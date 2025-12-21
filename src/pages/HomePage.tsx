@@ -1,6 +1,6 @@
-import { algorithms } from '@/data';
-import { useAlgoStore } from '@/store/useAlgoStore';
-import ChapterList from '@/components/ChapterList';
+// import { algorithms } from '@/data';
+// import { useAlgoStore } from '@/store/useAlgoStore';
+// import ChapterList from '@/components/ChapterList';
 
 export default function HomePage() {
   const { progress } = useAlgoStore();
