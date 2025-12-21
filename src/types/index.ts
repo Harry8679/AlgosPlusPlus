@@ -1,3 +1,5 @@
+import { algorithms } from '../data/algorithms';
+import { chapters } from '../data/chapters';
 // Export des types
 export type Difficulty = 'débutant' | 'intermédiaire' | 'avancé';
 
@@ -45,5 +47,7 @@ export interface ChapterInfo {
 }
 
 // Export des données
-export { algorithms } from './algorithms';
-export { chapters } from './chapters';
+// export { algorithms } from './algorithms';
+// export { chapters } from './chapters';
+export { algorithms };
+export { chapters };
