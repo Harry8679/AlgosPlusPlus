@@ -1,4 +1,4 @@
-import { Algorithm } from '@/types';
+import type { Algorithm } from '../types';
 
 export const algorithms: Algorithm[] = [
   // BASES DE JAVASCRIPT
