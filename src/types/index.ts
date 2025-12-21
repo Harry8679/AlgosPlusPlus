@@ -47,7 +47,5 @@ export interface ChapterInfo {
 }
 
 // Export des données
-// export { algorithms } from './algorithms';
-// export { chapters } from './chapters';
 export { algorithms };
 export { chapters };
