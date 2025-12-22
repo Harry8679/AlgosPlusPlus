@@ -11,13 +11,13 @@ interface ProgressData {
 
 interface AlgoStore {
   // État
-  selectedChapter: Chapter | null;
+  // selectedChapter: Chapter | null;
   searchQuery: string;
   selectedDifficulty: string;
   progress: ProgressData;
   
   // Actions
-  setSelectedChapter: (chapter: Chapter | null) => void;
+  // setSelectedChapter: (chapter: Chapter | null) => void;
   setSearchQuery: (query: string) => void;
   setSelectedDifficulty: (difficulty: string) => void;
   toggleComplete: (algoId: string) => void;
@@ -25,7 +25,8 @@ interface AlgoStore {
   setLastVisited: (algoId: string) => void;
   isCompleted: (algoId: string) => boolean;
   isFavorite: (algoId: string) => boolean;
-  getProgressByChapter: (chapter: Chapter, algorithms: Algorithm[]) => number;
+  getProgressByChapter: (algorithms: Algorithm[]) => number;
+  // getProgressByChapter: (chapter: Chapter, algorithms: Algorithm[]) => number;
 }
 
 export const useAlgoStore = create<AlgoStore>()(
