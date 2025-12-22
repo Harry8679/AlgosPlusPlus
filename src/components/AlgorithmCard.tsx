@@ -53,7 +53,7 @@ export default function AlgorithmCard({ algorithm }: AlgorithmCardProps) {
             
             {/* Icône favori */}
             {favorite && (
-              <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" title="Favori" />
+              <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
             )}
           </div>
 
