@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+// import type { Chapter, Algorithm } from '../types';
 import type { Algorithm } from '../types';
 // import { Algorithm, Chapter } from '@/data';
 
@@ -11,13 +12,13 @@ interface ProgressData {
 
 interface AlgoStore {
   // État
-  // selectedChapter: Chapter | null;
+  selectedChapter: Chapter | null;
   searchQuery: string;
   selectedDifficulty: string;
   progress: ProgressData;
   
   // Actions
-  // setSelectedChapter: (chapter: Chapter | null) => void;
+  setSelectedChapter: (chapter: Chapter | null) => void;
   setSearchQuery: (query: string) => void;
   setSelectedDifficulty: (difficulty: string) => void;
   toggleComplete: (algoId: string) => void;
@@ -25,8 +26,7 @@ interface AlgoStore {
   setLastVisited: (algoId: string) => void;
   isCompleted: (algoId: string) => boolean;
   isFavorite: (algoId: string) => boolean;
-  getProgressByChapter: (algorithms: Algorithm[]) => number;
-  // getProgressByChapter: (chapter: Chapter, algorithms: Algorithm[]) => number;
+  getProgressByChapter: (chapter: Chapter, algorithms: Algorithm[]) => number;
 }
 
 export const useAlgoStore = create<AlgoStore>()(
@@ -43,7 +43,7 @@ export const useAlgoStore = create<AlgoStore>()(
       },
 
       // Actions
-      // setSelectedChapter: (chapter) => set({ selectedChapter: chapter }),
+      setSelectedChapter: (chapter) => set({ selectedChapter: chapter }),
       
       setSearchQuery: (query) => set({ searchQuery: query }),
       
