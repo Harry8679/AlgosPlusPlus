@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Algorithm } from '../types';
+import type { Algorithm } from '../types';
 import { useAlgoStore } from '../store/useAlgoStore';
 import { Check, Star, Code2 } from 'lucide-react';
 
