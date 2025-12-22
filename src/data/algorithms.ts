@@ -6396,4 +6396,1565 @@ console.log(upperBound([1, 2, 4, 4, 5, 6, 8], 8));  // 7 (aucun > 8)`,
   tags: ['search', 'binary-search', 'upper-bound', 'sorted'],
   relatedAlgorithms: ['binary-search', 'lower-bound', 'count-occurrences']
 },
+// ==========================================
+// 🏗️ NIVEAU 4 : STRUCTURES DE DONNÉES (Algorithmes 63-75)
+// ==========================================
+
+{
+  id: 'dynamic-array',
+  title: '63. Implémenter un tableau dynamique',
+  level: 'niveau-4',
+  category: 'structures',
+  difficulty: 'avancé',
+  order: 63,
+  description: 'Créer un tableau qui s\'agrandit automatiquement',
+  explanation: `Un tableau dynamique (comme ArrayList en Java ou vector en C++) double sa capacité quand il est plein.
+
+Opérations :
+- push() : Ajouter un élément (O(1) amorti)
+- pop() : Retirer le dernier (O(1))
+- get(index) : Accès (O(1))
+- resize() : Doubler la capacité (O(n))`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Classe DynamicArray',
+      approach: 'Orientée objet',
+      code: `class DynamicArray {
+  constructor(capacity = 2) {
+    this.capacity = capacity;
+    this.length = 0;
+    this.data = new Array(capacity);
+  }
+  
+  // Ajouter un élément
+  push(item) {
+    if (this.length === this.capacity) {
+      this.resize();
+    }
+    this.data[this.length] = item;
+    this.length++;
+  }
+  
+  // Retirer le dernier
+  pop() {
+    if (this.length === 0) return undefined;
+    const item = this.data[this.length - 1];
+    this.length--;
+    return item;
+  }
+  
+  // Accès par index
+  get(index) {
+    if (index < 0 || index >= this.length) return undefined;
+    return this.data[index];
+  }
+  
+  // Doubler la capacité
+  resize() {
+    this.capacity *= 2;
+    const newData = new Array(this.capacity);
+    for (let i = 0; i < this.length; i++) {
+      newData[i] = this.data[i];
+    }
+    this.data = newData;
+  }
+  
+  // Taille actuelle
+  size() {
+    return this.length;
+  }
+}
+
+// Exemple d'utilisation
+const arr = new DynamicArray();
+arr.push(1);
+arr.push(2);
+arr.push(3); // Déclenche resize
+console.log(arr.get(0)); // 1
+console.log(arr.size()); // 3
+console.log(arr.pop());  // 3`,
+      explanation: 'Implémente un tableau qui double sa capacité automatiquement.',
+      timeComplexity: 'O(1) amorti pour push',
+      spaceComplexity: 'O(n)',
+      pros: ['push() O(1) amorti', 'Accès O(1)', 'Gestion automatique'],
+      cons: ['resize() coûteux O(n)', 'Gaspille de la mémoire']
+    }
+  ],
+  
+  examples: [
+    {
+      input: 'push(1), push(2), push(3)',
+      output: 'Capacité passe de 2 à 4 au 3e push',
+      explanation: 'Redimensionnement automatique'
+    }
+  ],
+  
+  tips: [
+    'Doubler la capacité donne O(1) amorti',
+    'Analyse amortie : moyenne des opérations sur le long terme',
+    'JavaScript Array natif utilise ce principe',
+    'Compromis mémoire/performance',
+    'Shrink possible si taille < capacity/4'
+  ],
+  
+  tags: ['data-structure', 'array', 'dynamic'],
+  relatedAlgorithms: ['stack', 'queue']
+},
+
+{
+  id: 'hash-map',
+  title: '64. Implémenter un dictionnaire (HashMap)',
+  level: 'niveau-4',
+  category: 'structures',
+  difficulty: 'avancé',
+  order: 64,
+  description: 'Table de hachage avec clé-valeur',
+  explanation: `Une HashMap stocke des paires clé-valeur avec accès O(1).
+
+Utilise une fonction de hachage pour convertir la clé en index.
+
+Opérations :
+- set(key, value) : Ajouter/modifier
+- get(key) : Récupérer
+- delete(key) : Supprimer
+- has(key) : Vérifier existence`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : HashMap simple',
+      approach: 'Orientée objet',
+      code: `class HashMap {
+  constructor(size = 16) {
+    this.size = size;
+    this.buckets = new Array(size);
+    this.count = 0;
+  }
+  
+  // Fonction de hachage
+  hash(key) {
+    let hash = 0;
+    for (let i = 0; i < key.length; i++) {
+      hash = (hash + key.charCodeAt(i) * i) % this.size;
+    }
+    return hash;
+  }
+  
+  // Ajouter ou modifier
+  set(key, value) {
+    const index = this.hash(key);
+    
+    if (!this.buckets[index]) {
+      this.buckets[index] = [];
+    }
+    
+    // Chercher si la clé existe déjà
+    const bucket = this.buckets[index];
+    for (let i = 0; i < bucket.length; i++) {
+      if (bucket[i][0] === key) {
+        bucket[i][1] = value; // Modifier
+        return;
+      }
+    }
+    
+    // Ajouter nouvelle clé
+    bucket.push([key, value]);
+    this.count++;
+  }
+  
+  // Récupérer
+  get(key) {
+    const index = this.hash(key);
+    const bucket = this.buckets[index];
+    
+    if (!bucket) return undefined;
+    
+    for (let [k, v] of bucket) {
+      if (k === key) return v;
+    }
+    
+    return undefined;
+  }
+  
+  // Supprimer
+  delete(key) {
+    const index = this.hash(key);
+    const bucket = this.buckets[index];
+    
+    if (!bucket) return false;
+    
+    for (let i = 0; i < bucket.length; i++) {
+      if (bucket[i][0] === key) {
+        bucket.splice(i, 1);
+        this.count--;
+        return true;
+      }
+    }
+    
+    return false;
+  }
+  
+  // Vérifier existence
+  has(key) {
+    return this.get(key) !== undefined;
+  }
+}
+
+// Exemple d'utilisation
+const map = new HashMap();
+map.set('name', 'Alice');
+map.set('age', 25);
+console.log(map.get('name')); // 'Alice'
+console.log(map.has('age'));  // true
+map.delete('age');
+console.log(map.has('age'));  // false`,
+      explanation: 'Implémente une table de hachage avec chaînage pour les collisions.',
+      timeComplexity: 'O(1) moyen, O(n) pire cas',
+      spaceComplexity: 'O(n)',
+      pros: ['O(1) en moyenne', 'Flexible', 'Gère collisions'],
+      cons: ['O(n) pire cas (toutes collisions)', 'Fonction hash critique']
+    }
+  ],
+  
+  examples: [
+    {
+      input: 'set("name", "Alice"), get("name")',
+      output: '"Alice"',
+      explanation: 'Stockage et récupération O(1)'
+    }
+  ],
+  
+  tips: [
+    'Fonction de hachage détermine les performances',
+    'Bonne hash → peu de collisions → O(1)',
+    'Load factor = count / size, resize si > 0.75',
+    'JavaScript Map natif utilise ce principe',
+    'Chaînage = liste pour chaque bucket'
+  ],
+  
+  tags: ['data-structure', 'hash-map', 'dictionary'],
+  relatedAlgorithms: ['hash-collision']
+},
+
+{
+  id: 'hash-collision',
+  title: '65. Gestion des collisions (chaînage)',
+  level: 'niveau-4',
+  category: 'structures',
+  difficulty: 'avancé',
+  order: 65,
+  description: 'Résoudre les collisions avec le chaînage',
+  explanation: `Quand deux clés ont le même hash (collision), on utilise le chaînage : chaque bucket contient une liste.
+
+Autres méthodes : open addressing, linear probing, quadratic probing.`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Chaînage avec listes',
+      approach: 'Orientée objet',
+      code: `class HashMapWithChaining {
+  constructor(size = 16) {
+    this.size = size;
+    this.buckets = Array.from({ length: size }, () => []);
+    this.count = 0;
+  }
+  
+  hash(key) {
+    let hash = 0;
+    for (let char of key) {
+      hash = (hash * 31 + char.charCodeAt(0)) % this.size;
+    }
+    return hash;
+  }
+  
+  set(key, value) {
+    const index = this.hash(key);
+    const bucket = this.buckets[index];
+    
+    // Chercher si existe
+    for (let item of bucket) {
+      if (item.key === key) {
+        item.value = value;
+        return;
+      }
+    }
+    
+    // Ajouter
+    bucket.push({ key, value });
+    this.count++;
+    
+    // Resize si load factor > 0.75
+    if (this.count / this.size > 0.75) {
+      this.resize();
+    }
+  }
+  
+  get(key) {
+    const index = this.hash(key);
+    const bucket = this.buckets[index];
+    
+    for (let item of bucket) {
+      if (item.key === key) {
+        return item.value;
+      }
+    }
+    
+    return undefined;
+  }
+  
+  resize() {
+    const oldBuckets = this.buckets;
+    this.size *= 2;
+    this.buckets = Array.from({ length: this.size }, () => []);
+    this.count = 0;
+    
+    // Réinsérer tous les éléments
+    for (let bucket of oldBuckets) {
+      for (let { key, value } of bucket) {
+        this.set(key, value);
+      }
+    }
+  }
+  
+  getLoadFactor() {
+    return this.count / this.size;
+  }
+  
+  // Afficher les collisions
+  showCollisions() {
+    let collisions = 0;
+    for (let bucket of this.buckets) {
+      if (bucket.length > 1) {
+        collisions += bucket.length - 1;
+        console.log(\`Bucket with \${bucket.length} items:\`, bucket);
+      }
+    }
+    console.log(\`Total collisions: \${collisions}\`);
+  }
+}
+
+// Exemple
+const map = new HashMapWithChaining(4);
+map.set('cat', 1);
+map.set('dog', 2);
+map.set('tac', 3); // Collision possible avec 'cat'
+map.showCollisions();`,
+      explanation: 'Chaînage complet avec resize automatique basé sur load factor.',
+      timeComplexity: 'O(1) moyen, O(k) avec k collisions',
+      spaceComplexity: 'O(n)',
+      pros: ['Gère bien les collisions', 'Resize automatique', 'Simple'],
+      cons: ['Performance dépend de la fonction hash']
+    }
+  ],
+  
+  examples: [
+    {
+      input: 'Plusieurs clés avec même hash',
+      output: 'Stockées dans la même liste',
+      explanation: 'Le chaînage évite la perte de données'
+    }
+  ],
+  
+  tips: [
+    'Chaînage = chaque bucket est une liste',
+    'Load factor = nombre d\'éléments / taille',
+    'Resize quand load factor > 0.75',
+    'Bonne hash → O(1), mauvaise hash → O(n)',
+    'Alternatives : open addressing, cuckoo hashing'
+  ],
+  
+  tags: ['data-structure', 'hash-map', 'collision', 'chaining'],
+  relatedAlgorithms: ['hash-map']
+},
+
+{
+  id: 'stack',
+  title: '66. Implémenter une pile (Stack)',
+  level: 'niveau-4',
+  category: 'structures',
+  difficulty: 'intermédiaire',
+  order: 66,
+  description: 'Structure LIFO (Last In First Out)',
+  explanation: `Une pile (stack) fonctionne comme une pile d'assiettes : le dernier ajouté est le premier retiré (LIFO).
+
+Opérations :
+- push(item) : Ajouter au sommet
+- pop() : Retirer du sommet
+- peek() : Voir le sommet sans retirer
+- isEmpty() : Vérifier si vide`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Stack avec tableau',
+      approach: 'Orientée objet',
+      code: `class Stack {
+  constructor() {
+    this.items = [];
+  }
+  
+  // Ajouter au sommet
+  push(item) {
+    this.items.push(item);
+  }
+  
+  // Retirer du sommet
+  pop() {
+    if (this.isEmpty()) {
+      return undefined;
+    }
+    return this.items.pop();
+  }
+  
+  // Voir le sommet
+  peek() {
+    if (this.isEmpty()) {
+      return undefined;
+    }
+    return this.items[this.items.length - 1];
+  }
+  
+  // Vérifier si vide
+  isEmpty() {
+    return this.items.length === 0;
+  }
+  
+  // Taille
+  size() {
+    return this.items.length;
+  }
+  
+  // Vider
+  clear() {
+    this.items = [];
+  }
+}
+
+// Exemple d'utilisation
+const stack = new Stack();
+stack.push(1);
+stack.push(2);
+stack.push(3);
+console.log(stack.peek()); // 3
+console.log(stack.pop());  // 3
+console.log(stack.pop());  // 2
+console.log(stack.size()); // 1`,
+      explanation: 'Implémente une pile avec un tableau JavaScript.',
+      timeComplexity: 'O(1) pour toutes les opérations',
+      spaceComplexity: 'O(n)',
+      pros: ['Simple', 'Toutes opérations O(1)', 'Facile à implémenter'],
+      cons: ['Utilise un tableau (peut gaspiller mémoire)']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Stack avec liste chaînée',
+      approach: 'Orientée objet',
+      code: `class Node {
+  constructor(value) {
+    this.value = value;
+    this.next = null;
+  }
+}
+
+class Stack {
+  constructor() {
+    this.top = null;
+    this.length = 0;
+  }
+  
+  push(value) {
+    const node = new Node(value);
+    node.next = this.top;
+    this.top = node;
+    this.length++;
+  }
+  
+  pop() {
+    if (!this.top) return undefined;
+    
+    const value = this.top.value;
+    this.top = this.top.next;
+    this.length--;
+    return value;
+  }
+  
+  peek() {
+    return this.top ? this.top.value : undefined;
+  }
+  
+  isEmpty() {
+    return this.length === 0;
+  }
+  
+  size() {
+    return this.length;
+  }
+}
+
+// Exemple
+const stack = new Stack();
+stack.push(1);
+stack.push(2);
+console.log(stack.pop()); // 2`,
+      explanation: 'Implémente avec liste chaînée (pas de gaspillage mémoire).',
+      timeComplexity: 'O(1)',
+      spaceComplexity: 'O(n)',
+      pros: ['Pas de gaspillage mémoire', 'Taille dynamique'],
+      cons: ['Plus complexe', 'Overhead des pointeurs']
+    }
+  ],
+  
+  examples: [
+    {
+      input: 'push(1), push(2), push(3), pop()',
+      output: '3',
+      explanation: 'Le dernier ajouté (3) est le premier retiré'
+    }
+  ],
+  
+  tips: [
+    'LIFO : Last In First Out',
+    'Utilisé pour : navigation (back), undo, récursion',
+    'Call stack du langage est une pile',
+    'push() et pop() en O(1)',
+    'Applications : évaluation d\'expressions, parenthèses'
+  ],
+  
+  tags: ['data-structure', 'stack', 'lifo'],
+  relatedAlgorithms: ['balanced-parentheses', 'postfix-evaluation', 'queue']
+},
+
+{
+  id: 'balanced-parentheses',
+  title: '67. Vérifier l\'équilibrage des parenthèses',
+  level: 'niveau-4',
+  category: 'structures',
+  difficulty: 'intermédiaire',
+  order: 67,
+  description: 'Vérifier si les parenthèses/crochets/accolades sont bien équilibrées',
+  explanation: `Vérifie si chaque ouvrante a sa fermante correspondante dans le bon ordre.
+
+Exemples valides : "()", "()[]{}", "({[]})"
+Exemples invalides : "(]", "(()", "())("
+
+Utilise une pile pour suivre les ouvrantes.`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Pile',
+      approach: 'Impérative',
+      code: `function isBalanced(str) {
+  const stack = [];
+  const pairs = {
+    ')': '(',
+    ']': '[',
+    '}': '{'
+  };
+  
+  for (let char of str) {
+    // Si c'est une ouvrante
+    if (char === '(' || char === '[' || char === '{') {
+      stack.push(char);
+    }
+    // Si c'est une fermante
+    else if (char === ')' || char === ']' || char === '}') {
+      // Vérifier correspondance
+      if (stack.length === 0 || stack.pop() !== pairs[char]) {
+        return false;
+      }
+    }
+  }
+  
+  // Vérifier que tout est fermé
+  return stack.length === 0;
+}
+
+// Exemples
+console.log(isBalanced('()'));        // true
+console.log(isBalanced('()[]{}'));    // true
+console.log(isBalanced('({[]})'));    // true
+console.log(isBalanced('(]'));        // false
+console.log(isBalanced('((()'));      // false
+console.log(isBalanced('())'));       // false`,
+      explanation: 'Empile les ouvrantes, dépile à chaque fermante et vérifie la correspondance.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Simple', 'Une seule passe', 'Élégant avec pile'],
+      cons: ['Nécessite une pile']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '"({[]})"',
+      output: 'true',
+      explanation: 'Toutes les parenthèses sont bien équilibrées'
+    },
+    {
+      input: '"(]"',
+      output: 'false',
+      explanation: '( est fermé par ] (mauvaise correspondance)'
+    },
+    {
+      input: '"(()"',
+      output: 'false',
+      explanation: 'Une ( n\'est pas fermée'
+    }
+  ],
+  
+  tips: [
+    'La pile est parfaite pour ce problème',
+    'Ouvrante → push, Fermante → pop et vérifier',
+    'À la fin, pile doit être vide',
+    'Problème classique d\'interview',
+    'Généralisable à n\'importe quels délimiteurs'
+  ],
+  
+  tags: ['stack', 'string', 'validation', 'parentheses'],
+  relatedAlgorithms: ['stack', 'postfix-evaluation']
+},
+
+{
+  id: 'postfix-evaluation',
+  title: '68. Évaluer une expression postfixée',
+  level: 'niveau-4',
+  category: 'structures',
+  difficulty: 'intermédiaire',
+  order: 68,
+  description: 'Évaluer une expression en notation polonaise inversée (RPN)',
+  explanation: `Notation postfixée (RPN) : les opérateurs viennent après les opérandes.
+
+Exemples :
+- Infix : (3 + 4)
+- Postfix : 3 4 +
+
+Algorithme : Parcourir de gauche à droite, empiler les nombres, dépiler pour les opérations.`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Pile d\'évaluation',
+      approach: 'Impérative',
+      code: `function evaluatePostfix(expression) {
+  const stack = [];
+  const tokens = expression.split(' ');
+  
+  for (let token of tokens) {
+    // Si c'est un nombre
+    if (!isNaN(token)) {
+      stack.push(Number(token));
+    }
+    // Si c'est un opérateur
+    else {
+      const b = stack.pop();
+      const a = stack.pop();
+      
+      switch (token) {
+        case '+':
+          stack.push(a + b);
+          break;
+        case '-':
+          stack.push(a - b);
+          break;
+        case '*':
+          stack.push(a * b);
+          break;
+        case '/':
+          stack.push(Math.floor(a / b));
+          break;
+      }
+    }
+  }
+  
+  return stack.pop();
+}
+
+// Exemples
+console.log(evaluatePostfix('3 4 +')); // 7
+console.log(evaluatePostfix('3 4 + 2 *')); // 14 : (3+4)*2
+console.log(evaluatePostfix('15 7 1 1 + - / 3 * 2 1 1 + + -')); // 5`,
+      explanation: 'Empile les nombres, dépile deux nombres pour chaque opérateur, empile le résultat.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Simple avec pile', 'Une passe', 'Pas de parenthèses'],
+      cons: ['Notation peu naturelle']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '"3 4 +"',
+      output: '7',
+      explanation: '3 + 4'
+    },
+    {
+      input: '"3 4 + 2 *"',
+      output: '14',
+      explanation: '(3 + 4) * 2'
+    },
+    {
+      input: '"5 1 2 + 4 * + 3 -"',
+      output: '14',
+      explanation: '5 + ((1 + 2) * 4) - 3'
+    }
+  ],
+  
+  tips: [
+    'RPN = Reverse Polish Notation',
+    'Pas besoin de parenthèses',
+    'Utilisé dans calculatrices HP',
+    'Plus efficace à évaluer que infix',
+    'Ordre : nombre nombre opérateur',
+    'Algorithme : nombre → push, opérateur → pop 2, calcule, push'
+  ],
+  
+  tags: ['stack', 'expression', 'postfix', 'rpn'],
+  relatedAlgorithms: ['stack', 'infix-to-postfix']
+},
+
+{
+  id: 'queue',
+  title: '69. Implémenter une file (Queue)',
+  level: 'niveau-4',
+  category: 'structures',
+  difficulty: 'intermédiaire',
+  order: 69,
+  description: 'Structure FIFO (First In First Out)',
+  explanation: `Une file (queue) fonctionne comme une file d'attente : le premier arrivé est le premier servi (FIFO).
+
+Opérations :
+- enqueue(item) : Ajouter à la fin
+- dequeue() : Retirer du début
+- front() : Voir le premier
+- isEmpty() : Vérifier si vide`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Queue avec tableau',
+      approach: 'Orientée objet',
+      code: `class Queue {
+  constructor() {
+    this.items = [];
+  }
+  
+  // Ajouter à la fin
+  enqueue(item) {
+    this.items.push(item);
+  }
+  
+  // Retirer du début
+  dequeue() {
+    if (this.isEmpty()) {
+      return undefined;
+    }
+    return this.items.shift(); // O(n) !
+  }
+  
+  // Voir le premier
+  front() {
+    if (this.isEmpty()) {
+      return undefined;
+    }
+    return this.items[0];
+  }
+  
+  isEmpty() {
+    return this.items.length === 0;
+  }
+  
+  size() {
+    return this.items.length;
+  }
+}
+
+// Exemple
+const queue = new Queue();
+queue.enqueue(1);
+queue.enqueue(2);
+queue.enqueue(3);
+console.log(queue.dequeue()); // 1
+console.log(queue.front());   // 2`,
+      explanation: 'Implémente une file avec un tableau (dequeue est O(n)).',
+      timeComplexity: 'enqueue O(1), dequeue O(n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Simple', 'Facile à comprendre'],
+      cons: ['dequeue() est O(n) avec shift()']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Queue optimisée avec deux indices',
+      approach: 'Orientée objet',
+      code: `class Queue {
+  constructor() {
+    this.items = {};
+    this.front = 0;
+    this.rear = 0;
+  }
+  
+  enqueue(item) {
+    this.items[this.rear] = item;
+    this.rear++;
+  }
+  
+  dequeue() {
+    if (this.isEmpty()) {
+      return undefined;
+    }
+    
+    const item = this.items[this.front];
+    delete this.items[this.front];
+    this.front++;
+    return item;
+  }
+  
+  peek() {
+    if (this.isEmpty()) {
+      return undefined;
+    }
+    return this.items[this.front];
+  }
+  
+  isEmpty() {
+    return this.rear === this.front;
+  }
+  
+  size() {
+    return this.rear - this.front;
+  }
+}
+
+// Exemple
+const queue = new Queue();
+queue.enqueue(1);
+queue.enqueue(2);
+console.log(queue.dequeue()); // 1`,
+      explanation: 'Utilise un objet et deux indices (front, rear) pour O(1) partout.',
+      timeComplexity: 'O(1) pour toutes opérations',
+      spaceComplexity: 'O(n)',
+      pros: ['dequeue() en O(1)', 'Optimal'],
+      cons: ['Objets peuvent gaspiller mémoire', 'Plus complexe']
+    }
+  ],
+  
+  examples: [
+    {
+      input: 'enqueue(1), enqueue(2), enqueue(3), dequeue()',
+      output: '1',
+      explanation: 'Le premier ajouté (1) est le premier retiré'
+    }
+  ],
+  
+  tips: [
+    'FIFO : First In First Out',
+    'Utilisé pour : BFS, task scheduling, buffers',
+    'Array.shift() est O(n), évitez-le',
+    'Version optimisée avec indices : O(1) partout',
+    'Applications : file d\'impression, gestion de tâches'
+  ],
+  
+  tags: ['data-structure', 'queue', 'fifo'],
+  relatedAlgorithms: ['stack', 'circular-queue', 'bfs']
+},
+
+{
+  id: 'circular-queue',
+  title: '70. File circulaire',
+  level: 'niveau-4',
+  category: 'structures',
+  difficulty: 'avancé',
+  order: 70,
+  description: 'File avec buffer circulaire de taille fixe',
+  explanation: `Une file circulaire réutilise l'espace libéré au début.
+
+Quand on atteint la fin du tableau, on revient au début (modulo).
+
+Évite le gaspillage mémoire d'une queue normale.`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : CircularQueue',
+      approach: 'Orientée objet',
+      code: `class CircularQueue {
+  constructor(capacity) {
+    this.capacity = capacity;
+    this.items = new Array(capacity);
+    this.front = 0;
+    this.rear = 0;
+    this.size = 0;
+  }
+  
+  enqueue(item) {
+    if (this.isFull()) {
+      throw new Error('Queue is full');
+    }
+    
+    this.items[this.rear] = item;
+    this.rear = (this.rear + 1) % this.capacity;
+    this.size++;
+  }
+  
+  dequeue() {
+    if (this.isEmpty()) {
+      return undefined;
+    }
+    
+    const item = this.items[this.front];
+    this.items[this.front] = undefined;
+    this.front = (this.front + 1) % this.capacity;
+    this.size--;
+    return item;
+  }
+  
+  peek() {
+    if (this.isEmpty()) {
+      return undefined;
+    }
+    return this.items[this.front];
+  }
+  
+  isEmpty() {
+    return this.size === 0;
+  }
+  
+  isFull() {
+    return this.size === this.capacity;
+  }
+  
+  getSize() {
+    return this.size;
+  }
+}
+
+// Exemple
+const queue = new CircularQueue(3);
+queue.enqueue(1);
+queue.enqueue(2);
+queue.enqueue(3);
+console.log(queue.dequeue()); // 1
+queue.enqueue(4); // Réutilise l'espace de 1
+console.log(queue.items); // [4, 2, 3]`,
+      explanation: 'Utilise modulo pour boucler les indices et réutiliser l\'espace.',
+      timeComplexity: 'O(1) pour toutes opérations',
+      spaceComplexity: 'O(capacity)',
+      pros: ['O(1) partout', 'Pas de gaspillage', 'Taille fixe'],
+      cons: ['Capacité limitée', 'Plus complexe']
+    }
+  ],
+  
+  examples: [
+    {
+      input: 'Capacité 3: enqueue(1,2,3), dequeue(), enqueue(4)',
+      output: 'Queue: [4, 2, 3]',
+      explanation: 'L\'espace libéré par 1 est réutilisé pour 4'
+    }
+  ],
+  
+  tips: [
+    'Modulo pour boucler : (index + 1) % capacity',
+    'Taille fixe définie à la création',
+    'Évite le gaspillage de la queue normale',
+    'Utilisé dans buffers circulaires, streaming',
+    'Suivre size ou utiliser un slot vide pour différencier vide/plein'
+  ],
+  
+  tags: ['data-structure', 'queue', 'circular', 'buffer'],
+  relatedAlgorithms: ['queue', 'ring-buffer']
+},
+
+{
+  id: 'linked-list',
+  title: '71. Liste chaînée simple',
+  level: 'niveau-4',
+  category: 'structures',
+  difficulty: 'intermédiaire',
+  order: 71,
+  description: 'Structure de données linéaire avec nœuds',
+  explanation: `Une liste chaînée est une séquence de nœuds où chaque nœud contient une valeur et un pointeur vers le suivant.
+
+Avantages : insertion/suppression O(1) si on a la référence
+Inconvénients : accès O(n), pas de cache-friendly`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : LinkedList',
+      approach: 'Orientée objet',
+      code: `class Node {
+  constructor(value) {
+    this.value = value;
+    this.next = null;
+  }
+}
+
+class LinkedList {
+  constructor() {
+    this.head = null;
+    this.tail = null;
+    this.size = 0;
+  }
+  
+  // Ajouter à la fin
+  append(value) {
+    const node = new Node(value);
+    
+    if (!this.head) {
+      this.head = node;
+      this.tail = node;
+    } else {
+      this.tail.next = node;
+      this.tail = node;
+    }
+    
+    this.size++;
+  }
+  
+  // Ajouter au début
+  prepend(value) {
+    const node = new Node(value);
+    
+    if (!this.head) {
+      this.head = node;
+      this.tail = node;
+    } else {
+      node.next = this.head;
+      this.head = node;
+    }
+    
+    this.size++;
+  }
+  
+  // Afficher
+  print() {
+    const values = [];
+    let current = this.head;
+    
+    while (current) {
+      values.push(current.value);
+      current = current.next;
+    }
+    
+    console.log(values.join(' -> '));
+  }
+  
+  // Recherche
+  find(value) {
+    let current = this.head;
+    
+    while (current) {
+      if (current.value === value) {
+        return current;
+      }
+      current = current.next;
+    }
+    
+    return null;
+  }
+}
+
+// Exemple
+const list = new LinkedList();
+list.append(1);
+list.append(2);
+list.append(3);
+list.prepend(0);
+list.print(); // 0 -> 1 -> 2 -> 3`,
+      explanation: 'Implémente une liste chaînée simple avec head et tail.',
+      timeComplexity: 'append/prepend O(1), find O(n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Insertion/suppression O(1)', 'Taille dynamique'],
+      cons: ['Accès O(n)', 'Overhead des pointeurs', 'Pas cache-friendly']
+    }
+  ],
+  
+  examples: [
+    {
+      input: 'append(1), append(2), prepend(0)',
+      output: '0 -> 1 -> 2',
+      explanation: 'Construction de la liste'
+    }
+  ],
+  
+  tips: [
+    'Chaque nœud a value et next',
+    'head = premier nœud, tail = dernier',
+    'append O(1) avec tail, sinon O(n)',
+    'prepend toujours O(1)',
+    'Utilisé dans LRU cache, undo systems'
+  ],
+  
+  tags: ['data-structure', 'linked-list', 'node'],
+  relatedAlgorithms: ['insert-linked-list', 'delete-linked-list']
+},
+
+{
+  id: 'insert-linked-list',
+  title: '72. Insertion dans une liste chaînée',
+  level: 'niveau-4',
+  category: 'structures',
+  difficulty: 'intermédiaire',
+  order: 72,
+  description: 'Insérer un nœud à une position donnée',
+  explanation: `Insérer à une position spécifique nécessite de :
+1. Parcourir jusqu'à position-1
+2. Créer le nouveau nœud
+3. Réajuster les pointeurs`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Insertion à l\'index',
+      approach: 'Impérative',
+      code: `class LinkedList {
+  // ... (code précédent)
+  
+  insertAt(value, index) {
+    if (index < 0 || index > this.size) {
+      throw new Error('Index out of bounds');
+    }
+    
+    // Cas spécial : début
+    if (index === 0) {
+      this.prepend(value);
+      return;
+    }
+    
+    // Cas spécial : fin
+    if (index === this.size) {
+      this.append(value);
+      return;
+    }
+    
+    // Cas général
+    const node = new Node(value);
+    let current = this.head;
+    let count = 0;
+    
+    // Aller à position - 1
+    while (count < index - 1) {
+      current = current.next;
+      count++;
+    }
+    
+    // Insérer
+    node.next = current.next;
+    current.next = node;
+    this.size++;
+  }
+}
+
+// Exemple
+const list = new LinkedList();
+list.append(1);
+list.append(3);
+list.insertAt(2, 1); // Insère 2 entre 1 et 3
+list.print(); // 1 -> 2 -> 3`,
+      explanation: 'Parcourt jusqu\'à position-1, insère en réajustant les pointeurs.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(1)',
+      pros: ['Insertion O(1) si on a le nœud', 'Flexible'],
+      cons: ['Parcours O(n) pour trouver la position']
+    }
+  ],
+  
+  examples: [
+    {
+      input: 'Liste [1, 3], insertAt(2, 1)',
+      output: '[1, 2, 3]',
+      explanation: 'Insère 2 à l\'index 1'
+    }
+  ],
+  
+  tips: [
+    'Gérez les cas spéciaux : début, fin',
+    'Parcours O(n) pour trouver position',
+    'Mais insertion elle-même O(1)',
+    'Attention aux pointeurs null',
+    'newNode.next = current.next, puis current.next = newNode'
+  ],
+  
+  tags: ['linked-list', 'insertion', 'pointers'],
+  relatedAlgorithms: ['linked-list', 'delete-linked-list']
+},
+
+{
+  id: 'delete-linked-list',
+  title: '73. Suppression dans une liste chaînée',
+  level: 'niveau-4',
+  category: 'structures',
+  difficulty: 'intermédiaire',
+  order: 73,
+  description: 'Supprimer un nœud d\'une liste chaînée',
+  explanation: `Supprimer nécessite de :
+1. Trouver le nœud précédent
+2. Réajuster son pointeur next pour sauter le nœud à supprimer`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Suppression par valeur',
+      approach: 'Impérative',
+      code: `class LinkedList {
+  // ... (code précédent)
+  
+  delete(value) {
+    if (!this.head) return false;
+    
+    // Cas spécial : supprimer head
+    if (this.head.value === value) {
+      this.head = this.head.next;
+      if (!this.head) {
+        this.tail = null;
+      }
+      this.size--;
+      return true;
+    }
+    
+    // Cas général
+    let current = this.head;
+    
+    while (current.next) {
+      if (current.next.value === value) {
+        // Sauter le nœud
+        current.next = current.next.next;
+        
+        // Mettre à jour tail si nécessaire
+        if (!current.next) {
+          this.tail = current;
+        }
+        
+        this.size--;
+        return true;
+      }
+      current = current.next;
+    }
+    
+    return false; // Non trouvé
+  }
+  
+  // Suppression par index
+  deleteAt(index) {
+    if (index < 0 || index >= this.size) {
+      throw new Error('Index out of bounds');
+    }
+    
+    if (index === 0) {
+      this.head = this.head.next;
+      if (!this.head) this.tail = null;
+      this.size--;
+      return;
+    }
+    
+    let current = this.head;
+    let count = 0;
+    
+    while (count < index - 1) {
+      current = current.next;
+      count++;
+    }
+    
+    current.next = current.next.next;
+    if (!current.next) {
+      this.tail = current;
+    }
+    this.size--;
+  }
+}
+
+// Exemple
+const list = new LinkedList();
+list.append(1);
+list.append(2);
+list.append(3);
+list.delete(2);
+list.print(); // 1 -> 3`,
+      explanation: 'Trouve le nœud précédent, puis saute le nœud à supprimer.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(1)',
+      pros: ['Suppression O(1) si on a le nœud précédent'],
+      cons: ['Parcours O(n) pour trouver']
+    }
+  ],
+  
+  examples: [
+    {
+      input: 'Liste [1, 2, 3], delete(2)',
+      output: '[1, 3]',
+      explanation: 'Supprime le nœud contenant 2'
+    }
+  ],
+  
+  tips: [
+    'Gérez le cas head séparément',
+    'previous.next = current.next',
+    'Attention à mettre à jour tail si on supprime le dernier',
+    'Si liste doublement chaînée, aussi mettre à jour prev',
+    'Garbage collector libère automatiquement la mémoire'
+  ],
+  
+  tags: ['linked-list', 'deletion', 'pointers'],
+  relatedAlgorithms: ['linked-list', 'insert-linked-list']
+},
+
+{
+  id: 'reverse-linked-list',
+  title: '74. Inverser une liste chaînée',
+  level: 'niveau-4',
+  category: 'structures',
+  difficulty: 'avancé',
+  order: 74,
+  description: 'Inverser l\'ordre des nœuds d\'une liste chaînée',
+  explanation: `Inverser une liste chaînée nécessite de renverser tous les pointeurs next.
+
+Trois approches : itérative, récursive, ou en créant une nouvelle liste.`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Itératif (optimal)',
+      approach: 'Impérative',
+      code: `function reverseList(head) {
+  let prev = null;
+  let current = head;
+  
+  while (current) {
+    // Sauvegarder next
+    const next = current.next;
+    
+    // Inverser le pointeur
+    current.next = prev;
+    
+    // Avancer
+    prev = current;
+    current = next;
+  }
+  
+  return prev; // Nouveau head
+}
+
+// Pour la classe LinkedList
+class LinkedList {
+  // ... (code précédent)
+  
+  reverse() {
+    let prev = null;
+    let current = this.head;
+    this.tail = this.head;
+    
+    while (current) {
+      const next = current.next;
+      current.next = prev;
+      prev = current;
+      current = next;
+    }
+    
+    this.head = prev;
+  }
+}
+
+// Exemple
+const list = new LinkedList();
+list.append(1);
+list.append(2);
+list.append(3);
+list.reverse();
+list.print(); // 3 -> 2 -> 1`,
+      explanation: 'Parcourt la liste en inversant chaque pointeur next.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(1)',
+      pros: ['Optimal O(n) temps, O(1) espace', 'In-place'],
+      cons: ['Manipulation de pointeurs délicate']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Récursif',
+      approach: 'Récursive',
+      code: `function reverseList(head) {
+  // Cas de base
+  if (!head || !head.next) {
+    return head;
+  }
+  
+  // Inverser le reste
+  const newHead = reverseList(head.next);
+  
+  // Inverser le lien actuel
+  head.next.next = head;
+  head.next = null;
+  
+  return newHead;
+}
+
+// Exemple
+// 1 -> 2 -> 3 -> null
+// Devient : 3 -> 2 -> 1 -> null`,
+      explanation: 'Récurse jusqu\'à la fin, puis inverse les liens en remontant.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(n)', // Stack de récursion
+      pros: ['Élégant', 'Concis'],
+      cons: ['Utilise stack O(n)', 'Moins intuitif']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '1 -> 2 -> 3 -> null',
+      output: '3 -> 2 -> 1 -> null',
+      explanation: 'Tous les pointeurs sont inversés'
+    }
+  ],
+  
+  tips: [
+    'Méthode itérative : prev, current, next',
+    'Trois pointeurs : prev = null au départ',
+    'Sauvegarder next avant de modifier current.next',
+    'Récursif élégant mais O(n) stack',
+    'Problème classique d\'interview',
+    'Variante : inverser par groupes de k'
+  ],
+  
+  tags: ['linked-list', 'reverse', 'pointers', 'recursion'],
+  relatedAlgorithms: ['linked-list', 'detect-cycle']
+},
+
+{
+  id: 'detect-cycle',
+  title: '75. Détecter un cycle dans une liste chaînée',
+  level: 'niveau-4',
+  category: 'structures',
+  difficulty: 'avancé',
+  order: 75,
+  description: 'Vérifier si une liste chaînée contient un cycle (Floyd\'s algorithm)',
+  explanation: `Un cycle existe quand un nœud pointe vers un nœud précédent, créant une boucle infinie.
+
+Algorithme de Floyd (Tortue et Lièvre) :
+- Deux pointeurs : un lent (1 pas), un rapide (2 pas)
+- S'ils se rencontrent, il y a un cycle
+- Si rapide atteint null, pas de cycle`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Algorithme de Floyd (optimal)',
+      approach: 'Two Pointers',
+      code: `function hasCycle(head) {
+  if (!head || !head.next) return false;
+  
+  let slow = head;
+  let fast = head;
+  
+  while (fast && fast.next) {
+    slow = slow.next;        // 1 pas
+    fast = fast.next.next;   // 2 pas
+    
+    if (slow === fast) {
+      return true; // Cycle détecté
+    }
+  }
+  
+  return false; // Pas de cycle
+}
+
+// Pour trouver le début du cycle
+function detectCycle(head) {
+  if (!head || !head.next) return null;
+  
+  let slow = head;
+  let fast = head;
+  let hasCycle = false;
+  
+  // Détecter le cycle
+  while (fast && fast.next) {
+    slow = slow.next;
+    fast = fast.next.next;
+    
+    if (slow === fast) {
+      hasCycle = true;
+      break;
+    }
+  }
+  
+  if (!hasCycle) return null;
+  
+  // Trouver le début du cycle
+  slow = head;
+  while (slow !== fast) {
+    slow = slow.next;
+    fast = fast.next;
+  }
+  
+  return slow; // Début du cycle
+}
+
+// Exemple
+// 1 -> 2 -> 3 -> 4
+//           ^    |
+//           |____|
+console.log(hasCycle(head)); // true`,
+      explanation: 'Deux pointeurs à vitesses différentes se rencontrent si cycle.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(1)',
+      pros: ['Optimal O(n) temps, O(1) espace', 'Élégant', 'Pas de structure auxiliaire'],
+      cons: ['Non intuitif au premier abord']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Set pour suivre les nœuds visités',
+      approach: 'Hash Set',
+      code: `function hasCycle(head) {
+  const visited = new Set();
+  let current = head;
+  
+  while (current) {
+    if (visited.has(current)) {
+      return true; // Déjà visité = cycle
+    }
+    
+    visited.add(current);
+    current = current.next;
+  }
+  
+  return false;
+}
+
+// Exemple
+console.log(hasCycle(head));`,
+      explanation: 'Garde trace des nœuds visités dans un Set.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Simple à comprendre', 'Facile à implémenter'],
+      cons: ['O(n) mémoire supplémentaire', 'Pas optimal']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '1 -> 2 -> 3 -> 4 -> 2 (cycle)',
+      output: 'true',
+      explanation: 'Le nœud 4 pointe vers le nœud 2'
+    },
+    {
+      input: '1 -> 2 -> 3 -> null',
+      output: 'false',
+      explanation: 'Pas de cycle, atteint null'
+    }
+  ],
+  
+  tips: [
+    'Floyd = Tortue et Lièvre (Tortoise and Hare)',
+    'Si rapide rattrape lent, il y a un cycle',
+    'Pour trouver le début : remettre un pointeur au head',
+    'Problème classique d\'interview',
+    'Variante : trouver la longueur du cycle',
+    'Set simple mais O(n) espace, Floyd O(1)'
+  ],
+  
+  tags: ['linked-list', 'cycle', 'two-pointers', 'floyd'],
+  relatedAlgorithms: ['linked-list', 'reverse-linked-list']
+},
 ];
