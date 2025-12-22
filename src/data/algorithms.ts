@@ -3084,7 +3084,7 @@ console.log(isPrime(1000)); // false`,
     relatedAlgorithms: ['generate-n-numbers', 'is-even-odd']
   },
   // ==========================================
-  // 🔄 NIVEAU 2 : BOUCLES & LOGIQUE (Algorithmes 31-50)
+  // 🔄 NIVEAU 2 : BOUCLES & LOGIQUE (Algorithmes 1-50)
   // ==========================================
   {
   id: 'second-largest',
@@ -3809,6 +3809,7 @@ console.log(chunkArray([1, 2, 3, 4, 5], 2));
   tags: ['array', 'chunk', 'split'],
   relatedAlgorithms: ['flatten-array']
 },
+
 {
   id: 'array-difference-symmetric',
   title: '39. Différence symétrique entre deux tableaux',
@@ -4013,6 +4014,1159 @@ console.log(groupBy(people, 'age'));`,
   
   tags: ['array', 'object', 'grouping', 'reduce'],
   relatedAlgorithms: ['count-occurrences']
-  },
+},
+// ==========================================
+// 🔄 NIVEAU 2 : BOUCLES & LOGIQUE (Algorithmes 41-50)
+// ==========================================
 
+{
+  id: 'inverted-pyramid',
+  title: '41. Générer une pyramide inversée',
+  level: 'niveau-2',
+  category: 'patterns',
+  difficulty: 'intermédiaire',
+  order: 41,
+  description: 'Générer une pyramide d\'étoiles inversée de hauteur n',
+  explanation: `Générer une pyramide inversée avec des étoiles.
+
+Exemple pour n=5 :
+*********
+ *******
+  *****
+   ***
+    *`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Boucle imbriquée',
+      approach: 'Impérative',
+      code: `function invertedPyramid(n) {
+  let result = '';
+  
+  for (let i = 0; i < n; i++) {
+    // Espaces au début
+    result += ' '.repeat(i);
+    
+    // Étoiles
+    const stars = 2 * (n - i) - 1;
+    result += '*'.repeat(stars);
+    
+    // Nouvelle ligne (sauf dernière)
+    if (i < n - 1) result += '\\n';
+  }
+  
+  return result;
+}
+
+// Exemple
+console.log(invertedPyramid(5));
+/*
+*********
+ *******
+  *****
+   ***
+    *
+*/`,
+      explanation: 'Pour chaque ligne i : i espaces, puis (2*(n-i)-1) étoiles.',
+      timeComplexity: 'O(n²)',
+      spaceComplexity: 'O(n²)',
+      pros: ['Simple', 'Formule claire'],
+      cons: ['Concaténation de strings']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Array + map',
+      approach: 'Fonctionnelle',
+      code: `function invertedPyramid(n) {
+  return Array.from({ length: n }, (_, i) => {
+    const spaces = ' '.repeat(i);
+    const stars = '*'.repeat(2 * (n - i) - 1);
+    return spaces + stars;
+  }).join('\\n');
+}
+
+// Exemple
+console.log(invertedPyramid(5));`,
+      explanation: 'Génère un tableau de lignes puis les joint.',
+      timeComplexity: 'O(n²)',
+      spaceComplexity: 'O(n²)',
+      pros: ['Fonctionnel', 'Concis'],
+      cons: ['Crée un tableau intermédiaire']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '3',
+      output: `*****
+ ***
+  *`,
+      explanation: 'Pyramide inversée de hauteur 3'
+    },
+    {
+      input: '5',
+      output: `*********
+ *******
+  *****
+   ***
+    *`,
+      explanation: 'Pyramide inversée de hauteur 5'
+    }
+  ],
+  
+  tips: [
+    'Formule des étoiles : 2 * (n - i) - 1 pour la ligne i',
+    'Formule des espaces : i espaces pour la ligne i',
+    'Ligne 0 : 0 espaces, 2n-1 étoiles',
+    'Dernière ligne : n-1 espaces, 1 étoile'
+  ],
+  
+  tags: ['pattern', 'loop', 'string'],
+  relatedAlgorithms: ['pyramid']
+},
+
+{
+  id: 'fibonacci',
+  title: '42. Générer une suite de Fibonacci',
+  level: 'niveau-2',
+  category: 'nombres',
+  difficulty: 'intermédiaire',
+  order: 42,
+  description: 'Générer les N premiers nombres de Fibonacci',
+  explanation: `Suite de Fibonacci : chaque nombre est la somme des deux précédents.
+  
+0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89...
+
+F(0) = 0, F(1) = 1, F(n) = F(n-1) + F(n-2)`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Itératif',
+      approach: 'Impérative',
+      code: `function fibonacci(n) {
+  if (n <= 0) return [];
+  if (n === 1) return [0];
+  if (n === 2) return [0, 1];
+  
+  const fib = [0, 1];
+  
+  for (let i = 2; i < n; i++) {
+    fib.push(fib[i - 1] + fib[i - 2]);
+  }
+  
+  return fib;
+}
+
+// Exemples
+console.log(fibonacci(8));  // [0, 1, 1, 2, 3, 5, 8, 13]
+console.log(fibonacci(10)); // [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]`,
+      explanation: 'Génère la suite de manière itérative, le plus efficace.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Optimal', 'Simple', 'Pas de stack overflow', 'O(n)'],
+      cons: ['Moins élégant que récursion']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Récursif (naïf)',
+      approach: 'Récursive',
+      code: `function fibonacciRecursive(n) {
+  if (n <= 0) return 0;
+  if (n === 1) return 1;
+  return fibonacciRecursive(n - 1) + fibonacciRecursive(n - 2);
+}
+
+// Pour générer la suite
+function fibonacci(n) {
+  return Array.from({ length: n }, (_, i) => fibonacciRecursive(i));
+}
+
+// Exemples
+console.log(fibonacci(8)); // [0, 1, 1, 2, 3, 5, 8, 13]`,
+      explanation: 'Récursion simple mais très inefficace (recalcule plusieurs fois).',
+      timeComplexity: 'O(2^n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Élégant', 'Suit la définition mathématique'],
+      cons: ['TRÈS lent O(2^n)', 'Stack overflow', 'Ne PAS utiliser en production']
+    },
+    {
+      id: 'method-3',
+      title: 'Méthode 3 : Récursif avec mémoïsation',
+      approach: 'Récursive',
+      code: `function fibonacci(n) {
+  const memo = {};
+  
+  function fib(num) {
+    if (num <= 0) return 0;
+    if (num === 1) return 1;
+    if (memo[num]) return memo[num];
+    
+    memo[num] = fib(num - 1) + fib(num - 2);
+    return memo[num];
+  }
+  
+  return Array.from({ length: n }, (_, i) => fib(i));
+}
+
+// Exemples
+console.log(fibonacci(8)); // [0, 1, 1, 2, 3, 5, 8, 13]`,
+      explanation: 'Mémoïsation évite les recalculs, beaucoup plus rapide.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Récursif mais performant', 'Cache les résultats'],
+      cons: ['Plus complexe', 'Utilise mémoire pour cache']
+    },
+    {
+      id: 'method-4',
+      title: 'Méthode 4 : Formule de Binet (mathématique)',
+      approach: 'Mathématique',
+      code: `function fibonacci(n) {
+  const phi = (1 + Math.sqrt(5)) / 2;
+  const psi = (1 - Math.sqrt(5)) / 2;
+  
+  return Array.from({ length: n }, (_, i) => {
+    return Math.round((Math.pow(phi, i) - Math.pow(psi, i)) / Math.sqrt(5));
+  });
+}
+
+// Exemples
+console.log(fibonacci(8)); // [0, 1, 1, 2, 3, 5, 8, 13]`,
+      explanation: 'Formule mathématique directe (nombre d\'or).',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Mathématiquement intéressant', 'Calcul direct'],
+      cons: ['Erreurs d\'arrondi pour grands n', 'Moins intuitif']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '8',
+      output: '[0, 1, 1, 2, 3, 5, 8, 13]',
+      explanation: 'Les 8 premiers nombres de Fibonacci'
+    },
+    {
+      input: '10',
+      output: '[0, 1, 1, 2, 3, 5, 8, 13, 21, 34]',
+      explanation: 'Les 10 premiers'
+    }
+  ],
+  
+  tips: [
+    'La méthode itérative est la meilleure pour la production',
+    'Récursion naïve est O(2^n) - TRÈS lent, ne JAMAIS utiliser',
+    'Mémoïsation transforme O(2^n) en O(n)',
+    'Suite commence à 0, 1 (parfois 1, 1 selon définition)',
+    'Croissance exponentielle : F(50) = 12,586,269,025'
+  ],
+  
+  tags: ['math', 'fibonacci', 'recursion', 'dynamic-programming'],
+  relatedAlgorithms: ['factorial']
+},
+
+{
+  id: 'are-anagrams',
+  title: '43. Vérifier si deux chaînes sont des anagrammes',
+  level: 'niveau-2',
+  category: 'chaines',
+  difficulty: 'intermédiaire',
+  order: 43,
+  description: 'Vérifier si deux mots sont des anagrammes (mêmes lettres, ordre différent)',
+  explanation: `Deux mots sont anagrammes s'ils contiennent exactement les mêmes lettres avec les mêmes fréquences.
+
+Exemples : "listen" et "silent", "evil" et "vile"`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Tri des caractères',
+      approach: 'Built-in',
+      code: `function areAnagrams(str1, str2) {
+  // Normaliser : minuscules, supprimer espaces
+  const clean1 = str1.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const clean2 = str2.toLowerCase().replace(/[^a-z0-9]/g, '');
+  
+  if (clean1.length !== clean2.length) return false;
+  
+  // Trier et comparer
+  const sorted1 = clean1.split('').sort().join('');
+  const sorted2 = clean2.split('').sort().join('');
+  
+  return sorted1 === sorted2;
+}
+
+// Exemples
+console.log(areAnagrams('listen', 'silent'));     // true
+console.log(areAnagrams('hello', 'world'));       // false
+console.log(areAnagrams('The Eyes', 'They See')); // true`,
+      explanation: 'Trie les caractères de chaque chaîne et compare.',
+      timeComplexity: 'O(n log n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Simple', 'Facile à comprendre', 'Gère espaces/ponctuation'],
+      cons: ['O(n log n) à cause du tri']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Comptage de fréquences (Map)',
+      approach: 'Impérative',
+      code: `function areAnagrams(str1, str2) {
+  const clean1 = str1.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const clean2 = str2.toLowerCase().replace(/[^a-z0-9]/g, '');
+  
+  if (clean1.length !== clean2.length) return false;
+  
+  const freq = new Map();
+  
+  // Compter str1
+  for (let char of clean1) {
+    freq.set(char, (freq.get(char) || 0) + 1);
+  }
+  
+  // Décompter str2
+  for (let char of clean2) {
+    if (!freq.has(char)) return false;
+    freq.set(char, freq.get(char) - 1);
+    if (freq.get(char) === 0) freq.delete(char);
+  }
+  
+  return freq.size === 0;
+}
+
+// Exemples
+console.log(areAnagrams('listen', 'silent')); // true
+console.log(areAnagrams('hello', 'world'));   // false`,
+      explanation: 'Compte les fréquences de chaque caractère et compare.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(k)', // k = nombre de caractères uniques
+      pros: ['Optimal O(n)', 'Pas de tri nécessaire'],
+      cons: ['Plus complexe', 'Utilise Map']
+    },
+    {
+      id: 'method-3',
+      title: 'Méthode 3 : Objet pour compter',
+      approach: 'Impérative',
+      code: `function areAnagrams(str1, str2) {
+  const clean1 = str1.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const clean2 = str2.toLowerCase().replace(/[^a-z0-9]/g, '');
+  
+  if (clean1.length !== clean2.length) return false;
+  
+  const freq = {};
+  
+  for (let char of clean1) {
+    freq[char] = (freq[char] || 0) + 1;
+  }
+  
+  for (let char of clean2) {
+    if (!freq[char]) return false;
+    freq[char]--;
+  }
+  
+  return Object.values(freq).every(count => count === 0);
+}
+
+// Exemples
+console.log(areAnagrams('listen', 'silent')); // true`,
+      explanation: 'Version avec objet au lieu de Map.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(k)',
+      pros: ['O(n)', 'Pas de Map nécessaire'],
+      cons: ['every() à la fin ajoute une passe']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '"listen", "silent"',
+      output: 'true',
+      explanation: 'Mêmes lettres : l, i, s, t, e, n'
+    },
+    {
+      input: '"hello", "world"',
+      output: 'false',
+      explanation: 'Lettres différentes'
+    },
+    {
+      input: '"The Eyes", "They See"',
+      output: 'true',
+      explanation: 'Anagrammes avec espaces (ignorés)'
+    }
+  ],
+  
+  tips: [
+    'Le tri est simple mais O(n log n)',
+    'Comptage de fréquences est O(n) - optimal',
+    'Pensez à normaliser : minuscules, supprimer espaces/ponctuation',
+    'Vérifiez d\'abord les longueurs (early return)',
+    'Map ou objet pour compter les fréquences'
+  ],
+  
+  tags: ['string', 'anagram', 'frequency', 'sorting'],
+  relatedAlgorithms: ['is-palindrome', 'unique-chars']
+},
+
+{
+  id: 'max-subarray-sum-brute',
+  title: '44. Somme maximale de sous-tableau (brute force)',
+  level: 'niveau-2',
+  category: 'tableaux',
+  difficulty: 'intermédiaire',
+  order: 44,
+  description: 'Trouver la somme maximale d\'un sous-tableau contigu (approche naïve)',
+  explanation: `Trouver le sous-tableau contigu avec la plus grande somme.
+
+Exemple : [-2, 1, -3, 4, -1, 2, 1, -5, 4] → [4, -1, 2, 1] = 6
+
+Cette version brute force teste tous les sous-tableaux possibles.`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Deux boucles imbriquées',
+      approach: 'Impérative',
+      code: `function maxSubarraySum(arr) {
+  if (arr.length === 0) return 0;
+  
+  let maxSum = arr[0];
+  
+  for (let i = 0; i < arr.length; i++) {
+    let currentSum = 0;
+    
+    for (let j = i; j < arr.length; j++) {
+      currentSum += arr[j];
+      maxSum = Math.max(maxSum, currentSum);
+    }
+  }
+  
+  return maxSum;
+}
+
+// Exemples
+console.log(maxSubarraySum([-2, 1, -3, 4, -1, 2, 1, -5, 4])); // 6
+console.log(maxSubarraySum([1, 2, 3, 4]));                     // 10
+console.log(maxSubarraySum([-1, -2, -3]));                     // -1`,
+      explanation: 'Teste tous les sous-tableaux possibles : pour chaque début i, teste toutes les fins j.',
+      timeComplexity: 'O(n²)',
+      spaceComplexity: 'O(1)',
+      pros: ['Simple à comprendre', 'Brute force clair', 'Pas de mémoire'],
+      cons: ['Lent O(n²)', 'Pas optimal']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Trois boucles (encore plus naïf)',
+      approach: 'Impérative',
+      code: `function maxSubarraySum(arr) {
+  if (arr.length === 0) return 0;
+  
+  let maxSum = arr[0];
+  
+  for (let i = 0; i < arr.length; i++) {
+    for (let j = i; j < arr.length; j++) {
+      let sum = 0;
+      
+      // Calculer la somme de arr[i] à arr[j]
+      for (let k = i; k <= j; k++) {
+        sum += arr[k];
+      }
+      
+      maxSum = Math.max(maxSum, sum);
+    }
+  }
+  
+  return maxSum;
+}
+
+// Exemples
+console.log(maxSubarraySum([-2, 1, -3, 4, -1, 2, 1, -5, 4])); // 6`,
+      explanation: 'Trois boucles : i (début), j (fin), k (somme). Très inefficace.',
+      timeComplexity: 'O(n³)',
+      spaceComplexity: 'O(1)',
+      pros: ['Très explicite'],
+      cons: ['Extrêmement lent O(n³)', 'Recalcule les sommes']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '[-2, 1, -3, 4, -1, 2, 1, -5, 4]',
+      output: '6',
+      explanation: 'Sous-tableau [4, -1, 2, 1] a la somme maximale'
+    },
+    {
+      input: '[1, 2, 3, 4]',
+      output: '10',
+      explanation: 'Tous positifs, donc tout le tableau'
+    },
+    {
+      input: '[-1, -2, -3]',
+      output: '-1',
+      explanation: 'Tous négatifs, prendre le moins négatif'
+    }
+  ],
+  
+  tips: [
+    'Cette version brute force est O(n²) ou O(n³)',
+    'Algorithme de Kadane résout en O(n) (Niveau 6)',
+    'Deux boucles : i=début, j=fin, cumule la somme',
+    'Trois boucles : recalcule tout à chaque fois (pire)',
+    'Utile pour comprendre le problème avant optimisation'
+  ],
+  
+  tags: ['array', 'subarray', 'brute-force', 'optimization'],
+  relatedAlgorithms: ['kadane-algorithm']
+},
+
+{
+  id: 'min-subarray-sum',
+  title: '45. Somme minimale de sous-tableau',
+  level: 'niveau-2',
+  category: 'tableaux',
+  difficulty: 'intermédiaire',
+  order: 45,
+  description: 'Trouver la somme minimale d\'un sous-tableau contigu',
+  explanation: `Même principe que la somme maximale, mais on cherche le minimum.
+
+Exemple : [3, -4, 2, -3, -1, 7, -5] → [-4, 2, -3, -1] = -6`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Brute force (deux boucles)',
+      approach: 'Impérative',
+      code: `function minSubarraySum(arr) {
+  if (arr.length === 0) return 0;
+  
+  let minSum = arr[0];
+  
+  for (let i = 0; i < arr.length; i++) {
+    let currentSum = 0;
+    
+    for (let j = i; j < arr.length; j++) {
+      currentSum += arr[j];
+      minSum = Math.min(minSum, currentSum);
+    }
+  }
+  
+  return minSum;
+}
+
+// Exemples
+console.log(minSubarraySum([3, -4, 2, -3, -1, 7, -5])); // -6
+console.log(minSubarraySum([1, 2, 3, 4]));              // 1
+console.log(minSubarraySum([-1, -2, -3]));              // -6`,
+      explanation: 'Même logique que maxSubarraySum mais avec Math.min.',
+      timeComplexity: 'O(n²)',
+      spaceComplexity: 'O(1)',
+      pros: ['Simple', 'Même structure que max'],
+      cons: ['O(n²) pas optimal']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Kadane inversé (optimal)',
+      approach: 'Impérative',
+      code: `function minSubarraySum(arr) {
+  if (arr.length === 0) return 0;
+  
+  let minSum = arr[0];
+  let currentMin = arr[0];
+  
+  for (let i = 1; i < arr.length; i++) {
+    currentMin = Math.min(arr[i], currentMin + arr[i]);
+    minSum = Math.min(minSum, currentMin);
+  }
+  
+  return minSum;
+}
+
+// Exemples
+console.log(minSubarraySum([3, -4, 2, -3, -1, 7, -5])); // -6`,
+      explanation: 'Algorithme de Kadane adapté pour le minimum.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(1)',
+      pros: ['Optimal O(n)', 'Une seule passe'],
+      cons: ['Plus complexe à comprendre']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '[3, -4, 2, -3, -1, 7, -5]',
+      output: '-6',
+      explanation: 'Sous-tableau [-4, 2, -3, -1]'
+    },
+    {
+      input: '[1, 2, 3, 4]',
+      output: '1',
+      explanation: 'Tous positifs, prendre le plus petit'
+    }
+  ],
+  
+  tips: [
+    'Même concept que somme max mais inversé',
+    'Math.min au lieu de Math.max',
+    'Kadane inversé est O(n) optimal'
+  ],
+  
+  tags: ['array', 'subarray', 'kadane', 'minimum'],
+  relatedAlgorithms: ['max-subarray-sum-brute']
+},
+
+{
+  id: 'longest-substring-no-repeat',
+  title: '46. Plus longue sous-chaîne sans répétition',
+  level: 'niveau-2',
+  category: 'chaines',
+  difficulty: 'intermédiaire',
+  order: 46,
+  description: 'Trouver la longueur de la plus longue sous-chaîne sans caractères répétés',
+  explanation: `Trouver la plus longue sous-chaîne où tous les caractères sont uniques.
+
+Exemple : "abcabcbb" → "abc" (longueur 3)`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Sliding Window avec Set',
+      approach: 'Impérative',
+      code: `function longestSubstringNoRepeat(str) {
+  let maxLength = 0;
+  let left = 0;
+  const seen = new Set();
+  
+  for (let right = 0; right < str.length; right++) {
+    // Si caractère déjà vu, avancer left
+    while (seen.has(str[right])) {
+      seen.delete(str[left]);
+      left++;
+    }
+    
+    seen.add(str[right]);
+    maxLength = Math.max(maxLength, right - left + 1);
+  }
+  
+  return maxLength;
+}
+
+// Exemples
+console.log(longestSubstringNoRepeat('abcabcbb')); // 3 ('abc')
+console.log(longestSubstringNoRepeat('bbbbb'));    // 1 ('b')
+console.log(longestSubstringNoRepeat('pwwkew'));   // 3 ('wke')`,
+      explanation: 'Fenêtre glissante avec Set pour tracker les caractères vus.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(k)', // k = taille de l'alphabet
+      pros: ['Optimal O(n)', 'Sliding window efficace'],
+      cons: ['Nécessite Set']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Brute force',
+      approach: 'Impérative',
+      code: `function longestSubstringNoRepeat(str) {
+  let maxLength = 0;
+  
+  for (let i = 0; i < str.length; i++) {
+    const seen = new Set();
+    
+    for (let j = i; j < str.length; j++) {
+      if (seen.has(str[j])) {
+        break;
+      }
+      seen.add(str[j]);
+      maxLength = Math.max(maxLength, j - i + 1);
+    }
+  }
+  
+  return maxLength;
+}
+
+// Exemples
+console.log(longestSubstringNoRepeat('abcabcbb')); // 3`,
+      explanation: 'Teste toutes les sous-chaînes possibles.',
+      timeComplexity: 'O(n²)',
+      spaceComplexity: 'O(k)',
+      pros: ['Simple à comprendre'],
+      cons: ['Lent O(n²)']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '"abcabcbb"',
+      output: '3',
+      explanation: 'Sous-chaîne "abc" (ou "bca", "cab")'
+    },
+    {
+      input: '"bbbbb"',
+      output: '1',
+      explanation: 'Un seul caractère unique'
+    },
+    {
+      input: '"pwwkew"',
+      output: '3',
+      explanation: 'Sous-chaîne "wke"'
+    }
+  ],
+  
+  tips: [
+    'Sliding window est la technique optimale O(n)',
+    'Deux pointeurs : left et right',
+    'Set pour tracker les caractères dans la fenêtre',
+    'Quand doublon trouvé, avancer left jusqu\'à l\'éliminer',
+    'Problème classique d\'interview technique'
+  ],
+  
+  tags: ['string', 'sliding-window', 'set', 'substring'],
+  relatedAlgorithms: ['unique-chars', 'longest-word']
+},
+
+{
+  id: 'count-digits',
+  title: '47. Compter les chiffres d\'un nombre',
+  level: 'niveau-2',
+  category: 'nombres',
+  difficulty: 'intermédiaire',
+  order: 47,
+  description: 'Compter le nombre de chiffres dans un nombre',
+  explanation: `Déterminer combien de chiffres contient un nombre.
+
+Exemples : 123 → 3, 9999 → 4, -456 → 3`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Conversion en string',
+      approach: 'Built-in',
+      code: `function countDigits(n) {
+  return Math.abs(n).toString().length;
+}
+
+// Exemples
+console.log(countDigits(123));    // 3
+console.log(countDigits(9999));   // 4
+console.log(countDigits(-456));   // 3
+console.log(countDigits(0));      // 1`,
+      explanation: 'Convertit en string et compte les caractères (abs pour gérer négatifs).',
+      timeComplexity: 'O(log n)', // proportionnel au nombre de chiffres
+      spaceComplexity: 'O(log n)',
+      pros: ['Très simple', 'Une ligne'],
+      cons: ['Conversion en string']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Division par 10',
+      approach: 'Impérative',
+      code: `function countDigits(n) {
+  if (n === 0) return 1;
+  
+  n = Math.abs(n);
+  let count = 0;
+  
+  while (n > 0) {
+    count++;
+    n = Math.floor(n / 10);
+  }
+  
+  return count;
+}
+
+// Exemples
+console.log(countDigits(123));  // 3
+console.log(countDigits(9999)); // 4
+console.log(countDigits(-456)); // 3`,
+      explanation: 'Divise par 10 jusqu\'à 0, compte les itérations.',
+      timeComplexity: 'O(log n)',
+      spaceComplexity: 'O(1)',
+      pros: ['Mathématique', 'Pas de conversion string'],
+      cons: ['Plus verbeux']
+    },
+    {
+      id: 'method-3',
+      title: 'Méthode 3 : Logarithme (mathématique)',
+      approach: 'Mathématique',
+      code: `function countDigits(n) {
+  if (n === 0) return 1;
+  return Math.floor(Math.log10(Math.abs(n))) + 1;
+}
+
+// Exemples
+console.log(countDigits(123));  // 3
+console.log(countDigits(9999)); // 4
+console.log(countDigits(-456)); // 3`,
+      explanation: 'Utilise log10 : nombre de chiffres = floor(log10(n)) + 1.',
+      timeComplexity: 'O(1)',
+      spaceComplexity: 'O(1)',
+      pros: ['O(1) constant !', 'Formule mathématique'],
+      cons: ['Erreurs d\'arrondi possibles', 'Moins intuitif']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '123',
+      output: '3',
+      explanation: '3 chiffres'
+    },
+    {
+      input: '-456',
+      output: '3',
+      explanation: 'Les négatifs comptent sans le signe'
+    },
+    {
+      input: '0',
+      output: '1',
+      explanation: '0 a 1 chiffre'
+    }
+  ],
+  
+  tips: [
+    'Conversion en string est la plus simple',
+    'Math.abs() pour gérer les négatifs',
+    'Log10 est O(1) mais attention aux arrondis',
+    'Cas spécial : 0 a 1 chiffre'
+  ],
+  
+  tags: ['math', 'numbers', 'digits'],
+  relatedAlgorithms: ['reverse-number', 'digit-sum']
+},
+
+{
+  id: 'reverse-number',
+  title: '48. Inverser un nombre',
+  level: 'niveau-2',
+  category: 'nombres',
+  difficulty: 'intermédiaire',
+  order: 48,
+  description: 'Inverser les chiffres d\'un nombre',
+  explanation: `Inverser l'ordre des chiffres d'un nombre.
+
+Exemples : 123 → 321, -456 → -654, 1200 → 21`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : String reverse',
+      approach: 'Built-in',
+      code: `function reverseNumber(n) {
+  const sign = n < 0 ? -1 : 1;
+  const reversed = parseInt(
+    Math.abs(n).toString().split('').reverse().join('')
+  );
+  return sign * reversed;
+}
+
+// Exemples
+console.log(reverseNumber(123));   // 321
+console.log(reverseNumber(-456));  // -654
+console.log(reverseNumber(1200));  // 21`,
+      explanation: 'Convertit en string, inverse, reconvertit en nombre.',
+      timeComplexity: 'O(log n)',
+      spaceComplexity: 'O(log n)',
+      pros: ['Simple', 'Utilise reverse()'],
+      cons: ['Conversion string']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Mathématique (modulo)',
+      approach: 'Impérative',
+      code: `function reverseNumber(n) {
+  const sign = n < 0 ? -1 : 1;
+  n = Math.abs(n);
+  
+  let reversed = 0;
+  
+  while (n > 0) {
+    const digit = n % 10;
+    reversed = reversed * 10 + digit;
+    n = Math.floor(n / 10);
+  }
+  
+  return sign * reversed;
+}
+
+// Exemples
+console.log(reverseNumber(123));   // 321
+console.log(reverseNumber(-456));  // -654
+console.log(reverseNumber(1200));  // 21`,
+      explanation: 'Extrait les chiffres un par un avec modulo, reconstruit inversé.',
+      timeComplexity: 'O(log n)',
+      spaceComplexity: 'O(1)',
+      pros: ['Mathématique pur', 'Pas de string'],
+      cons: ['Plus complexe']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '123',
+      output: '321',
+      explanation: 'Chiffres inversés'
+    },
+    {
+      input: '-456',
+      output: '-654',
+      explanation: 'Garde le signe'
+    },
+    {
+      input: '1200',
+      output: '21',
+      explanation: 'Les zéros de fin disparaissent'
+    }
+  ],
+  
+  tips: [
+    'String reverse est plus simple',
+    'Modulo extrait le dernier chiffre : n % 10',
+    'Division par 10 supprime le dernier chiffre',
+    'Attention : 1200 → 21 (zéros finaux perdus)',
+    'Gérez le signe séparément'
+  ],
+  
+  tags: ['math', 'numbers', 'reverse'],
+  relatedAlgorithms: ['reverse-string', 'is-palindrome']
+},
+
+{
+  id: 'to-binary',
+  title: '49. Convertir un nombre en binaire',
+  level: 'niveau-2',
+  category: 'nombres',
+  difficulty: 'intermédiaire',
+  order: 49,
+  description: 'Convertir un nombre décimal en binaire',
+  explanation: `Convertir un nombre en sa représentation binaire.
+
+Exemples : 5 → "101", 10 → "1010", 255 → "11111111"`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : toString(2)',
+      approach: 'Built-in',
+      code: `function toBinary(n) {
+  return n.toString(2);
+}
+
+// Exemples
+console.log(toBinary(5));   // '101'
+console.log(toBinary(10));  // '1010'
+console.log(toBinary(255)); // '11111111'
+console.log(toBinary(0));   // '0'`,
+      explanation: 'Méthode native toString avec base 2.',
+      timeComplexity: 'O(log n)',
+      spaceComplexity: 'O(log n)',
+      pros: ['Très simple', 'Une ligne', 'Natif'],
+      cons: ['Pas pédagogique']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Division par 2',
+      approach: 'Impérative',
+      code: `function toBinary(n) {
+  if (n === 0) return '0';
+  
+  let binary = '';
+  
+  while (n > 0) {
+    binary = (n % 2) + binary;
+    n = Math.floor(n / 2);
+  }
+  
+  return binary;
+}
+
+// Exemples
+console.log(toBinary(5));   // '101'
+console.log(toBinary(10));  // '1010'
+console.log(toBinary(255)); // '11111111'`,
+      explanation: 'Divise par 2, le reste donne le bit, prépend au résultat.',
+      timeComplexity: 'O(log n)',
+      spaceComplexity: 'O(log n)',
+      pros: ['Pédagogique', 'Montre l\'algorithme'],
+      cons: ['Plus verbeux', 'Concaténation strings']
+    },
+    {
+      id: 'method-3',
+      title: 'Méthode 3 : Bitwise (récursif)',
+      approach: 'Récursive',
+      code: `function toBinary(n) {
+  if (n === 0) return '0';
+  if (n === 1) return '1';
+  return toBinary(Math.floor(n / 2)) + (n % 2);
+}
+
+// Exemples
+console.log(toBinary(5));   // '101'
+console.log(toBinary(10));  // '1010'`,
+      explanation: 'Approche récursive : divise par 2 puis ajoute le bit.',
+      timeComplexity: 'O(log n)',
+      spaceComplexity: 'O(log n)',
+      pros: ['Élégant', 'Récursif'],
+      cons: ['Stack pour petits nombres ok']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '5',
+      output: '"101"',
+      explanation: '5 = 4 + 1 = 2² + 2⁰'
+    },
+    {
+      input: '10',
+      output: '"1010"',
+      explanation: '10 = 8 + 2 = 2³ + 2¹'
+    },
+    {
+      input: '255',
+      output: '"11111111"',
+      explanation: '255 = 2⁸ - 1'
+    }
+  ],
+  
+  tips: [
+    'toString(2) est la méthode la plus simple',
+    'Division par 2 + modulo : algorithme classique',
+    'n % 2 donne le dernier bit',
+    'n / 2 décale vers la droite',
+    'Pour binaire → décimal : parseInt(str, 2)'
+  ],
+  
+  tags: ['math', 'binary', 'conversion'],
+  relatedAlgorithms: ['to-hex', 'count-bits']
+},
+
+{
+  id: 'string-to-number',
+  title: '50. Convertir une chaîne en nombre sans parseInt',
+  level: 'niveau-2',
+  category: 'chaines',
+  difficulty: 'intermédiaire',
+  order: 50,
+  description: 'Convertir une chaîne en nombre sans utiliser parseInt ou Number',
+  explanation: `Implémenter la conversion string → number manuellement.
+
+Exemples : "123" → 123, "-456" → -456, "  789  " → 789`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Parcours + multiplication',
+      approach: 'Impérative',
+      code: `function stringToNumber(str) {
+  str = str.trim();
+  
+  let result = 0;
+  let sign = 1;
+  let i = 0;
+  
+  // Gérer le signe
+  if (str[0] === '-') {
+    sign = -1;
+    i = 1;
+  } else if (str[0] === '+') {
+    i = 1;
+  }
+  
+  // Convertir chaque chiffre
+  for (; i < str.length; i++) {
+    const digit = str.charCodeAt(i) - '0'.charCodeAt(0);
+    
+    // Vérifier si c'est un chiffre
+    if (digit < 0 || digit > 9) break;
+    
+    result = result * 10 + digit;
+  }
+  
+  return sign * result;
+}
+
+// Exemples
+console.log(stringToNumber('123'));      // 123
+console.log(stringToNumber('-456'));     // -456
+console.log(stringToNumber('  789  ')); // 789
+console.log(stringToNumber('42abc'));    // 42`,
+      explanation: 'Parcourt caractère par caractère, multiplie par 10 et ajoute le chiffre.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(1)',
+      pros: ['Algorithme complet', 'Gère signe et espaces'],
+      cons: ['Plus complexe']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : reduce()',
+      approach: 'Fonctionnelle',
+      code: `function stringToNumber(str) {
+  str = str.trim();
+  
+  const sign = str[0] === '-' ? -1 : 1;
+  const start = str[0] === '-' || str[0] === '+' ? 1 : 0;
+  
+  return sign * str.slice(start).split('').reduce((num, char) => {
+    const digit = char.charCodeAt(0) - '0'.charCodeAt(0);
+    return num * 10 + digit;
+  }, 0);
+}
+
+// Exemples
+console.log(stringToNumber('123'));  // 123
+console.log(stringToNumber('-456')); // -456`,
+      explanation: 'Utilise reduce pour accumuler le nombre.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Fonctionnel', 'Concis'],
+      cons: ['Crée un tableau intermédiaire']
+    },
+    {
+      id: 'method-3',
+      title: 'Méthode 3 : Unary + operator',
+      approach: 'Built-in',
+      code: `function stringToNumber(str) {
+  return +str;
+  // Ou : return str * 1;
+  // Ou : return str - 0;
+}
+
+// Exemples
+console.log(stringToNumber('123'));  // 123
+console.log(stringToNumber('-456')); // -456`,
+      explanation: 'Opérateur unaire + force la conversion en nombre.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(1)',
+      pros: ['Très simple', 'Built-in'],
+      cons: ['Triche un peu', 'Pas manuel']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '"123"',
+      output: '123',
+      explanation: 'Conversion simple'
+    },
+    {
+      input: '"-456"',
+      output: '-456',
+      explanation: 'Gère les nombres négatifs'
+    },
+    {
+      input: '"  789  "',
+      output: '789',
+      explanation: 'Ignore les espaces'
+    }
+  ],
+  
+  tips: [
+    'charCodeAt() pour obtenir le code ASCII',
+    '\'0\'.charCodeAt(0) = 48, donc digit = code - 48',
+    'Multipliez par 10 puis ajoutez le nouveau chiffre',
+    'Gérez le signe séparément',
+    'trim() pour supprimer les espaces',
+    'Opérateur unaire + est une astuce JS : +"123" = 123'
+  ],
+  
+  tags: ['string', 'conversion', 'parsing'],
+  relatedAlgorithms: ['count-digits', 'reverse-number']
+},
 ];
