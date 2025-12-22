@@ -12,7 +12,7 @@ interface ProgressData {
 
 interface AlgoStore {
   // État
-  selectedChapter: Chapter | null;
+  // selectedChapter: Chapter | null;
   searchQuery: string;
   selectedDifficulty: string;
   progress: ProgressData;
