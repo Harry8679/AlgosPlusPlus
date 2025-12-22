@@ -3082,5 +3082,934 @@ console.log(isPrime(1000)); // false`,
     
     tags: ['math', 'prime', 'number-theory', 'optimization'],
     relatedAlgorithms: ['generate-n-numbers', 'is-even-odd']
+  },
+  {
+  id: 'second-largest',
+  title: '31. Trouver le deuxième plus grand nombre',
+  level: 'niveau-2',
+  category: 'tableaux',
+  difficulty: 'intermédiaire',
+  order: 31,
+  description: 'Trouver le deuxième plus grand élément d\'un tableau',
+  explanation: `Trouver le deuxième plus grand nombre nécessite de parcourir le tableau en gardant trace des deux plus grandes valeurs.
+
+Attention aux cas limites : doublons, tableaux de moins de 2 éléments.`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Tri + accès à l\'index',
+      approach: 'Built-in',
+      code: `function secondLargest(arr) {
+  if (arr.length < 2) return undefined;
+  
+  const sorted = [...new Set(arr)].sort((a, b) => b - a);
+  return sorted[1];
+}
+
+// Exemples
+console.log(secondLargest([5, 2, 8, 1, 9])); // 8
+console.log(secondLargest([10, 10, 5, 3]));  // 5`,
+      explanation: 'Supprime les doublons avec Set, trie par ordre décroissant, prend le deuxième.',
+      timeComplexity: 'O(n log n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Simple', 'Gère les doublons automatiquement'],
+      cons: ['Moins performant (O(n log n))', 'Crée des copies']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Deux variables (une passe)',
+      approach: 'Impérative',
+      code: `function secondLargest(arr) {
+  if (arr.length < 2) return undefined;
+  
+  let first = -Infinity;
+  let second = -Infinity;
+  
+  for (let num of arr) {
+    if (num > first) {
+      second = first;
+      first = num;
+    } else if (num > second && num < first) {
+      second = num;
+    }
   }
+  
+  return second === -Infinity ? undefined : second;
+}
+
+// Exemples
+console.log(secondLargest([5, 2, 8, 1, 9])); // 8
+console.log(secondLargest([10, 10, 5, 3]));  // 5`,
+      explanation: 'Maintient deux variables : le maximum et le deuxième maximum.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(1)',
+      pros: ['Optimal O(n)', 'Une seule passe', 'Économe en mémoire'],
+      cons: ['Plus complexe', 'Gestion des cas limites']
+    },
+    {
+      id: 'method-3',
+      title: 'Méthode 3 : Suppression du max + recherche',
+      approach: 'Impérative',
+      code: `function secondLargest(arr) {
+  if (arr.length < 2) return undefined;
+  
+  const unique = [...new Set(arr)];
+  if (unique.length < 2) return undefined;
+  
+  const max = Math.max(...unique);
+  const remaining = unique.filter(n => n !== max);
+  return Math.max(...remaining);
+}
+
+// Exemples
+console.log(secondLargest([5, 2, 8, 1, 9])); // 8
+console.log(secondLargest([10, 10, 5, 3]));  // 5`,
+      explanation: 'Trouve le max, le retire, puis trouve le max du reste.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Facile à comprendre', 'Logique claire'],
+      cons: ['Deux passes', 'Crée des tableaux intermédiaires']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '[5, 2, 8, 1, 9]',
+      output: '8',
+      explanation: '9 est le plus grand, 8 est le deuxième'
+    },
+    {
+      input: '[10, 10, 5, 3]',
+      output: '5',
+      explanation: 'Ignore les doublons de 10'
+    },
+    {
+      input: '[5]',
+      output: 'undefined',
+      explanation: 'Pas assez d\'éléments'
+    }
+  ],
+  
+  tips: [
+    'La méthode à deux variables est la plus efficace O(n)',
+    'Attention aux doublons : [10, 10, 5] → le 2e est 5, pas 10',
+    'Gérez les cas : tableau vide, 1 élément, tous identiques',
+    'Utilisez -Infinity pour initialiser (gère les négatifs)'
+  ],
+  
+  tags: ['array', 'max', 'sorting', 'optimization'],
+  relatedAlgorithms: ['find-max', 'find-min', 'n-largest']
+},
+
+{
+  id: 'n-largest',
+  title: '32. Trouver les N plus grands éléments',
+  level: 'niveau-2',
+  category: 'tableaux',
+  difficulty: 'intermédiaire',
+  order: 32,
+  description: 'Retourner les N plus grands éléments d\'un tableau',
+  explanation: `Trouver les N éléments les plus grands d'un tableau, triés par ordre décroissant.`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Tri + slice',
+      approach: 'Built-in',
+      code: `function nLargest(arr, n) {
+  return [...new Set(arr)]
+    .sort((a, b) => b - a)
+    .slice(0, n);
+}
+
+// Exemples
+console.log(nLargest([5, 2, 8, 1, 9, 3], 3)); // [9, 8, 5]
+console.log(nLargest([10, 10, 5, 3, 7], 2));  // [10, 7]`,
+      explanation: 'Supprime doublons, trie décroissant, prend les N premiers.',
+      timeComplexity: 'O(n log n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Simple', 'Une ligne', 'Lisible'],
+      cons: ['Tri complet inutile si n << arr.length']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Boucle avec tableau de taille N',
+      approach: 'Impérative',
+      code: `function nLargest(arr, n) {
+  const result = [];
+  const unique = [...new Set(arr)];
+  
+  for (let i = 0; i < n && i < unique.length; i++) {
+    const max = Math.max(...unique);
+    result.push(max);
+    const index = unique.indexOf(max);
+    unique.splice(index, 1);
+  }
+  
+  return result;
+}
+
+// Exemples
+console.log(nLargest([5, 2, 8, 1, 9, 3], 3)); // [9, 8, 5]`,
+      explanation: 'Trouve le max, l\'ajoute au résultat, le retire, répète N fois.',
+      timeComplexity: 'O(n²)',
+      spaceComplexity: 'O(n)',
+      pros: ['Logique claire', 'Arrête après N éléments'],
+      cons: ['Moins performant O(n²)', 'Modifications du tableau']
+    }
+  ],
+  
+  examples: [
+    {
+      input: 'arr = [5, 2, 8, 1, 9, 3], n = 3',
+      output: '[9, 8, 5]',
+      explanation: 'Les 3 plus grands nombres'
+    },
+    {
+      input: 'arr = [10, 10, 5, 3, 7], n = 2',
+      output: '[10, 7]',
+      explanation: 'Ignore les doublons'
+    }
+  ],
+  
+  tips: [
+    'Pour n petit, le tri est acceptable',
+    'Pour n très petit et tableau très grand, utilisez une heap',
+    'Set élimine automatiquement les doublons'
+  ],
+  
+  tags: ['array', 'sorting', 'top-n'],
+  relatedAlgorithms: ['second-largest', 'n-smallest']
+},
+
+{
+  id: 'n-smallest',
+  title: '33. Trouver les N plus petits éléments',
+  level: 'niveau-2',
+  category: 'tableaux',
+  difficulty: 'intermédiaire',
+  order: 33,
+  description: 'Retourner les N plus petits éléments d\'un tableau',
+  explanation: `Trouver les N éléments les plus petits, triés par ordre croissant.`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Tri + slice',
+      approach: 'Built-in',
+      code: `function nSmallest(arr, n) {
+  return [...new Set(arr)]
+    .sort((a, b) => a - b)
+    .slice(0, n);
+}
+
+// Exemples
+console.log(nSmallest([5, 2, 8, 1, 9, 3], 3)); // [1, 2, 3]
+console.log(nSmallest([10, 10, 5, 3, 7], 2));  // [3, 5]`,
+      explanation: 'Trie croissant et prend les N premiers.',
+      timeComplexity: 'O(n log n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Simple', 'Lisible'],
+      cons: ['Tri complet pas optimal']
+    }
+  ],
+  
+  examples: [
+    {
+      input: 'arr = [5, 2, 8, 1, 9, 3], n = 3',
+      output: '[1, 2, 3]',
+      explanation: 'Les 3 plus petits nombres'
+    }
+  ],
+  
+  tips: [
+    'Même logique que nLargest mais tri croissant',
+    'Utilisez slice(0, n) pour limiter le résultat'
+  ],
+  
+  tags: ['array', 'sorting', 'top-n'],
+  relatedAlgorithms: ['n-largest', 'find-min']
+},
+
+{
+  id: 'unique-chars',
+  title: '34. Vérifier si tous les caractères sont uniques',
+  level: 'niveau-2',
+  category: 'chaines',
+  difficulty: 'intermédiaire',
+  order: 34,
+  description: 'Vérifier si une chaîne contient uniquement des caractères uniques',
+  explanation: `Déterminer si tous les caractères d'une chaîne sont différents (aucun doublon).`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Set',
+      approach: 'Built-in',
+      code: `function hasUniqueChars(str) {
+  return new Set(str).size === str.length;
+}
+
+// Exemples
+console.log(hasUniqueChars('abcdef')); // true
+console.log(hasUniqueChars('hello'));  // false (l répété)
+console.log(hasUniqueChars(''));       // true`,
+      explanation: 'Set ne garde que les valeurs uniques. Si sa taille = longueur de la chaîne, tous uniques.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Très simple', 'Une ligne', 'Performant'],
+      cons: ['Utilise O(n) mémoire']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Boucle avec objet',
+      approach: 'Impérative',
+      code: `function hasUniqueChars(str) {
+  const seen = {};
+  
+  for (let char of str) {
+    if (seen[char]) {
+      return false;
+    }
+    seen[char] = true;
+  }
+  
+  return true;
+}
+
+// Exemples
+console.log(hasUniqueChars('abcdef')); // true
+console.log(hasUniqueChars('hello'));  // false`,
+      explanation: 'Utilise un objet pour suivre les caractères vus. Early return si doublon.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Early return possible', 'Explicite'],
+      cons: ['Plus verbeux']
+    },
+    {
+      id: 'method-3',
+      title: 'Méthode 3 : indexOf vs lastIndexOf',
+      approach: 'Built-in',
+      code: `function hasUniqueChars(str) {
+  return str.split('').every((char, index) => 
+    str.indexOf(char) === str.lastIndexOf(char)
+  );
+}
+
+// Exemples
+console.log(hasUniqueChars('abcdef')); // true
+console.log(hasUniqueChars('hello'));  // false`,
+      explanation: 'Pour chaque caractère, vérifie que indexOf = lastIndexOf (apparaît une seule fois).',
+      timeComplexity: 'O(n²)',
+      spaceComplexity: 'O(n)',
+      pros: ['Astucieux', 'Pas de structure auxiliaire'],
+      cons: ['O(n²) moins performant']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '"abcdef"',
+      output: 'true',
+      explanation: 'Tous les caractères sont différents'
+    },
+    {
+      input: '"hello"',
+      output: 'false',
+      explanation: 'Le "l" apparaît deux fois'
+    },
+    {
+      input: '""',
+      output: 'true',
+      explanation: 'Chaîne vide = tous uniques'
+    }
+  ],
+  
+  tips: [
+    'Set est la solution la plus simple et performante',
+    'Pour optimiser la mémoire : utilisez un objet avec early return',
+    'Sensible à la casse : "A" et "a" sont différents'
+  ],
+  
+  tags: ['string', 'unique', 'set', 'validation'],
+  relatedAlgorithms: ['remove-duplicates', 'first-non-repeating']
+},
+
+{
+  id: 'first-non-repeating',
+  title: '35. Trouver le premier caractère non répété',
+  level: 'niveau-2',
+  category: 'chaines',
+  difficulty: 'intermédiaire',
+  order: 35,
+  description: 'Trouver le premier caractère qui n\'apparaît qu\'une fois',
+  explanation: `Trouver le premier caractère dans une chaîne qui n'a qu'une seule occurrence.`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Map pour compter',
+      approach: 'Impérative',
+      code: `function firstNonRepeating(str) {
+  const counts = new Map();
+  
+  // Compter les occurrences
+  for (let char of str) {
+    counts.set(char, (counts.get(char) || 0) + 1);
+  }
+  
+  // Trouver le premier avec count = 1
+  for (let char of str) {
+    if (counts.get(char) === 1) {
+      return char;
+    }
+  }
+  
+  return null;
+}
+
+// Exemples
+console.log(firstNonRepeating('swiss'));      // 'w'
+console.log(firstNonRepeating('aabbcc'));     // null
+console.log(firstNonRepeating('javascript')); // 'j'`,
+      explanation: 'Deux passes : compte puis trouve le premier avec count = 1.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Optimal O(n)', 'Clair', 'Utilise Map'],
+      cons: ['Deux passes du tableau']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : indexOf vs lastIndexOf',
+      approach: 'Built-in',
+      code: `function firstNonRepeating(str) {
+  for (let i = 0; i < str.length; i++) {
+    if (str.indexOf(str[i]) === str.lastIndexOf(str[i])) {
+      return str[i];
+    }
+  }
+  return null;
+}
+
+// Exemples
+console.log(firstNonRepeating('swiss'));      // 'w'
+console.log(firstNonRepeating('aabbcc'));     // null`,
+      explanation: 'Pour chaque caractère, vérifie si indexOf = lastIndexOf.',
+      timeComplexity: 'O(n²)',
+      spaceComplexity: 'O(1)',
+      pros: ['Simple', 'Pas de structure auxiliaire'],
+      cons: ['O(n²) moins performant']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '"swiss"',
+      output: '"w"',
+      explanation: 's' apparaît 3 fois, 'w' et 'i' 1 fois, 'w' est le premier
+    },
+    {
+      input: '"aabbcc"',
+      output: 'null',
+      explanation: 'Tous les caractères sont répétés'
+    }
+  ],
+  
+  tips: [
+    'Map est optimal pour compter les occurrences',
+    'Conservez l\'ordre d\'apparition avec deux passes',
+    'indexOf/lastIndexOf est O(n²) mais ne nécessite pas de mémoire'
+  ],
+  
+  tags: ['string', 'frequency', 'map', 'optimization'],
+  relatedAlgorithms: ['unique-chars', 'count-occurrences']
+},
+
+{
+  id: 'remove-falsy',
+  title: '36. Supprimer les valeurs falsy d\'un tableau',
+  level: 'niveau-2',
+  category: 'tableaux',
+  difficulty: 'intermédiaire',
+  order: 36,
+  description: 'Retirer toutes les valeurs falsy (false, 0, "", null, undefined, NaN)',
+  explanation: `En JavaScript, les valeurs falsy sont : false, 0, "", null, undefined, NaN.
+
+Filtrer un tableau pour ne garder que les valeurs truthy.`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : filter avec Boolean',
+      approach: 'Fonctionnelle',
+      code: `function removeFalsy(arr) {
+  return arr.filter(Boolean);
+}
+
+// Exemples
+console.log(removeFalsy([0, 1, false, 2, '', 3, null, undefined, NaN]));
+// [1, 2, 3]
+
+console.log(removeFalsy([0, '0', false, 'false']));
+// ['0', 'false'] - strings non vides sont truthy`,
+      explanation: 'Boolean est une fonction qui convertit en booléen. filter(Boolean) garde les truthy.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Très concis', 'Une ligne', 'Idiomatique'],
+      cons: ['Peut être surprenant pour débutants']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : filter explicite',
+      approach: 'Fonctionnelle',
+      code: `function removeFalsy(arr) {
+  return arr.filter(item => item);
+}
+
+// Ou plus explicite :
+function removeFalsy(arr) {
+  return arr.filter(item => !!item);
+}
+
+// Exemples
+console.log(removeFalsy([0, 1, false, 2, '', 3])); // [1, 2, 3]`,
+      explanation: 'Filtre avec une condition truthy explicite.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Clair', 'Explicite'],
+      cons: ['Légèrement plus verbeux que Boolean']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '[0, 1, false, 2, "", 3, null, undefined, NaN]',
+      output: '[1, 2, 3]',
+      explanation: 'Seules les valeurs truthy sont gardées'
+    },
+    {
+      input: '[0, "0", false, "false"]',
+      output: '["0", "false"]',
+      explanation: 'Les strings non vides sont truthy'
+    }
+  ],
+  
+  tips: [
+    'filter(Boolean) est la méthode standard en JavaScript',
+    'Attention : "0" et "false" (strings) sont truthy !',
+    'Les valeurs falsy : false, 0, "", null, undefined, NaN',
+    'Double négation !! convertit en booléen : !!0 = false, !!"text" = true'
+  ],
+  
+  tags: ['array', 'filter', 'falsy', 'truthy'],
+  relatedAlgorithms: ['remove-element', 'remove-duplicates']
+},
+
+{
+  id: 'flatten-array',
+  title: '37. Aplatir un tableau (1 niveau)',
+  level: 'niveau-2',
+  category: 'tableaux',
+  difficulty: 'intermédiaire',
+  order: 37,
+  description: 'Aplatir un tableau d\'un niveau [[1, 2], [3, 4]] → [1, 2, 3, 4]',
+  explanation: `Aplatir (flatten) un tableau signifie supprimer un niveau d'imbrication.`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : flat()',
+      approach: 'Built-in',
+      code: `function flattenArray(arr) {
+  return arr.flat();
+}
+
+// Exemples
+console.log(flattenArray([[1, 2], [3, 4]]));        // [1, 2, 3, 4]
+console.log(flattenArray([1, [2, 3], 4, [5]]));     // [1, 2, 3, 4, 5]
+console.log(flattenArray([[1], [2], [3]]));         // [1, 2, 3]`,
+      explanation: 'Méthode native flat() aplatit d\'un niveau par défaut.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Très simple', 'Une ligne', 'Moderne (ES2019)'],
+      cons: ['ES2019+ seulement']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : concat + spread',
+      approach: 'Built-in',
+      code: `function flattenArray(arr) {
+  return [].concat(...arr);
+}
+
+// Exemples
+console.log(flattenArray([[1, 2], [3, 4]]));    // [1, 2, 3, 4]
+console.log(flattenArray([1, [2, 3], 4, [5]])); // [1, 2, 3, 4, 5]`,
+      explanation: 'Spread décompose les sous-tableaux, concat les combine.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Compatible partout', 'Concis'],
+      cons: ['Moins lisible que flat()']
+    },
+    {
+      id: 'method-3',
+      title: 'Méthode 3 : reduce + concat',
+      approach: 'Fonctionnelle',
+      code: `function flattenArray(arr) {
+  return arr.reduce((acc, val) => acc.concat(val), []);
+}
+
+// Exemples
+console.log(flattenArray([[1, 2], [3, 4]])); // [1, 2, 3, 4]`,
+      explanation: 'Utilise reduce pour concaténer chaque sous-tableau.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Fonctionnel', 'Explicite'],
+      cons: ['Plus verbeux']
+    },
+    {
+      id: 'method-4',
+      title: 'Méthode 4 : Boucle for',
+      approach: 'Impérative',
+      code: `function flattenArray(arr) {
+  const result = [];
+  
+  for (let item of arr) {
+    if (Array.isArray(item)) {
+      result.push(...item);
+    } else {
+      result.push(item);
+    }
+  }
+  
+  return result;
+}
+
+// Exemples
+console.log(flattenArray([[1, 2], [3, 4]])); // [1, 2, 3, 4]`,
+      explanation: 'Parcourt et décompose chaque sous-tableau.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Contrôle total', 'Gère les éléments non-tableaux'],
+      cons: ['Verbeux']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '[[1, 2], [3, 4]]',
+      output: '[1, 2, 3, 4]',
+      explanation: 'Aplatit un niveau'
+    },
+    {
+      input: '[1, [2, 3], 4, [5]]',
+      output: '[1, 2, 3, 4, 5]',
+      explanation: 'Gère les éléments mélangés'
+    }
+  ],
+  
+  tips: [
+    'flat() est la méthode moderne (ES2019)',
+    'Pour aplatir complètement : flat(Infinity)',
+    'concat + spread est une bonne alternative pré-ES2019',
+    'Array.isArray() vérifie si c\'est un tableau'
+  ],
+  
+  tags: ['array', 'flatten', 'nested'],
+  relatedAlgorithms: ['merge-arrays']
+},
+
+{
+  id: 'chunk-array',
+  title: '38. Diviser un tableau en morceaux',
+  level: 'niveau-2',
+  category: 'tableaux',
+  difficulty: 'intermédiaire',
+  order: 38,
+  description: 'Diviser un tableau en sous-tableaux de taille n',
+  explanation: `Découper un tableau en morceaux (chunks) de taille fixe.
+
+Exemple : [1, 2, 3, 4, 5], size=2 → [[1, 2], [3, 4], [5]]`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Boucle for + slice',
+      approach: 'Impérative',
+      code: `function chunkArray(arr, size) {
+  const result = [];
+  
+  for (let i = 0; i < arr.length; i += size) {
+    result.push(arr.slice(i, i + size));
+  }
+  
+  return result;
+}
+
+// Exemples
+console.log(chunkArray([1, 2, 3, 4, 5], 2));
+// [[1, 2], [3, 4], [5]]
+
+console.log(chunkArray([1, 2, 3, 4, 5, 6], 3));
+// [[1, 2, 3], [4, 5, 6]]`,
+      explanation: 'Parcourt par pas de size et découpe avec slice.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Simple', 'Clair', 'Performant'],
+      cons: ['Un peu verbeux']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Récursion',
+      approach: 'Récursive',
+      code: `function chunkArray(arr, size) {
+  if (arr.length === 0) return [];
+  
+  return [
+    arr.slice(0, size),
+    ...chunkArray(arr.slice(size), size)
+  ];
+}
+
+// Exemples
+console.log(chunkArray([1, 2, 3, 4, 5], 2));
+// [[1, 2], [3, 4], [5]]`,
+      explanation: 'Prend les size premiers, puis récurse sur le reste.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Élégant', 'Fonctionnel'],
+      cons: ['Stack overflow possible sur grands tableaux']
+    }
+  ],
+  
+  examples: [
+    {
+      input: 'arr = [1, 2, 3, 4, 5], size = 2',
+      output: '[[1, 2], [3, 4], [5]]',
+      explanation: 'Morceaux de 2, dernier incomplet'
+    },
+    {
+      input: 'arr = [1, 2, 3, 4, 5, 6], size = 3',
+      output: '[[1, 2, 3], [4, 5, 6]]',
+      explanation: 'Morceaux de 3'
+    }
+  ],
+  
+  tips: [
+    'La boucle for avec slice est la plus simple',
+    'Le dernier chunk peut être plus petit si longueur non divisible',
+    'Vérifiez que size > 0',
+    'Utile pour pagination, traitement par lots'
+  ],
+  
+  tags: ['array', 'chunk', 'split'],
+  relatedAlgorithms: ['flatten-array']
+},
+
+{
+  id: 'array-difference-symmetric',
+  title: '39. Différence symétrique entre deux tableaux',
+  level: 'niveau-2',
+  category: 'tableaux',
+  difficulty: 'intermédiaire',
+  order: 39,
+  description: 'Éléments présents dans l\'un OU l\'autre mais pas dans les deux',
+  explanation: `La différence symétrique retourne les éléments uniques à chaque tableau.
+
+A △ B = (A - B) ∪ (B - A)`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Filter + includes (deux directions)',
+      approach: 'Fonctionnelle',
+      code: `function symmetricDifference(arr1, arr2) {
+  const diff1 = arr1.filter(item => !arr2.includes(item));
+  const diff2 = arr2.filter(item => !arr1.includes(item));
+  return [...diff1, ...diff2];
+}
+
+// Exemples
+console.log(symmetricDifference([1, 2, 3], [2, 3, 4, 5]));
+// [1, 4, 5]`,
+      explanation: 'Trouve les éléments de arr1 pas dans arr2, et vice versa.',
+      timeComplexity: 'O(n * m)',
+      spaceComplexity: 'O(n + m)',
+      pros: ['Facile à comprendre', 'Deux filtres séparés'],
+      cons: ['O(n*m) pas optimal']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Set pour optimiser',
+      approach: 'Built-in',
+      code: `function symmetricDifference(arr1, arr2) {
+  const set1 = new Set(arr1);
+  const set2 = new Set(arr2);
+  
+  const diff1 = arr1.filter(item => !set2.has(item));
+  const diff2 = arr2.filter(item => !set1.has(item));
+  
+  return [...new Set([...diff1, ...diff2])];
+}
+
+// Exemples
+console.log(symmetricDifference([1, 2, 3], [2, 3, 4, 5]));
+// [1, 4, 5]`,
+      explanation: 'Utilise Set pour lookup O(1), élimine les doublons finaux.',
+      timeComplexity: 'O(n + m)',
+      spaceComplexity: 'O(n + m)',
+      pros: ['Performant O(n+m)', 'Pas de doublons'],
+      cons: ['Plus complexe']
+    }
+  ],
+  
+  examples: [
+    {
+      input: 'arr1 = [1, 2, 3], arr2 = [2, 3, 4, 5]',
+      output: '[1, 4, 5]',
+      explanation: '1 uniquement dans arr1, 4 et 5 uniquement dans arr2'
+    }
+  ],
+  
+  tips: [
+    'Différence symétrique = (A-B) + (B-A)',
+    'Set améliore drastiquement les performances',
+    'Résultat sans doublons en utilisant Set final'
+  ],
+  
+  tags: ['array', 'set', 'difference', 'symmetric'],
+  relatedAlgorithms: ['array-difference', 'array-intersection']
+},
+
+{
+  id: 'group-by',
+  title: '40. Grouper les éléments par propriété',
+  level: 'niveau-2',
+  category: 'tableaux',
+  difficulty: 'intermédiaire',
+  order: 40,
+  description: 'Grouper un tableau d\'objets selon une clé',
+  explanation: `Regrouper les éléments d'un tableau selon une propriété commune.
+
+Exemple : grouper des personnes par âge, des produits par catégorie, etc.`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : reduce avec objet',
+      approach: 'Fonctionnelle',
+      code: `function groupBy(arr, key) {
+  return arr.reduce((groups, item) => {
+    const groupKey = item[key];
+    if (!groups[groupKey]) {
+      groups[groupKey] = [];
+    }
+    groups[groupKey].push(item);
+    return groups;
+  }, {});
+}
+
+// Exemple
+const people = [
+  { name: 'Alice', age: 25 },
+  { name: 'Bob', age: 30 },
+  { name: 'Charlie', age: 25 }
+];
+
+console.log(groupBy(people, 'age'));
+/*
+{
+  25: [{ name: 'Alice', age: 25 }, { name: 'Charlie', age: 25 }],
+  30: [{ name: 'Bob', age: 30 }]
+}
+*/`,
+      explanation: 'Utilise reduce pour construire un objet avec des clés de groupe.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Standard', 'Performant', 'Fonctionnel'],
+      cons: ['Un peu verbeux']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Boucle for',
+      approach: 'Impérative',
+      code: `function groupBy(arr, key) {
+  const groups = {};
+  
+  for (let item of arr) {
+    const groupKey = item[key];
+    if (!groups[groupKey]) {
+      groups[groupKey] = [];
+    }
+    groups[groupKey].push(item);
+  }
+  
+  return groups;
+}
+
+// Exemple
+const people = [
+  { name: 'Alice', age: 25 },
+  { name: 'Bob', age: 30 }
+];
+
+console.log(groupBy(people, 'age'));`,
+      explanation: 'Boucle explicite pour remplir l\'objet de groupes.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Très clair', 'Facile à comprendre'],
+      cons: ['Plus verbeux que reduce']
+    },
+    {
+      id: 'method-3',
+      title: 'Méthode 3 : Map pour grouper',
+      approach: 'Built-in',
+      code: `function groupBy(arr, key) {
+  const groups = new Map();
+  
+  for (let item of arr) {
+    const groupKey = item[key];
+    if (!groups.has(groupKey)) {
+      groups.set(groupKey, []);
+    }
+    groups.get(groupKey).push(item);
+  }
+  
+  return Object.fromEntries(groups);
+}
+
+// Exemple
+const people = [
+  { name: 'Alice', age: 25 },
+  { name: 'Bob', age: 30 }
+];
+
+console.log(groupBy(people, 'age'));`,
+      explanation: 'Utilise Map puis convertit en objet.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Map gère mieux les clés non-string'],
+      cons: ['Conversion finale en objet']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '[{name: "Alice", age: 25}, {name: "Bob", age: 30}, {name: "Charlie", age: 25}]',
+      output: '{25: [{name: "Alice", age: 25}, {name: "Charlie", age: 25}], 30: [{name: "Bob", age: 30}]}',
+      explanation: 'Groupés par âge'
+    }
+  ],
+  
+  tips: [
+    'reduce est la méthode standard pour grouper',
+    'Vérifiez toujours si la clé existe avant de push',
+    'Map est meilleur si les clés ne sont pas des strings',
+    'Utile pour agrégation, reporting, data processing'
+  ],
+  
+  tags: ['array', 'object', 'grouping', 'reduce'],
+  relatedAlgorithms: ['count-occurrences']
+},
 ];
