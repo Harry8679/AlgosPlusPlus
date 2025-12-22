@@ -1,12 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import HomePage from './pages/HomePage';
-import ChapterPage from './pages/ChapterPage';
+import LevelPage from './pages/LevelPage';
 import AlgorithmPage from './pages/AlgorithmPage';
-// import Layout from '@/components/Layout';
-// import HomePage from '@/pages/HomePage';
-// import ChapterPage from '@/pages/ChapterPage';
-// import AlgorithmPage from '@/pages/AlgorithmPage';
 
 function App() {
   return (
@@ -14,7 +10,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage />} />
-          <Route path="/chapter/:chapterId" element={<ChapterPage />} />
+          <Route path="/level/:levelId" element={<LevelPage />} />
           <Route path="/algorithm/:algoId" element={<AlgorithmPage />} />
         </Route>
       </Routes>
