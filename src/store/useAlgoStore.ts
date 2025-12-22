@@ -43,7 +43,7 @@ export const useAlgoStore = create<AlgoStore>()(
       },
 
       // Actions
-      setSelectedChapter: (chapter) => set({ selectedChapter: chapter }),
+      // setSelectedChapter: (chapter) => set({ selectedChapter: chapter }),
       
       setSearchQuery: (query) => set({ searchQuery: query }),
       
