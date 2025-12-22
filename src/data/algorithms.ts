@@ -1917,5 +1917,723 @@ console.log(countVowels('Hello World')); // 3`,
     
     tags: ['string', 'vowels', 'count', 'regex'],
     relatedAlgorithms: ['count-words']
+  },
+  {
+    id: 'capitalize-words',
+    title: '21. Mettre en majuscule la première lettre de chaque mot',
+    level: 'niveau-1',
+    category: 'chaines',
+    difficulty: 'débutant',
+    order: 21,
+    description: 'Transformer "hello world" en "Hello World"',
+    explanation: `Met en majuscule la première lettre de chaque mot (title case).
+
+Aussi appelé "capitalize" ou "title case", c'est utile pour les titres, noms, etc.`,
+    
+    solutions: [
+      {
+        id: 'method-1',
+        title: 'Méthode 1 : split + map + join',
+        approach: 'Fonctionnelle',
+        code: `function capitalizeWords(str) {
+  return str
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+}
+
+// Exemples
+console.log(capitalizeWords('hello world')); // 'Hello World'
+console.log(capitalizeWords('javaScript is AWESOME')); // 'Javascript Is Awesome'`,
+        explanation: 'Découpe en mots, capitalise chaque mot (première lettre en majuscule, reste en minuscule), puis rejoint.',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(n)',
+        pros: ['Clair', 'Fonctionnel', 'Prévisible'],
+        cons: ['Crée plusieurs tableaux intermédiaires']
+      },
+      {
+        id: 'method-2',
+        title: 'Méthode 2 : Regex + replace()',
+        approach: 'Regex',
+        code: `function capitalizeWords(str) {
+  return str.replace(/\\b\\w/g, char => char.toUpperCase());
+}
+
+// Exemples
+console.log(capitalizeWords('hello world')); // 'Hello World'
+console.log(capitalizeWords('javaScript is awesome')); // 'JavaScript Is Awesome'`,
+        explanation: 'Remplace chaque première lettre de mot (\\b = word boundary) par sa majuscule.',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(n)',
+        pros: ['Très concis', 'Élégant', 'Une ligne'],
+        cons: ['Regex moins évident', 'Ne force pas le reste en minuscule']
+      },
+      {
+        id: 'method-3',
+        title: 'Méthode 3 : Boucle for avec flag',
+        approach: 'Impérative',
+        code: `function capitalizeWords(str) {
+  let result = '';
+  let capitalizeNext = true;
+  
+  for (let i = 0; i < str.length; i++) {
+    const char = str[i];
+    
+    if (char === ' ') {
+      result += char;
+      capitalizeNext = true;
+    } else {
+      result += capitalizeNext ? char.toUpperCase() : char.toLowerCase();
+      capitalizeNext = false;
+    }
+  }
+  
+  return result;
+}
+
+// Exemples
+console.log(capitalizeWords('hello world')); // 'Hello World'`,
+        explanation: 'Parcourt caractère par caractère, utilise un flag pour savoir quand capitaliser.',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(n)',
+        pros: ['Contrôle total', 'Gère bien les cas spéciaux'],
+        cons: ['Verbeux', 'Concaténation de strings coûteuse']
+      }
+    ],
+    
+    examples: [
+      {
+        input: '"hello world"',
+        output: '"Hello World"',
+        explanation: 'Chaque mot commence par une majuscule'
+      },
+      {
+        input: '"javascript is awesome"',
+        output: '"Javascript Is Awesome"',
+        explanation: 'Fonctionne avec plusieurs mots'
+      },
+      {
+        input: '"a"',
+        output: '"A"',
+        explanation: 'Un seul caractère'
+      }
+    ],
+    
+    tips: [
+      'split-map-join est plus lisible',
+      'Regex est plus court mais moins intuitif',
+      '\\b détecte les limites de mots (word boundaries)',
+      'Pour capitaliser uniquement la première lettre de TOUTE la phrase : str[0].toUpperCase() + str.slice(1)'
+    ],
+    
+    tags: ['string', 'capitalize', 'title-case', 'regex']
+  },
+
+  {
+    id: 'longest-word',
+    title: '22. Trouver le mot le plus long d\'une phrase',
+    level: 'niveau-1',
+    category: 'chaines',
+    difficulty: 'débutant',
+    order: 22,
+    description: 'Retourner le mot ayant le plus de caractères',
+    explanation: `Découpe la phrase en mots et trouve celui avec la plus grande longueur.
+
+En cas d'égalité, retourne généralement le premier trouvé.`,
+    
+    solutions: [
+      {
+        id: 'method-1',
+        title: 'Méthode 1 : reduce()',
+        approach: 'Fonctionnelle',
+        code: `function longestWord(str) {
+  return str.split(' ').reduce((longest, word) => 
+    word.length > longest.length ? word : longest
+  , '');
+}
+
+// Exemples
+console.log(longestWord('The quick brown fox')); // 'quick' (ou 'brown')
+console.log(longestWord('JavaScript is awesome')); // 'JavaScript'`,
+        explanation: 'Compare chaque mot avec le plus long trouvé jusqu\'à présent.',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(n)',
+        pros: ['Fonctionnel', 'Concis', 'Élégant'],
+        cons: ['Moins lisible pour débutants']
+      },
+      {
+        id: 'method-2',
+        title: 'Méthode 2 : Boucle for',
+        approach: 'Impérative',
+        code: `function longestWord(str) {
+  const words = str.split(' ');
+  let longest = '';
+  
+  for (let word of words) {
+    if (word.length > longest.length) {
+      longest = word;
+    }
+  }
+  
+  return longest;
+}
+
+// Exemples
+console.log(longestWord('The quick brown fox')); // 'quick'
+console.log(longestWord('JavaScript is awesome')); // 'JavaScript'`,
+        explanation: 'Parcourt tous les mots et garde le plus long.',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(n)',
+        pros: ['Simple', 'Clair', 'Facile à débugger'],
+        cons: ['Plus verbeux']
+      },
+      {
+        id: 'method-3',
+        title: 'Méthode 3 : sort() par longueur',
+        approach: 'Built-in',
+        code: `function longestWord(str) {
+  const words = str.split(' ');
+  return words.sort((a, b) => b.length - a.length)[0];
+}
+
+// Exemples
+console.log(longestWord('The quick brown fox')); // 'quick' ou 'brown'
+console.log(longestWord('JavaScript is awesome')); // 'JavaScript'`,
+        explanation: 'Trie les mots par longueur décroissante et prend le premier.',
+        timeComplexity: 'O(n log n)',
+        spaceComplexity: 'O(n)',
+        pros: ['Concis'],
+        cons: ['Moins performant (tri O(n log n))', 'Modifie le tableau']
+      }
+    ],
+    
+    examples: [
+      {
+        input: '"The quick brown fox"',
+        output: '"quick" (ou "brown")',
+        explanation: 'Les deux font 5 caractères, retourne le premier'
+      },
+      {
+        input: '"JavaScript is awesome"',
+        output: '"JavaScript"',
+        explanation: '10 caractères'
+      }
+    ],
+    
+    tips: [
+      'Si égalité, retourne le premier trouvé (ordre d\'apparition)',
+      'Pensez à gérer la ponctuation si nécessaire : str.replace(/[^a-z ]/gi, \'\')',
+      'reduce() et for sont O(n), sort() est O(n log n)',
+      'Pour retourner TOUS les plus longs : filter par longueur max'
+    ],
+    
+    tags: ['string', 'longest', 'words'],
+    relatedAlgorithms: ['count-words']
+  },
+
+  {
+    id: 'count-words',
+    title: '23. Compter les mots dans une phrase',
+    level: 'niveau-1',
+    category: 'chaines',
+    difficulty: 'débutant',
+    order: 23,
+    description: 'Compter le nombre de mots séparés par des espaces',
+    explanation: `Découpe la phrase en mots et compte-les.
+
+Attention aux espaces multiples et aux espaces en début/fin !`,
+    
+    solutions: [
+      {
+        id: 'method-1',
+        title: 'Méthode 1 : split() + length',
+        approach: 'Built-in',
+        code: `function countWords(str) {
+  return str.trim().split(/\\s+/).length;
+}
+
+// Exemples
+console.log(countWords('Hello world from JavaScript')); // 4
+console.log(countWords('  Multiple   spaces  ')); // 2
+console.log(countWords('')); // 1 (attention !)`,
+        explanation: 'trim() enlève espaces début/fin, split(/\\s+/) découpe sur un ou plusieurs espaces.',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(n)',
+        pros: ['Simple', 'Gère espaces multiples', 'Concis'],
+        cons: ['Crée un tableau', 'Retourne 1 pour chaîne vide']
+      },
+      {
+        id: 'method-2',
+        title: 'Méthode 2 : Regex + match()',
+        approach: 'Regex',
+        code: `function countWords(str) {
+  const matches = str.match(/\\S+/g);
+  return matches ? matches.length : 0;
+}
+
+// Exemples
+console.log(countWords('Hello world from JavaScript')); // 4
+console.log(countWords('  Multiple   spaces  ')); // 2
+console.log(countWords('')); // 0`,
+        explanation: 'Trouve tous les groupes de caractères non-espaces (\\S = non-whitespace).',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(n)',
+        pros: ['Concis', 'Robuste', 'Gère chaîne vide correctement'],
+        cons: ['Regex', 'Retourne null si aucun mot']
+      },
+      {
+        id: 'method-3',
+        title: 'Méthode 3 : Boucle for avec compteur',
+        approach: 'Impérative',
+        code: `function countWords(str) {
+  str = str.trim();
+  if (str.length === 0) return 0;
+  
+  let count = 1; // Au moins 1 mot si non vide
+  
+  for (let i = 0; i < str.length; i++) {
+    if (str[i] === ' ' && str[i + 1] !== ' ') {
+      count++;
+    }
+  }
+  
+  return count;
+}
+
+// Exemples
+console.log(countWords('Hello world from JavaScript')); // 4`,
+        explanation: 'Compte les transitions espace → non-espace.',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(1)',
+        pros: ['Économe en mémoire O(1)', 'Contrôle total'],
+        cons: ['Verbeux', 'Plus complexe']
+      }
+    ],
+    
+    examples: [
+      {
+        input: '"Hello world from JavaScript"',
+        output: '4',
+        explanation: '4 mots séparés par des espaces'
+      },
+      {
+        input: '"  Multiple   spaces  "',
+        output: '2',
+        explanation: 'Gère espaces multiples correctement'
+      },
+      {
+        input: '""',
+        output: '0',
+        explanation: 'Chaîne vide = 0 mots'
+      }
+    ],
+    
+    tips: [
+      'trim() enlève les espaces de début/fin',
+      '/\\s+/ gère les espaces multiples (un ou plus)',
+      '/\\S+/g trouve tous les groupes de non-espaces',
+      'Attention : split() sur chaîne vide retourne [\'\'] (longueur 1)',
+      'match() retourne null si aucun match → vérifiez toujours !'
+    ],
+    
+    tags: ['string', 'count', 'words', 'regex'],
+    relatedAlgorithms: ['longest-word']
+  },
+
+  {
+    id: 'replace-char',
+    title: '24. Remplacer un caractère dans une chaîne',
+    level: 'niveau-1',
+    category: 'chaines',
+    difficulty: 'débutant',
+    order: 24,
+    description: 'Remplacer toutes les occurrences d\'un caractère',
+    explanation: `Remplace toutes les instances d'un caractère par un autre.`,
+    
+    solutions: [
+      {
+        id: 'method-1',
+        title: 'Méthode 1 : replace() avec regex',
+        approach: 'Built-in',
+        code: `function replaceChar(str, oldChar, newChar) {
+  return str.replace(new RegExp(oldChar, 'g'), newChar);
+}
+
+// Exemples
+console.log(replaceChar('hello', 'l', 'L')); // 'heLLo'
+console.log(replaceChar('banana', 'a', 'o')); // 'bonono'`,
+        explanation: 'Utilise replace avec regex globale (flag g = remplacer toutes).',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(n)',
+        pros: ['Simple', 'Natif'],
+        cons: ['Attention aux caractères spéciaux regex ($, ., *, etc.)']
+      },
+      {
+        id: 'method-2',
+        title: 'Méthode 2 : replaceAll() (ES2021)',
+        approach: 'Built-in',
+        code: `function replaceChar(str, oldChar, newChar) {
+  return str.replaceAll(oldChar, newChar);
+}
+
+// Exemples
+console.log(replaceChar('hello', 'l', 'L')); // 'heLLo'
+console.log(replaceChar('banana', 'a', 'o')); // 'bonono'`,
+        explanation: 'Méthode moderne qui remplace toutes les occurrences directement.',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(n)',
+        pros: ['Très simple', 'Moderne', 'Pas de regex'],
+        cons: ['ES2021 seulement (vérifiez compatibilité)']
+      },
+      {
+        id: 'method-3',
+        title: 'Méthode 3 : split() + join()',
+        approach: 'Built-in',
+        code: `function replaceChar(str, oldChar, newChar) {
+  return str.split(oldChar).join(newChar);
+}
+
+// Exemples
+console.log(replaceChar('hello', 'l', 'L')); // 'heLLo'
+console.log(replaceChar('banana', 'a', 'o')); // 'bonono'`,
+        explanation: 'Découpe sur l\'ancien caractère et rejoint avec le nouveau.',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(n)',
+        pros: ['Fonctionne partout', 'Pas de regex', 'Astucieux'],
+        cons: ['Moins évident', 'Crée un tableau intermédiaire']
+      },
+      {
+        id: 'method-4',
+        title: 'Méthode 4 : Boucle for',
+        approach: 'Impérative',
+        code: `function replaceChar(str, oldChar, newChar) {
+  let result = '';
+  
+  for (let char of str) {
+    result += char === oldChar ? newChar : char;
+  }
+  
+  return result;
+}
+
+// Exemples
+console.log(replaceChar('hello', 'l', 'L')); // 'heLLo'`,
+        explanation: 'Reconstruit la chaîne caractère par caractère.',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(n)',
+        pros: ['Contrôle total', 'Facile à comprendre'],
+        cons: ['Verbeux', 'Concaténation coûteuse']
+      }
+    ],
+    
+    examples: [
+      {
+        input: 'str = "hello", oldChar = "l", newChar = "L"',
+        output: '"heLLo"',
+        explanation: 'Tous les "l" deviennent "L"'
+      },
+      {
+        input: 'str = "banana", oldChar = "a", newChar = "o"',
+        output: '"bonono"',
+        explanation: 'Tous les "a" deviennent "o"'
+      }
+    ],
+    
+    tips: [
+      'replaceAll() est le plus simple (ES2021+)',
+      'split-join fonctionne sur tous les navigateurs',
+      'replace() avec /g nécessite d\'échapper les caractères spéciaux regex',
+      'Pour remplacer plusieurs caractères : chaînez les appels',
+      'Attention : replace() SANS flag g ne remplace que la première occurrence'
+    ],
+    
+    tags: ['string', 'replace', 'characters']
+  },
+
+  {
+    id: 'generate-even-numbers',
+    title: '25. Générer un tableau de nombres pairs',
+    level: 'niveau-1',
+    category: 'nombres',
+    difficulty: 'débutant',
+    order: 25,
+    description: 'Créer un tableau des N premiers nombres pairs',
+    explanation: `Génère les N premiers nombres pairs : [2, 4, 6, 8, 10, ...]
+
+Formule : le i-ème nombre pair = (i + 1) * 2`,
+    
+    solutions: [
+      {
+        id: 'method-1',
+        title: 'Méthode 1 : Array.from()',
+        approach: 'Built-in',
+        code: `function generateEvenNumbers(n) {
+  return Array.from({ length: n }, (_, i) => (i + 1) * 2);
+}
+
+// Exemples
+console.log(generateEvenNumbers(5)); // [2, 4, 6, 8, 10]
+console.log(generateEvenNumbers(3)); // [2, 4, 6]`,
+        explanation: 'Crée un tableau de longueur n et mappe chaque index à (i+1)*2.',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(n)',
+        pros: ['Concis', 'Fonctionnel', 'Moderne'],
+        cons: ['Syntaxe moins évidente pour débutants']
+      },
+      {
+        id: 'method-2',
+        title: 'Méthode 2 : Boucle for',
+        approach: 'Impérative',
+        code: `function generateEvenNumbers(n) {
+  const result = [];
+  
+  for (let i = 1; i <= n; i++) {
+    result.push(i * 2);
+  }
+  
+  return result;
+}
+
+// Exemples
+console.log(generateEvenNumbers(5)); // [2, 4, 6, 8, 10]`,
+        explanation: 'Boucle qui ajoute chaque nombre pair.',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(n)',
+        pros: ['Simple', 'Clair', 'Facile à comprendre'],
+        cons: ['Plus verbeux']
+      },
+      {
+        id: 'method-3',
+        title: 'Méthode 3 : Spread + map()',
+        approach: 'Fonctionnelle',
+        code: `function generateEvenNumbers(n) {
+  return [...Array(n)].map((_, i) => (i + 1) * 2);
+}
+
+// Exemples
+console.log(generateEvenNumbers(5)); // [2, 4, 6, 8, 10]`,
+        explanation: 'Spread un tableau vide puis mappe les indices.',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(n)',
+        pros: ['Concis', 'Fonctionnel'],
+        cons: ['Moins lisible']
+      }
+    ],
+    
+    examples: [
+      {
+        input: '5',
+        output: '[2, 4, 6, 8, 10]',
+        explanation: 'Les 5 premiers nombres pairs'
+      },
+      {
+        input: '3',
+        output: '[2, 4, 6]',
+        explanation: 'Les 3 premiers'
+      }
+    ],
+    
+    tips: [
+      'Array.from() est très pratique pour générer des séquences',
+      'Formule : i-ème nombre pair = i * 2 (si index commence à 1)',
+      'Alternative : [...Array(n).keys()].map(i => (i + 1) * 2)',
+      'Les nombres pairs commencent à 2 (pas 0 pour les "premiers N pairs")'
+    ],
+    
+    tags: ['array', 'numbers', 'even', 'generate'],
+    relatedAlgorithms: ['generate-odd-numbers', 'generate-n-numbers']
+  },
+
+  {
+    id: 'generate-odd-numbers',
+    title: '26. Générer un tableau de nombres impairs',
+    level: 'niveau-1',
+    category: 'nombres',
+    difficulty: 'débutant',
+    order: 26,
+    description: 'Créer un tableau des N premiers nombres impairs',
+    explanation: `Génère les N premiers nombres impairs : [1, 3, 5, 7, 9, ...]
+
+Formule : le i-ème nombre impair = i * 2 + 1 (index commence à 0)`,
+    
+    solutions: [
+      {
+        id: 'method-1',
+        title: 'Méthode 1 : Array.from()',
+        approach: 'Built-in',
+        code: `function generateOddNumbers(n) {
+  return Array.from({ length: n }, (_, i) => i * 2 + 1);
+}
+
+// Exemples
+console.log(generateOddNumbers(5)); // [1, 3, 5, 7, 9]
+console.log(generateOddNumbers(3)); // [1, 3, 5]`,
+        explanation: 'Crée un tableau avec formule i*2+1 pour chaque index.',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(n)',
+        pros: ['Concis', 'Fonctionnel', 'Formule claire'],
+        cons: ['Syntaxe moins intuitive']
+      },
+      {
+        id: 'method-2',
+        title: 'Méthode 2 : Boucle for',
+        approach: 'Impérative',
+        code: `function generateOddNumbers(n) {
+  const result = [];
+  
+  for (let i = 0; i < n; i++) {
+    result.push(i * 2 + 1);
+  }
+  
+  return result;
+}
+
+// Exemples
+console.log(generateOddNumbers(5)); // [1, 3, 5, 7, 9]`,
+        explanation: 'Boucle qui génère chaque nombre impair.',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(n)',
+        pros: ['Simple', 'Lisible', 'Explicite'],
+        cons: ['Verbeux']
+      }
+    ],
+    
+    examples: [
+      {
+        input: '5',
+        output: '[1, 3, 5, 7, 9]',
+        explanation: 'Les 5 premiers nombres impairs'
+      },
+      {
+        input: '1',
+        output: '[1]',
+        explanation: 'Le premier nombre impair'
+      }
+    ],
+    
+    tips: [
+      'Formule : i * 2 + 1 pour le i-ème nombre impair (i commence à 0)',
+      'Les impairs commencent à 1',
+      'Alternative : for (let i = 1; i <= 2*n; i += 2)',
+      'Différence avec pairs : pairs = (i+1)*2, impairs = i*2+1'
+    ],
+    
+    tags: ['array', 'numbers', 'odd', 'generate'],
+    relatedAlgorithms: ['generate-even-numbers', 'generate-n-numbers']
+  },
+
+  {
+    id: 'generate-n-numbers',
+    title: '27. Générer les N premiers nombres',
+    level: 'niveau-1',
+    category: 'nombres',
+    difficulty: 'débutant',
+    order: 27,
+    description: 'Créer un tableau de 1 à N',
+    explanation: `Génère une séquence de 1 à N : [1, 2, 3, ..., N]
+
+Très utile pour itérations, tests, et génération de données.`,
+    
+    solutions: [
+      {
+        id: 'method-1',
+        title: 'Méthode 1 : Array.from()',
+        approach: 'Built-in',
+        code: `function generateNumbers(n) {
+  return Array.from({ length: n }, (_, i) => i + 1);
+}
+
+// Exemples
+console.log(generateNumbers(5)); // [1, 2, 3, 4, 5]
+console.log(generateNumbers(10)); // [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]`,
+        explanation: 'Crée un tableau de longueur n et mappe les indices +1.',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(n)',
+        pros: ['Concis', 'Moderne', 'Standard'],
+        cons: ['Syntaxe peut être déroutante']
+      },
+      {
+        id: 'method-2',
+        title: 'Méthode 2 : Spread + keys()',
+        approach: 'Built-in',
+        code: `function generateNumbers(n) {
+  return [...Array(n).keys()].map(i => i + 1);
+}
+
+// Exemples
+console.log(generateNumbers(5)); // [1, 2, 3, 4, 5]`,
+        explanation: 'Utilise keys() pour obtenir les indices [0..n-1] puis +1.',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(n)',
+        pros: ['Élégant', 'Fonctionnel'],
+        cons: ['Moins évident', 'Deux opérations']
+      },
+      {
+        id: 'method-3',
+        title: 'Méthode 3 : Boucle for',
+        approach: 'Impérative',
+        code: `function generateNumbers(n) {
+  const result = [];
+  
+  for (let i = 1; i <= n; i++) {
+    result.push(i);
+  }
+  
+  return result;
+}
+
+// Exemples
+console.log(generateNumbers(5)); // [1, 2, 3, 4, 5]`,
+        explanation: 'Simple boucle qui remplit le tableau de 1 à n.',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(n)',
+        pros: ['Très clair', 'Simple', 'Facile à débugger'],
+        cons: ['Verbeux']
+      },
+      {
+        id: 'method-4',
+        title: 'Méthode 4 : fill() + map()',
+        approach: 'Built-in',
+        code: `function generateNumbers(n) {
+  return Array(n).fill(0).map((_, i) => i + 1);
+}
+
+// Exemples
+console.log(generateNumbers(5)); // [1, 2, 3, 4, 5]`,
+        explanation: 'Remplit un tableau de 0, puis mappe les indices.',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(n)',
+        pros: ['Alternative intéressante'],
+        cons: ['fill(0) inutile (gaspille une itération)']
+      }
+    ],
+    
+    examples: [
+      {
+        input: '5',
+        output: '[1, 2, 3, 4, 5]',
+        explanation: 'Séquence de 1 à 5'
+      },
+      {
+        input: '1',
+        output: '[1]',
+        explanation: 'Un seul élément'
+      },
+      {
+        input: '0',
+        output: '[]',
+        explanation: 'Tableau vide'
+      }
+    ],
+    
+    tips: [
+      'Array.from() est la méthode moderne préférée',
+      'Utile pour beaucoup d\'algorithmes (range, sequence)',
+      'Pour commencer à 0 : Array.from({length: n}, (_, i) => i)',
+      'Pour range(start, end) : Array.from({length: end-start}, (_, i) => start + i)',
+      'Cette fonction s\'appelle souvent "range" dans d\'autres langages'
+    ],
+    
+    tags: ['array', 'numbers', 'range', 'sequence']
   }
 ];
