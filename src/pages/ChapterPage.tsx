@@ -1,7 +1,8 @@
 import { useParams, useNavigate } from 'react-router-dom';
 // import { algorithms, chapters, Chapter } from '@/data';
 import { ArrowLeft } from 'lucide-react';
-import { chapters, algorithms } from '../types';
+import { chapters, algorithms, type Chapter } from '../types';
+import AlgorithmCard from '../components/AlgorithmCard';
 // import AlgorithmCard from '@/components/AlgorithmCard';
 
 export default function ChapterPage() {

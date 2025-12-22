@@ -2,6 +2,10 @@
 // import { useAlgoStore } from '@/store/useAlgoStore';
 // import ChapterList from '@/components/ChapterList';
 
+import ChapterList from "../components/ChapterList";
+import { useAlgoStore } from "../store/useAlgoStore";
+import { algorithms } from "../types";
+
 export default function HomePage() {
   const { progress } = useAlgoStore();
 
