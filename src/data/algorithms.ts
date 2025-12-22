@@ -5169,4 +5169,1231 @@ console.log(stringToNumber('-456')); // -456`,
   tags: ['string', 'conversion', 'parsing'],
   relatedAlgorithms: ['count-digits', 'reverse-number']
 },
+// ==========================================
+// 🟡 NIVEAU 3 : ALGORITHMES CLASSIQUES (Algorithmes 51-62)
+// ==========================================
+
+{
+  id: 'bubble-sort',
+  title: '51. Tri à bulles (Bubble Sort)',
+  level: 'niveau-3',
+  category: 'tri',
+  difficulty: 'intermédiaire',
+  order: 51,
+  description: 'Algorithme de tri par comparaison successive d\'éléments adjacents',
+  explanation: `Le tri à bulles compare des paires d'éléments adjacents et les échange s'ils sont dans le mauvais ordre.
+
+Le nom vient du fait que les petits éléments "remontent" comme des bulles vers le début du tableau.
+
+Complexité : O(n²) dans le pire cas, mais O(n) si déjà trié avec optimisation.`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Bubble Sort classique',
+      approach: 'Impérative',
+      code: `function bubbleSort(arr) {
+  const result = [...arr];
+  const n = result.length;
+  
+  for (let i = 0; i < n - 1; i++) {
+    for (let j = 0; j < n - i - 1; j++) {
+      if (result[j] > result[j + 1]) {
+        // Échange (swap)
+        [result[j], result[j + 1]] = [result[j + 1], result[j]];
+      }
+    }
+  }
+  
+  return result;
+}
+
+// Exemple
+console.log(bubbleSort([64, 34, 25, 12, 22, 11, 90]));
+// [11, 12, 22, 25, 34, 64, 90]`,
+      explanation: 'Compare chaque paire adjacente et échange si nécessaire. Répète n fois.',
+      timeComplexity: 'O(n²)',
+      spaceComplexity: 'O(n)', // Copie du tableau
+      pros: ['Simple à comprendre', 'Stable (préserve l\'ordre des égaux)'],
+      cons: ['Très lent O(n²)', 'Inefficace sur grands tableaux']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Bubble Sort optimisé',
+      approach: 'Impérative',
+      code: `function bubbleSort(arr) {
+  const result = [...arr];
+  const n = result.length;
+  
+  for (let i = 0; i < n - 1; i++) {
+    let swapped = false;
+    
+    for (let j = 0; j < n - i - 1; j++) {
+      if (result[j] > result[j + 1]) {
+        [result[j], result[j + 1]] = [result[j + 1], result[j]];
+        swapped = true;
+      }
+    }
+    
+    // Si aucun échange, le tableau est trié
+    if (!swapped) break;
+  }
+  
+  return result;
+}
+
+// Exemple
+console.log(bubbleSort([1, 2, 3, 4, 5])); // Déjà trié, s'arrête tôt`,
+      explanation: 'Ajoute un flag pour détecter si le tableau est trié et arrêter tôt.',
+      timeComplexity: 'O(n²) pire cas, O(n) meilleur cas',
+      spaceComplexity: 'O(n)',
+      pros: ['Optimisé pour tableaux presque triés', 'O(n) si déjà trié'],
+      cons: ['Toujours O(n²) dans le pire cas']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '[64, 34, 25, 12, 22, 11, 90]',
+      output: '[11, 12, 22, 25, 34, 64, 90]',
+      explanation: 'Tableau trié par ordre croissant'
+    }
+  ],
+  
+  tips: [
+    'Après chaque passe, le plus grand élément est à sa place finale',
+    'n-i-1 car les i derniers sont déjà triés',
+    'Flag swapped pour optimisation O(n) si déjà trié',
+    'Algorithme stable : préserve l\'ordre des éléments égaux',
+    'Utilisé pour l\'enseignement, pas en production'
+  ],
+  
+  tags: ['sorting', 'bubble-sort', 'algorithm'],
+  relatedAlgorithms: ['selection-sort', 'insertion-sort']
+},
+
+{
+  id: 'selection-sort',
+  title: '52. Tri par sélection (Selection Sort)',
+  level: 'niveau-3',
+  category: 'tri',
+  difficulty: 'intermédiaire',
+  order: 52,
+  description: 'Trouve le minimum et le place au début, répète',
+  explanation: `Le tri par sélection divise le tableau en deux parties : triée et non triée.
+
+À chaque itération, trouve le minimum dans la partie non triée et l'échange avec le premier élément non trié.`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Selection Sort',
+      approach: 'Impérative',
+      code: `function selectionSort(arr) {
+  const result = [...arr];
+  const n = result.length;
+  
+  for (let i = 0; i < n - 1; i++) {
+    // Trouver l'index du minimum dans [i, n)
+    let minIndex = i;
+    
+    for (let j = i + 1; j < n; j++) {
+      if (result[j] < result[minIndex]) {
+        minIndex = j;
+      }
+    }
+    
+    // Échanger si nécessaire
+    if (minIndex !== i) {
+      [result[i], result[minIndex]] = [result[minIndex], result[i]];
+    }
+  }
+  
+  return result;
+}
+
+// Exemple
+console.log(selectionSort([64, 25, 12, 22, 11]));
+// [11, 12, 22, 25, 64]`,
+      explanation: 'Pour chaque position, trouve le minimum dans le reste et l\'échange.',
+      timeComplexity: 'O(n²)',
+      spaceComplexity: 'O(n)',
+      pros: ['Simple', 'Moins d\'échanges que bubble sort', 'Performant sur petits tableaux'],
+      cons: ['O(n²) toujours', 'Non stable', 'Inefficace sur grands tableaux']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '[64, 25, 12, 22, 11]',
+      output: '[11, 12, 22, 25, 64]',
+      explanation: 'Min 11 → position 0, min 12 → position 1, etc.'
+    }
+  ],
+  
+  tips: [
+    'Moins d\'échanges que bubble sort (n échanges max)',
+    'Toujours O(n²), même si déjà trié',
+    'Non stable : peut changer l\'ordre des égaux',
+    'Utile si les échanges sont coûteux (écriture mémoire)'
+  ],
+  
+  tags: ['sorting', 'selection-sort', 'algorithm'],
+  relatedAlgorithms: ['bubble-sort', 'insertion-sort']
+},
+
+{
+  id: 'insertion-sort',
+  title: '53. Tri par insertion (Insertion Sort)',
+  level: 'niveau-3',
+  category: 'tri',
+  difficulty: 'intermédiaire',
+  order: 53,
+  description: 'Insère chaque élément à sa place dans la partie triée',
+  explanation: `Le tri par insertion construit le tableau trié un élément à la fois.
+
+Comme trier des cartes à jouer : on prend une carte et on l'insère à sa place dans la main déjà triée.`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Insertion Sort',
+      approach: 'Impérative',
+      code: `function insertionSort(arr) {
+  const result = [...arr];
+  const n = result.length;
+  
+  for (let i = 1; i < n; i++) {
+    const key = result[i];
+    let j = i - 1;
+    
+    // Décale les éléments > key vers la droite
+    while (j >= 0 && result[j] > key) {
+      result[j + 1] = result[j];
+      j--;
+    }
+    
+    // Insère key à sa place
+    result[j + 1] = key;
+  }
+  
+  return result;
+}
+
+// Exemple
+console.log(insertionSort([12, 11, 13, 5, 6]));
+// [5, 6, 11, 12, 13]`,
+      explanation: 'Pour chaque élément, le décale vers la gauche jusqu\'à trouver sa place.',
+      timeComplexity: 'O(n²) pire cas, O(n) meilleur cas',
+      spaceComplexity: 'O(n)',
+      pros: ['Efficace sur petits tableaux', 'O(n) si presque trié', 'Stable', 'In-place possible'],
+      cons: ['O(n²) dans le pire cas']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Insertion Sort avec binary search',
+      approach: 'Optimisée',
+      code: `function insertionSort(arr) {
+  const result = [...arr];
+  const n = result.length;
+  
+  for (let i = 1; i < n; i++) {
+    const key = result[i];
+    
+    // Recherche binaire de la position d'insertion
+    let left = 0;
+    let right = i - 1;
+    
+    while (left <= right) {
+      const mid = Math.floor((left + right) / 2);
+      if (result[mid] > key) {
+        right = mid - 1;
+      } else {
+        left = mid + 1;
+      }
+    }
+    
+    // Décale et insère
+    for (let j = i - 1; j >= left; j--) {
+      result[j + 1] = result[j];
+    }
+    result[left] = key;
+  }
+  
+  return result;
+}
+
+// Exemple
+console.log(insertionSort([12, 11, 13, 5, 6]));`,
+      explanation: 'Utilise la recherche binaire pour trouver la position, mais le décalage reste O(n).',
+      timeComplexity: 'O(n²)', // Décalage toujours O(n)
+      spaceComplexity: 'O(n)',
+      pros: ['Moins de comparaisons', 'Intéressant théoriquement'],
+      cons: ['Toujours O(n²) à cause des décalages', 'Plus complexe']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '[12, 11, 13, 5, 6]',
+      output: '[5, 6, 11, 12, 13]',
+      explanation: 'Chaque élément est inséré à sa place dans la partie triée'
+    }
+  ],
+  
+  tips: [
+    'Excellent pour tableaux presque triés : O(n)',
+    'Utilisé dans le tri hybride (Timsort utilise insertion)',
+    'Stable : préserve l\'ordre des égaux',
+    'Très efficace sur petits tableaux (<10 éléments)',
+    'Analogie : trier des cartes à jouer'
+  ],
+  
+  tags: ['sorting', 'insertion-sort', 'algorithm'],
+  relatedAlgorithms: ['bubble-sort', 'selection-sort']
+},
+
+{
+  id: 'quick-sort',
+  title: '54. Tri rapide (Quick Sort)',
+  level: 'niveau-3',
+  category: 'tri',
+  difficulty: 'avancé',
+  order: 54,
+  description: 'Divise en partitions autour d\'un pivot, récurse',
+  explanation: `Quick Sort utilise la stratégie "diviser pour régner".
+
+1. Choisit un pivot
+2. Partitionne : éléments < pivot à gauche, > pivot à droite
+3. Récurse sur chaque partition
+
+Un des algorithmes de tri les plus rapides en pratique.`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Quick Sort (pivot dernier)',
+      approach: 'Récursive',
+      code: `function quickSort(arr) {
+  if (arr.length <= 1) return arr;
+  
+  const pivot = arr[arr.length - 1];
+  const left = [];
+  const right = [];
+  
+  for (let i = 0; i < arr.length - 1; i++) {
+    if (arr[i] < pivot) {
+      left.push(arr[i]);
+    } else {
+      right.push(arr[i]);
+    }
+  }
+  
+  return [...quickSort(left), pivot, ...quickSort(right)];
+}
+
+// Exemple
+console.log(quickSort([10, 7, 8, 9, 1, 5]));
+// [1, 5, 7, 8, 9, 10]`,
+      explanation: 'Version simple : crée deux sous-tableaux (< pivot et > pivot) et récurse.',
+      timeComplexity: 'O(n log n) moyen, O(n²) pire cas',
+      spaceComplexity: 'O(n)', // Crée de nouveaux tableaux
+      pros: ['Simple à comprendre', 'Élégant', 'Rapide en moyenne'],
+      cons: ['O(n²) si pivot mal choisi', 'Utilise beaucoup de mémoire', 'Non stable']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Quick Sort in-place (Lomuto)',
+      approach: 'Récursive',
+      code: `function quickSort(arr, low = 0, high = arr.length - 1) {
+  if (low < high) {
+    // Partition
+    const pivotIndex = partition(arr, low, high);
+    
+    // Récurse sur les deux partitions
+    quickSort(arr, low, pivotIndex - 1);
+    quickSort(arr, pivotIndex + 1, high);
+  }
+  
+  return arr;
+}
+
+function partition(arr, low, high) {
+  const pivot = arr[high];
+  let i = low - 1;
+  
+  for (let j = low; j < high; j++) {
+    if (arr[j] < pivot) {
+      i++;
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+  }
+  
+  [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]];
+  return i + 1;
+}
+
+// Exemple
+const arr = [10, 7, 8, 9, 1, 5];
+console.log(quickSort([...arr]));`,
+      explanation: 'Version in-place avec partition de Lomuto (modifie le tableau).',
+      timeComplexity: 'O(n log n) moyen, O(n²) pire cas',
+      spaceComplexity: 'O(log n)', // Stack de récursion
+      pros: ['Économe en mémoire O(log n)', 'Rapide en pratique'],
+      cons: ['O(n²) pire cas', 'Plus complexe', 'Non stable']
+    },
+    {
+      id: 'method-3',
+      title: 'Méthode 3 : Quick Sort avec pivot aléatoire',
+      approach: 'Récursive',
+      code: `function quickSort(arr) {
+  if (arr.length <= 1) return arr;
+  
+  // Pivot aléatoire pour éviter O(n²)
+  const pivotIndex = Math.floor(Math.random() * arr.length);
+  const pivot = arr[pivotIndex];
+  
+  const left = [];
+  const middle = [];
+  const right = [];
+  
+  for (let num of arr) {
+    if (num < pivot) left.push(num);
+    else if (num > pivot) right.push(num);
+    else middle.push(num);
+  }
+  
+  return [...quickSort(left), ...middle, ...quickSort(right)];
+}
+
+// Exemple
+console.log(quickSort([10, 7, 8, 9, 1, 5]));`,
+      explanation: 'Pivot aléatoire évite le pire cas O(n²) sur tableaux triés.',
+      timeComplexity: 'O(n log n) attendu',
+      spaceComplexity: 'O(n)',
+      pros: ['Évite O(n²) sur tableaux triés', 'Performances constantes'],
+      cons: ['Utilise de la mémoire', 'Randomisé']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '[10, 7, 8, 9, 1, 5]',
+      output: '[1, 5, 7, 8, 9, 10]',
+      explanation: 'Partition récursive autour des pivots'
+    }
+  ],
+  
+  tips: [
+    'Un des algorithmes les plus rapides en pratique',
+    'O(n log n) en moyenne, O(n²) pire cas (déjà trié)',
+    'Pivot aléatoire ou médiane évite le pire cas',
+    'In-place possible avec O(log n) mémoire',
+    'Non stable : peut changer l\'ordre des égaux',
+    'Utilisé par défaut dans beaucoup de langages'
+  ],
+  
+  tags: ['sorting', 'quick-sort', 'divide-and-conquer', 'recursion'],
+  relatedAlgorithms: ['merge-sort', 'heap-sort']
+},
+
+{
+  id: 'merge-sort',
+  title: '55. Tri fusion (Merge Sort)',
+  level: 'niveau-3',
+  category: 'tri',
+  difficulty: 'avancé',
+  order: 55,
+  description: 'Divise en deux, trie récursivement, fusionne',
+  explanation: `Merge Sort est un algorithme "diviser pour régner" stable et prévisible.
+
+1. Divise le tableau en deux moitiés
+2. Trie récursivement chaque moitié
+3. Fusionne les deux moitiés triées
+
+Toujours O(n log n), même dans le pire cas.`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Merge Sort récursif',
+      approach: 'Récursive',
+      code: `function mergeSort(arr) {
+  // Cas de base
+  if (arr.length <= 1) return arr;
+  
+  // Diviser
+  const mid = Math.floor(arr.length / 2);
+  const left = arr.slice(0, mid);
+  const right = arr.slice(mid);
+  
+  // Conquérir (récurse)
+  return merge(mergeSort(left), mergeSort(right));
+}
+
+function merge(left, right) {
+  const result = [];
+  let i = 0, j = 0;
+  
+  // Fusion
+  while (i < left.length && j < right.length) {
+    if (left[i] <= right[j]) {
+      result.push(left[i]);
+      i++;
+    } else {
+      result.push(right[j]);
+      j++;
+    }
+  }
+  
+  // Copie les restes
+  return result.concat(left.slice(i)).concat(right.slice(j));
+}
+
+// Exemple
+console.log(mergeSort([38, 27, 43, 3, 9, 82, 10]));
+// [3, 9, 10, 27, 38, 43, 82]`,
+      explanation: 'Divise récursivement puis fusionne les moitiés triées.',
+      timeComplexity: 'O(n log n)',
+      spaceComplexity: 'O(n)',
+      pros: ['O(n log n) garanti', 'Stable', 'Prévisible', 'Excellent pour listes chaînées'],
+      cons: ['Utilise O(n) mémoire supplémentaire', 'Pas in-place']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Merge Sort avec optimisation',
+      approach: 'Récursive',
+      code: `function mergeSort(arr) {
+  // Optimisation : insertion sort pour petits tableaux
+  if (arr.length <= 10) {
+    return insertionSort(arr);
+  }
+  
+  if (arr.length <= 1) return arr;
+  
+  const mid = Math.floor(arr.length / 2);
+  const left = mergeSort(arr.slice(0, mid));
+  const right = mergeSort(arr.slice(mid));
+  
+  return merge(left, right);
+}
+
+function merge(left, right) {
+  const result = [];
+  let i = 0, j = 0;
+  
+  while (i < left.length && j < right.length) {
+    if (left[i] <= right[j]) {
+      result.push(left[i++]);
+    } else {
+      result.push(right[j++]);
+    }
+  }
+  
+  return result.concat(left.slice(i), right.slice(j));
+}
+
+function insertionSort(arr) {
+  for (let i = 1; i < arr.length; i++) {
+    let key = arr[i];
+    let j = i - 1;
+    while (j >= 0 && arr[j] > key) {
+      arr[j + 1] = arr[j];
+      j--;
+    }
+    arr[j + 1] = key;
+  }
+  return arr;
+}
+
+// Exemple
+console.log(mergeSort([38, 27, 43, 3, 9, 82, 10]));`,
+      explanation: 'Utilise insertion sort pour les petits sous-tableaux (plus rapide).',
+      timeComplexity: 'O(n log n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Plus rapide en pratique', 'Moins d\'appels récursifs'],
+      cons: ['Plus de code']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '[38, 27, 43, 3, 9, 82, 10]',
+      output: '[3, 9, 10, 27, 38, 43, 82]',
+      explanation: 'Divise, trie, fusionne récursivement'
+    }
+  ],
+  
+  tips: [
+    'O(n log n) GARANTI dans tous les cas',
+    'Stable : préserve l\'ordre des égaux',
+    'Excellent pour trier des données sur disque (tri externe)',
+    'Utilisé dans Arrays.sort() de plusieurs langages',
+    'Timsort (Python, Java) est basé sur merge sort',
+    'Préférable à quick sort si stabilité nécessaire'
+  ],
+  
+  tags: ['sorting', 'merge-sort', 'divide-and-conquer', 'stable'],
+  relatedAlgorithms: ['quick-sort', 'timsort']
+},
+
+{
+  id: 'heap-sort',
+  title: '56. Tri par tas (Heap Sort)',
+  level: 'niveau-3',
+  category: 'tri',
+  difficulty: 'avancé',
+  order: 56,
+  description: 'Construit un tas max puis extrait les éléments',
+  explanation: `Heap Sort utilise une structure de tas (heap) binaire.
+
+1. Construit un max-heap
+2. Échange la racine (max) avec le dernier élément
+3. Réduit la taille du tas et réajuste
+4. Répète jusqu'à ce que le tas soit vide
+
+O(n log n) garanti, in-place.`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Heap Sort',
+      approach: 'Impérative',
+      code: `function heapSort(arr) {
+  const result = [...arr];
+  const n = result.length;
+  
+  // Construire le max-heap
+  for (let i = Math.floor(n / 2) - 1; i >= 0; i--) {
+    heapify(result, n, i);
+  }
+  
+  // Extraire les éléments un par un
+  for (let i = n - 1; i > 0; i--) {
+    // Échanger racine avec dernier
+    [result[0], result[i]] = [result[i], result[0]];
+    
+    // Réajuster le tas réduit
+    heapify(result, i, 0);
+  }
+  
+  return result;
+}
+
+function heapify(arr, n, i) {
+  let largest = i;
+  const left = 2 * i + 1;
+  const right = 2 * i + 2;
+  
+  if (left < n && arr[left] > arr[largest]) {
+    largest = left;
+  }
+  
+  if (right < n && arr[right] > arr[largest]) {
+    largest = right;
+  }
+  
+  if (largest !== i) {
+    [arr[i], arr[largest]] = [arr[largest], arr[i]];
+    heapify(arr, n, largest);
+  }
+}
+
+// Exemple
+console.log(heapSort([12, 11, 13, 5, 6, 7]));
+// [5, 6, 7, 11, 12, 13]`,
+      explanation: 'Construit un tas max puis extrait le maximum répétitivement.',
+      timeComplexity: 'O(n log n)',
+      spaceComplexity: 'O(n)', // Copie du tableau
+      pros: ['O(n log n) garanti', 'In-place possible', 'Pas de pire cas'],
+      cons: ['Non stable', 'Plus lent que quick sort en pratique', 'Complexe']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '[12, 11, 13, 5, 6, 7]',
+      output: '[5, 6, 7, 11, 12, 13]',
+      explanation: 'Construit un tas puis extrait les max successifs'
+    }
+  ],
+  
+  tips: [
+    'O(n log n) garanti, pas de pire cas',
+    'In-place : O(1) mémoire supplémentaire',
+    'Non stable : peut changer l\'ordre des égaux',
+    'Moins rapide que quick sort en pratique',
+    'Nécessite de comprendre les tas binaires',
+    'Index parent : floor((i-1)/2), enfants : 2i+1 et 2i+2'
+  ],
+  
+  tags: ['sorting', 'heap-sort', 'heap', 'in-place'],
+  relatedAlgorithms: ['quick-sort', 'merge-sort', 'priority-queue']
+},
+
+{
+  id: 'counting-sort',
+  title: '57. Tri par comptage (Counting Sort)',
+  level: 'niveau-3',
+  category: 'tri',
+  difficulty: 'avancé',
+  order: 57,
+  description: 'Compte les occurrences, reconstruit le tableau trié',
+  explanation: `Counting Sort est un tri linéaire O(n+k) pour des entiers dans une plage connue.
+
+1. Compte les occurrences de chaque valeur
+2. Calcule les positions cumulées
+3. Place chaque élément à sa position finale
+
+Pas de comparaisons ! Fonctionne par comptage.`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Counting Sort simple',
+      approach: 'Impérative',
+      code: `function countingSort(arr) {
+  if (arr.length === 0) return [];
+  
+  const max = Math.max(...arr);
+  const min = Math.min(...arr);
+  const range = max - min + 1;
+  
+  // Tableau de comptage
+  const count = new Array(range).fill(0);
+  
+  // Compter les occurrences
+  for (let num of arr) {
+    count[num - min]++;
+  }
+  
+  // Reconstruire le tableau trié
+  const result = [];
+  for (let i = 0; i < range; i++) {
+    for (let j = 0; j < count[i]; j++) {
+      result.push(i + min);
+    }
+  }
+  
+  return result;
+}
+
+// Exemple
+console.log(countingSort([4, 2, 2, 8, 3, 3, 1]));
+// [1, 2, 2, 3, 3, 4, 8]`,
+      explanation: 'Compte chaque valeur puis reconstruit le tableau dans l\'ordre.',
+      timeComplexity: 'O(n + k)', // k = plage de valeurs
+      spaceComplexity: 'O(n + k)',
+      pros: ['Linéaire O(n+k)', 'Stable possible', 'Très rapide si k petit'],
+      cons: ['Nécessite plage de valeurs connue', 'Utilise O(k) mémoire', 'Uniquement pour entiers']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Counting Sort stable',
+      approach: 'Impérative',
+      code: `function countingSort(arr) {
+  if (arr.length === 0) return [];
+  
+  const max = Math.max(...arr);
+  const min = Math.min(...arr);
+  const range = max - min + 1;
+  
+  const count = new Array(range).fill(0);
+  const output = new Array(arr.length);
+  
+  // Compter
+  for (let num of arr) {
+    count[num - min]++;
+  }
+  
+  // Positions cumulées
+  for (let i = 1; i < range; i++) {
+    count[i] += count[i - 1];
+  }
+  
+  // Placer les éléments (de la fin pour stabilité)
+  for (let i = arr.length - 1; i >= 0; i--) {
+    const num = arr[i];
+    output[count[num - min] - 1] = num;
+    count[num - min]--;
+  }
+  
+  return output;
+}
+
+// Exemple
+console.log(countingSort([4, 2, 2, 8, 3, 3, 1]));`,
+      explanation: 'Version stable qui préserve l\'ordre relatif des éléments égaux.',
+      timeComplexity: 'O(n + k)',
+      spaceComplexity: 'O(n + k)',
+      pros: ['Stable', 'O(n+k) linéaire'],
+      cons: ['Plus complexe', 'Nécessite tableau auxiliaire']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '[4, 2, 2, 8, 3, 3, 1]',
+      output: '[1, 2, 2, 3, 3, 4, 8]',
+      explanation: 'Tri linéaire par comptage'
+    }
+  ],
+  
+  tips: [
+    'O(n + k) où k = plage de valeurs (max - min + 1)',
+    'Très rapide si k est petit (k << n)',
+    'Pas de comparaisons, fonctionne par comptage',
+    'Utilisé comme sous-routine dans radix sort',
+    'Nécessite des entiers dans une plage connue',
+    'Version stable nécessaire pour radix sort'
+  ],
+  
+  tags: ['sorting', 'counting-sort', 'linear', 'non-comparison'],
+  relatedAlgorithms: ['radix-sort', 'bucket-sort']
+},
+
+{
+  id: 'radix-sort',
+  title: '58. Tri radix (Radix Sort)',
+  level: 'niveau-3',
+  category: 'tri',
+  difficulty: 'avancé',
+  order: 58,
+  description: 'Trie chiffre par chiffre (unités, dizaines, centaines...)',
+  explanation: `Radix Sort trie les nombres en traitant chiffre par chiffre.
+
+1. Trie par le chiffre des unités
+2. Puis par le chiffre des dizaines
+3. Puis centaines, etc.
+
+Utilise counting sort comme sous-routine stable.`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Radix Sort (LSD)',
+      approach: 'Impérative',
+      code: `function radixSort(arr) {
+  if (arr.length === 0) return [];
+  
+  // Trouver le nombre avec le plus de chiffres
+  const max = Math.max(...arr);
+  const maxDigits = Math.floor(Math.log10(max)) + 1;
+  
+  let result = [...arr];
+  
+  // Trier pour chaque position de chiffre
+  for (let digit = 0; digit < maxDigits; digit++) {
+    result = countingSortByDigit(result, digit);
+  }
+  
+  return result;
+}
+
+function countingSortByDigit(arr, digitPos) {
+  const output = new Array(arr.length);
+  const count = new Array(10).fill(0);
+  const divisor = Math.pow(10, digitPos);
+  
+  // Compter les occurrences du chiffre
+  for (let num of arr) {
+    const digit = Math.floor((num / divisor) % 10);
+    count[digit]++;
+  }
+  
+  // Positions cumulées
+  for (let i = 1; i < 10; i++) {
+    count[i] += count[i - 1];
+  }
+  
+  // Placer les éléments (stable)
+  for (let i = arr.length - 1; i >= 0; i--) {
+    const digit = Math.floor((arr[i] / divisor) % 10);
+    output[count[digit] - 1] = arr[i];
+    count[digit]--;
+  }
+  
+  return output;
+}
+
+// Exemple
+console.log(radixSort([170, 45, 75, 90, 802, 24, 2, 66]));
+// [2, 24, 45, 66, 75, 90, 170, 802]`,
+      explanation: 'Trie par chaque position de chiffre (unités, dizaines, etc.) avec counting sort.',
+      timeComplexity: 'O(d * (n + k))', // d = nombre de chiffres, k = base (10)
+      spaceComplexity: 'O(n + k)',
+      pros: ['Linéaire si d constant', 'Stable', 'Pas de comparaisons'],
+      cons: ['Uniquement pour entiers', 'Plus lent que quick sort en pratique', 'Complexe']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '[170, 45, 75, 90, 802, 24, 2, 66]',
+      output: '[2, 24, 45, 66, 75, 90, 170, 802]',
+      explanation: 'Trie chiffre par chiffre de droite à gauche'
+    }
+  ],
+  
+  tips: [
+    'LSD (Least Significant Digit) : commence par les unités',
+    'MSD (Most Significant Digit) : commence par les chiffres de gauche',
+    'O(d * (n + k)) où d = nombre de chiffres',
+    'Utilise counting sort comme sous-routine stable',
+    'Fonctionne pour base quelconque (base 10 ici)',
+    'Peut être adapté pour strings'
+  ],
+  
+  tags: ['sorting', 'radix-sort', 'linear', 'non-comparison'],
+  relatedAlgorithms: ['counting-sort', 'bucket-sort']
+},
+
+{
+  id: 'linear-search',
+  title: '59. Recherche linéaire',
+  level: 'niveau-3',
+  category: 'recherche',
+  difficulty: 'débutant',
+  order: 59,
+  description: 'Parcourt le tableau élément par élément',
+  explanation: `La recherche linéaire parcourt séquentiellement jusqu'à trouver l'élément.
+
+Simple mais lent : O(n) dans le pire cas.`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Boucle for',
+      approach: 'Impérative',
+      code: `function linearSearch(arr, target) {
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] === target) {
+      return i; // Retourne l'index
+    }
+  }
+  return -1; // Non trouvé
+}
+
+// Exemples
+console.log(linearSearch([1, 3, 5, 7, 9], 5)); // 2
+console.log(linearSearch([1, 3, 5, 7, 9], 6)); // -1`,
+      explanation: 'Parcourt le tableau jusqu\'à trouver l\'élément ou atteindre la fin.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(1)',
+      pros: ['Simple', 'Fonctionne sur tableau non trié', 'O(1) mémoire'],
+      cons: ['Lent O(n)', 'Pas optimal si tableau trié']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : indexOf()',
+      approach: 'Built-in',
+      code: `function linearSearch(arr, target) {
+  return arr.indexOf(target);
+}
+
+// Exemples
+console.log(linearSearch([1, 3, 5, 7, 9], 5)); // 2
+console.log(linearSearch([1, 3, 5, 7, 9], 6)); // -1`,
+      explanation: 'Utilise la méthode native indexOf.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(1)',
+      pros: ['Très simple', 'Une ligne'],
+      cons: ['Même complexité O(n)']
+    },
+    {
+      id: 'method-3',
+      title: 'Méthode 3 : findIndex()',
+      approach: 'Fonctionnelle',
+      code: `function linearSearch(arr, target) {
+  return arr.findIndex(item => item === target);
+}
+
+// Exemples
+console.log(linearSearch([1, 3, 5, 7, 9], 5)); // 2`,
+      explanation: 'Version fonctionnelle avec findIndex.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(1)',
+      pros: ['Fonctionnel', 'Flexible (condition custom)'],
+      cons: ['O(n)']
+    }
+  ],
+  
+  examples: [
+    {
+      input: 'arr = [1, 3, 5, 7, 9], target = 5',
+      output: '2',
+      explanation: 'Élément trouvé à l\'index 2'
+    },
+    {
+      input: 'arr = [1, 3, 5, 7, 9], target = 6',
+      output: '-1',
+      explanation: 'Élément non trouvé'
+    }
+  ],
+  
+  tips: [
+    'O(n) dans le pire cas',
+    'Fonctionne sur tableaux non triés',
+    'Si tableau trié, utilisez binary search O(log n)',
+    'Early return dès que trouvé',
+    'Simple mais inefficace sur grands tableaux'
+  ],
+  
+  tags: ['search', 'linear-search', 'algorithm'],
+  relatedAlgorithms: ['binary-search']
+},
+
+{
+  id: 'binary-search',
+  title: '60. Recherche binaire',
+  level: 'niveau-3',
+  category: 'recherche',
+  difficulty: 'intermédiaire',
+  order: 60,
+  description: 'Divise le tableau trié en deux à chaque étape',
+  explanation: `La recherche binaire exploite le fait que le tableau est TRIÉ.
+
+1. Compare avec l'élément du milieu
+2. Si égal : trouvé
+3. Si target < milieu : cherche à gauche
+4. Si target > milieu : cherche à droite
+
+O(log n) - très rapide !`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Itératif',
+      approach: 'Impérative',
+      code: `function binarySearch(arr, target) {
+  let left = 0;
+  let right = arr.length - 1;
+  
+  while (left <= right) {
+    const mid = Math.floor((left + right) / 2);
+    
+    if (arr[mid] === target) {
+      return mid;
+    } else if (arr[mid] < target) {
+      left = mid + 1;
+    } else {
+      right = mid - 1;
+    }
+  }
+  
+  return -1;
+}
+
+// Exemples
+console.log(binarySearch([1, 3, 5, 7, 9, 11, 13], 7));  // 3
+console.log(binarySearch([1, 3, 5, 7, 9, 11, 13], 6));  // -1`,
+      explanation: 'Version itérative avec deux pointeurs.',
+      timeComplexity: 'O(log n)',
+      spaceComplexity: 'O(1)',
+      pros: ['Très rapide O(log n)', 'Économe en mémoire O(1)', 'Standard'],
+      cons: ['Nécessite tableau trié', 'Plus complexe que linear search']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Récursif',
+      approach: 'Récursive',
+      code: `function binarySearch(arr, target, left = 0, right = arr.length - 1) {
+  if (left > right) return -1;
+  
+  const mid = Math.floor((left + right) / 2);
+  
+  if (arr[mid] === target) {
+    return mid;
+  } else if (arr[mid] < target) {
+    return binarySearch(arr, target, mid + 1, right);
+  } else {
+    return binarySearch(arr, target, left, mid - 1);
+  }
+}
+
+// Exemples
+console.log(binarySearch([1, 3, 5, 7, 9, 11, 13], 7));  // 3`,
+      explanation: 'Version récursive plus élégante.',
+      timeComplexity: 'O(log n)',
+      spaceComplexity: 'O(log n)', // Stack
+      pros: ['Élégant', 'Suit la définition récursive'],
+      cons: ['Utilise stack O(log n)', 'Légèrement moins performant']
+    }
+  ],
+  
+  examples: [
+    {
+      input: 'arr = [1, 3, 5, 7, 9, 11, 13], target = 7',
+      output: '3',
+      explanation: 'Trouve 7 à l\'index 3 en 3 comparaisons au lieu de 4'
+    },
+    {
+      input: 'arr = [1, 3, 5, 7, 9, 11, 13], target = 6',
+      output: '-1',
+      explanation: 'Non trouvé après log₂(7) ≈ 3 comparaisons'
+    }
+  ],
+  
+  tips: [
+    'CRITIQUE : Le tableau DOIT être trié',
+    'O(log n) : divise par 2 à chaque étape',
+    'Attention à l\'overflow : mid = left + (right - left) / 2',
+    'Itératif préféré en production (pas de stack)',
+    'Algorithme fondamental en informatique',
+    'Base de beaucoup d\'autres algorithmes'
+  ],
+  
+  tags: ['search', 'binary-search', 'divide-and-conquer', 'sorted'],
+  relatedAlgorithms: ['linear-search', 'lower-bound', 'upper-bound']
+},
+
+{
+  id: 'lower-bound',
+  title: '61. Recherche du premier élément ≥ X (Lower Bound)',
+  level: 'niveau-3',
+  category: 'recherche',
+  difficulty: 'avancé',
+  order: 61,
+  description: 'Trouver le premier élément supérieur ou égal à X',
+  explanation: `Lower bound trouve le premier élément >= target dans un tableau trié.
+
+Si target n'existe pas, retourne la position où il devrait être inséré.
+
+Variante de binary search.`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Binary Search modifié',
+      approach: 'Impérative',
+      code: `function lowerBound(arr, target) {
+  let left = 0;
+  let right = arr.length;
+  
+  while (left < right) {
+    const mid = Math.floor((left + right) / 2);
+    
+    if (arr[mid] < target) {
+      left = mid + 1;
+    } else {
+      right = mid; // Ne pas exclure mid
+    }
+  }
+  
+  return left;
+}
+
+// Exemples
+console.log(lowerBound([1, 2, 4, 4, 5, 6, 8], 4));  // 2 (premier 4)
+console.log(lowerBound([1, 2, 4, 4, 5, 6, 8], 3));  // 2 (position où 3 irait)
+console.log(lowerBound([1, 2, 4, 4, 5, 6, 8], 9));  // 7 (après le dernier)`,
+      explanation: 'Trouve le premier élément >= target, ou la position d\'insertion.',
+      timeComplexity: 'O(log n)',
+      spaceComplexity: 'O(1)',
+      pros: ['O(log n)', 'Utile pour insertions', 'Gère les doublons'],
+      cons: ['Plus subtil que binary search standard']
+    }
+  ],
+  
+  examples: [
+    {
+      input: 'arr = [1, 2, 4, 4, 5, 6, 8], target = 4',
+      output: '2',
+      explanation: 'Index du premier 4'
+    },
+    {
+      input: 'arr = [1, 2, 4, 4, 5, 6, 8], target = 3',
+      output: '2',
+      explanation: 'Position où 3 devrait être inséré'
+    },
+    {
+      input: 'arr = [1, 2, 4, 4, 5, 6, 8], target = 9',
+      output: '7',
+      explanation: 'Après le dernier élément'
+    }
+  ],
+  
+  tips: [
+    'Retourne l\'index du premier élément >= target',
+    'Si aucun, retourne arr.length',
+    'Utile pour l\'insertion dans un tableau trié',
+    'Différence avec binary search : ne cherche pas égalité exacte',
+    'Condition : arr[mid] < target (strictement inférieur)',
+    'Utilisé dans C++ STL (lower_bound)'
+  ],
+  
+  tags: ['search', 'binary-search', 'lower-bound', 'sorted'],
+  relatedAlgorithms: ['binary-search', 'upper-bound']
+},
+
+{
+  id: 'upper-bound',
+  title: '62. Recherche du dernier élément ≤ X (Upper Bound)',
+  level: 'niveau-3',
+  category: 'recherche',
+  difficulty: 'avancé',
+  order: 62,
+  description: 'Trouver le premier élément strictement supérieur à X',
+  explanation: `Upper bound trouve le premier élément > target (strictement supérieur).
+
+Complémentaire de lower bound.`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Binary Search modifié',
+      approach: 'Impérative',
+      code: `function upperBound(arr, target) {
+  let left = 0;
+  let right = arr.length;
+  
+  while (left < right) {
+    const mid = Math.floor((left + right) / 2);
+    
+    if (arr[mid] <= target) {
+      left = mid + 1;
+    } else {
+      right = mid;
+    }
+  }
+  
+  return left;
+}
+
+// Exemples
+console.log(upperBound([1, 2, 4, 4, 5, 6, 8], 4));  // 4 (après le dernier 4)
+console.log(upperBound([1, 2, 4, 4, 5, 6, 8], 3));  // 2 (premier > 3 est à l'index 2)
+console.log(upperBound([1, 2, 4, 4, 5, 6, 8], 8));  // 7 (aucun > 8)`,
+      explanation: 'Trouve le premier élément > target (strictement supérieur).',
+      timeComplexity: 'O(log n)',
+      spaceComplexity: 'O(1)',
+      pros: ['O(log n)', 'Complémentaire de lower bound'],
+      cons: ['Confusion possible avec lower bound']
+    }
+  ],
+  
+  examples: [
+    {
+      input: 'arr = [1, 2, 4, 4, 5, 6, 8], target = 4',
+      output: '4',
+      explanation: 'Index après le dernier 4 (où commence 5)'
+    },
+    {
+      input: 'arr = [1, 2, 4, 4, 5, 6, 8], target = 3',
+      output: '2',
+      explanation: 'Premier élément > 3 est 4 à l\'index 2'
+    }
+  ],
+  
+  tips: [
+    'Retourne l\'index du premier élément > target (strictement)',
+    'upper_bound(x) - lower_bound(x) = nombre d\'occurrences de x',
+    'Condition : arr[mid] <= target (inférieur ou égal)',
+    'Utilisé dans C++ STL (upper_bound)',
+    'Utile pour compter les occurrences en O(log n)'
+  ],
+  
+  tags: ['search', 'binary-search', 'upper-bound', 'sorted'],
+  relatedAlgorithms: ['binary-search', 'lower-bound', 'count-occurrences']
+},
 ];
