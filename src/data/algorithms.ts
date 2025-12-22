@@ -3507,7 +3507,7 @@ console.log(firstNonRepeating('aabbcc'));     // null`,
     {
       input: '"swiss"',
       output: '"w"',
-      explanation: 's' apparaît 3 fois, 'w' et 'i' 1 fois, 'w' est le premier
+      explanation: 's\' apparaît 3 fois, \'w\' et \'i\' 1 fois, \'w\' est le premier'
     },
     {
       input: '"aabbcc"',
