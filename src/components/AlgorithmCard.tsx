@@ -1,9 +1,7 @@
 import { Link } from 'react-router-dom';
-// import { Algorithm } from '@/data';
-// import { useAlgoStore } from '@/store/useAlgoStore';
-import { Check, Star } from 'lucide-react';
+import { Algorithm } from '../types';
 import { useAlgoStore } from '../store/useAlgoStore';
-import type { Algorithm } from '../types';
+import { Check, Star, Code2 } from 'lucide-react';
 
 interface AlgorithmCardProps {
   algorithm: Algorithm;
@@ -36,7 +34,7 @@ export default function AlgorithmCard({ algorithm }: AlgorithmCardProps) {
       <div className="flex items-start justify-between">
         <div className="flex-1">
           {/* Titre et badges */}
-          <div className="flex items-center space-x-3 mb-2">
+          <div className="flex items-center flex-wrap gap-3 mb-2">
             <h3 className="text-xl font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">
               {algorithm.title}
             </h3>
@@ -48,14 +46,14 @@ export default function AlgorithmCard({ algorithm }: AlgorithmCardProps) {
             
             {/* Icône complété */}
             {completed && (
-              <div className="flex items-center space-x-1 text-green-600">
+              <div className="flex items-center space-x-1 text-green-600" title="Complété">
                 <Check className="w-5 h-5" />
               </div>
             )}
             
             {/* Icône favori */}
             {favorite && (
-              <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
+              <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" title="Favori" />
             )}
           </div>
 
@@ -64,13 +62,21 @@ export default function AlgorithmCard({ algorithm }: AlgorithmCardProps) {
             {algorithm.description}
           </p>
 
+          {/* Nombre de solutions */}
+          <div className="flex items-center space-x-2 text-sm text-primary-600 mb-3">
+            <Code2 className="w-4 h-4" />
+            <span className="font-medium">
+              {algorithm.solutions.length} {algorithm.solutions.length > 1 ? 'méthodes' : 'méthode'}
+            </span>
+          </div>
+
           {/* Complexités */}
           <div className="flex items-center space-x-4 text-sm text-gray-500">
             <div>
-              <span className="font-medium">Temps:</span> {algorithm.timeComplexity}
+              <span className="font-medium">Temps:</span> {algorithm.solutions[0].timeComplexity}
             </div>
             <div>
-              <span className="font-medium">Espace:</span> {algorithm.spaceComplexity}
+              <span className="font-medium">Espace:</span> {algorithm.solutions[0].spaceComplexity}
             </div>
           </div>
 
