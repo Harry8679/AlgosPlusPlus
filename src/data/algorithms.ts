@@ -7957,4 +7957,1540 @@ console.log(hasCycle(head));`,
   tags: ['linked-list', 'cycle', 'two-pointers', 'floyd'],
   relatedAlgorithms: ['linked-list', 'reverse-linked-list']
 },
+// ==========================================
+// 🔴 NIVEAU 6 : ALGORITHMES AVANCÉS (Algorithmes 76-90)
+// Objectif : Niveau interview FAANG
+// ==========================================
+
+{
+  id: 'two-sum',
+  title: '76. Two Sum',
+  level: 'niveau-6',
+  category: 'array',
+  difficulty: 'facile',
+  order: 76,
+  description: 'Trouver deux nombres dont la somme égale la cible',
+  explanation: `Étant donné un tableau et une cible, trouver les indices de deux nombres qui s'additionnent pour donner la cible.
+
+Exemple : nums = [2, 7, 11, 15], target = 9 → [0, 1] (car 2 + 7 = 9)
+
+Problème classique d'interview, souvent la première question chez FAANG.`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Brute Force',
+      approach: 'Deux boucles',
+      code: `function twoSum(nums, target) {
+  for (let i = 0; i < nums.length; i++) {
+    for (let j = i + 1; j < nums.length; j++) {
+      if (nums[i] + nums[j] === target) {
+        return [i, j];
+      }
+    }
+  }
+  return [];
+}
+
+// Exemple
+console.log(twoSum([2, 7, 11, 15], 9)); // [0, 1]`,
+      explanation: 'Teste toutes les paires possibles.',
+      timeComplexity: 'O(n²)',
+      spaceComplexity: 'O(1)',
+      pros: ['Simple', 'Facile à comprendre'],
+      cons: ['Très lent O(n²)']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Hash Map (optimal)',
+      approach: 'Hash Table',
+      code: `function twoSum(nums, target) {
+  const map = new Map();
+  
+  for (let i = 0; i < nums.length; i++) {
+    const complement = target - nums[i];
+    
+    if (map.has(complement)) {
+      return [map.get(complement), i];
+    }
+    
+    map.set(nums[i], i);
+  }
+  
+  return [];
+}
+
+// Exemples
+console.log(twoSum([2, 7, 11, 15], 9));  // [0, 1]
+console.log(twoSum([3, 2, 4], 6));       // [1, 2]
+console.log(twoSum([3, 3], 6));          // [0, 1]`,
+      explanation: 'Utilise une HashMap pour stocker les valeurs vues et chercher le complément en O(1).',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Optimal O(n)', 'Une seule passe', 'Élégant'],
+      cons: ['Utilise O(n) mémoire']
+    }
+  ],
+  
+  examples: [
+    {
+      input: 'nums = [2, 7, 11, 15], target = 9',
+      output: '[0, 1]',
+      explanation: 'nums[0] + nums[1] = 2 + 7 = 9'
+    },
+    {
+      input: 'nums = [3, 2, 4], target = 6',
+      output: '[1, 2]',
+      explanation: 'nums[1] + nums[2] = 2 + 4 = 6'
+    }
+  ],
+  
+  tips: [
+    'HashMap stocke {valeur: index}',
+    'Pour chaque nombre, cherche target - nombre',
+    'Une seule passe suffit',
+    'Problème #1 sur LeetCode',
+    'Variantes : Two Sum II (sorted), Two Sum III (data structure)'
+  ],
+  
+  tags: ['array', 'hash-map', 'two-pointers', 'leetcode-easy'],
+  relatedAlgorithms: ['three-sum', 'four-sum']
+},
+
+{
+  id: 'three-sum',
+  title: '77. Three Sum',
+  level: 'niveau-6',
+  category: 'array',
+  difficulty: 'moyen',
+  order: 77,
+  description: 'Trouver tous les triplets dont la somme égale zéro',
+  explanation: `Trouver tous les triplets uniques [a, b, c] tels que a + b + c = 0.
+
+Exemple : nums = [-1, 0, 1, 2, -1, -4] → [[-1, -1, 2], [-1, 0, 1]]
+
+IMPORTANT : Éviter les doublons !`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Tri + Two Pointers',
+      approach: 'Two Pointers',
+      code: `function threeSum(nums) {
+  nums.sort((a, b) => a - b);
+  const result = [];
+  
+  for (let i = 0; i < nums.length - 2; i++) {
+    // Éviter les doublons pour i
+    if (i > 0 && nums[i] === nums[i - 1]) continue;
+    
+    // Two Sum sur le reste
+    let left = i + 1;
+    let right = nums.length - 1;
+    
+    while (left < right) {
+      const sum = nums[i] + nums[left] + nums[right];
+      
+      if (sum === 0) {
+        result.push([nums[i], nums[left], nums[right]]);
+        
+        // Éviter les doublons
+        while (left < right && nums[left] === nums[left + 1]) left++;
+        while (left < right && nums[right] === nums[right - 1]) right--;
+        
+        left++;
+        right--;
+      } else if (sum < 0) {
+        left++;
+      } else {
+        right--;
+      }
+    }
+  }
+  
+  return result;
+}
+
+// Exemple
+console.log(threeSum([-1, 0, 1, 2, -1, -4]));
+// [[-1, -1, 2], [-1, 0, 1]]`,
+      explanation: 'Trie puis utilise two pointers pour chaque élément fixé.',
+      timeComplexity: 'O(n²)',
+      spaceComplexity: 'O(1)', // Sans compter le résultat
+      pros: ['Optimal O(n²)', 'Pas de HashMap', 'Gère les doublons'],
+      cons: ['Nécessite tri', 'Plus complexe']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '[-1, 0, 1, 2, -1, -4]',
+      output: '[[-1, -1, 2], [-1, 0, 1]]',
+      explanation: 'Deux triplets valides'
+    },
+    {
+      input: '[0, 0, 0]',
+      output: '[[0, 0, 0]]',
+      explanation: 'Un seul triplet'
+    }
+  ],
+  
+  tips: [
+    'Trier d\'abord pour utiliser two pointers',
+    'Fixer un élément, résoudre Two Sum sur le reste',
+    'CRITIQUE : éviter les doublons avec continue',
+    'O(n²) est optimal pour ce problème',
+    'Variantes : 3Sum Closest, 4Sum'
+  ],
+  
+  tags: ['array', 'two-pointers', 'sorting', 'leetcode-medium'],
+  relatedAlgorithms: ['two-sum', 'four-sum']
+},
+
+{
+  id: 'sliding-window-max',
+  title: '78. Sliding Window Maximum',
+  level: 'niveau-6',
+  category: 'array',
+  difficulty: 'difficile',
+  order: 78,
+  description: 'Maximum dans une fenêtre glissante de taille k',
+  explanation: `Trouver le maximum dans chaque fenêtre glissante de taille k.
+
+Exemple : nums = [1,3,-1,-3,5,3,6,7], k = 3
+Output: [3,3,5,5,6,7]
+
+Fenêtres : [1 3 -1] → 3, [3 -1 -3] → 3, [-1 -3 5] → 5, etc.`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Brute Force',
+      approach: 'Deux boucles',
+      code: `function maxSlidingWindow(nums, k) {
+  const result = [];
+  
+  for (let i = 0; i <= nums.length - k; i++) {
+    let max = nums[i];
+    for (let j = i; j < i + k; j++) {
+      max = Math.max(max, nums[j]);
+    }
+    result.push(max);
+  }
+  
+  return result;
+}
+
+// Exemple
+console.log(maxSlidingWindow([1,3,-1,-3,5,3,6,7], 3));
+// [3, 3, 5, 5, 6, 7]`,
+      explanation: 'Calcule le max pour chaque fenêtre.',
+      timeComplexity: 'O(n * k)',
+      spaceComplexity: 'O(1)',
+      pros: ['Simple'],
+      cons: ['Lent O(n*k)']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Deque (optimal)',
+      approach: 'Monotonic Queue',
+      code: `function maxSlidingWindow(nums, k) {
+  const result = [];
+  const deque = []; // Stocke les indices
+  
+  for (let i = 0; i < nums.length; i++) {
+    // Retirer les indices hors de la fenêtre
+    while (deque.length && deque[0] <= i - k) {
+      deque.shift();
+    }
+    
+    // Retirer les éléments plus petits (inutiles)
+    while (deque.length && nums[deque[deque.length - 1]] < nums[i]) {
+      deque.pop();
+    }
+    
+    deque.push(i);
+    
+    // Ajouter le max au résultat
+    if (i >= k - 1) {
+      result.push(nums[deque[0]]);
+    }
+  }
+  
+  return result;
+}
+
+// Exemple
+console.log(maxSlidingWindow([1,3,-1,-3,5,3,6,7], 3));
+// [3, 3, 5, 5, 6, 7]`,
+      explanation: 'Utilise une deque monotone décroissante pour maintenir le maximum.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(k)',
+      pros: ['Optimal O(n)', 'Clever avec deque'],
+      cons: ['Complexe à comprendre', 'Deque non standard']
+    }
+  ],
+  
+  examples: [
+    {
+      input: 'nums = [1,3,-1,-3,5,3,6,7], k = 3',
+      output: '[3, 3, 5, 5, 6, 7]',
+      explanation: 'Maximum de chaque fenêtre de taille 3'
+    }
+  ],
+  
+  tips: [
+    'Deque stocke les indices en ordre décroissant de valeurs',
+    'Front de la deque = max actuel',
+    'Retirer les éléments hors fenêtre',
+    'Retirer les éléments plus petits (jamais max)',
+    'Problème difficile, acceptable O(n*k) en interview'
+  ],
+  
+  tags: ['array', 'sliding-window', 'deque', 'monotonic-queue', 'leetcode-hard'],
+  relatedAlgorithms: ['sliding-window-sum', 'longest-substring']
+},
+
+{
+  id: 'kadane-algorithm',
+  title: '79. Kadane\'s Algorithm (Maximum Subarray)',
+  level: 'niveau-6',
+  category: 'array',
+  difficulty: 'moyen',
+  order: 79,
+  description: 'Somme maximale d\'un sous-tableau contigu (optimal)',
+  explanation: `Algorithme de Kadane : trouve la somme maximale d'un sous-tableau contigu en O(n).
+
+Exemple : [-2,1,-3,4,-1,2,1,-5,4] → 6 (sous-tableau [4,-1,2,1])
+
+Idée clé : à chaque position, décider si on continue le sous-tableau ou on recommence.`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Kadane\'s Algorithm',
+      approach: 'Dynamic Programming',
+      code: `function maxSubArray(nums) {
+  let maxSum = nums[0];
+  let currentSum = nums[0];
+  
+  for (let i = 1; i < nums.length; i++) {
+    // Continuer ou recommencer ?
+    currentSum = Math.max(nums[i], currentSum + nums[i]);
+    maxSum = Math.max(maxSum, currentSum);
+  }
+  
+  return maxSum;
+}
+
+// Exemples
+console.log(maxSubArray([-2,1,-3,4,-1,2,1,-5,4])); // 6
+console.log(maxSubArray([1]));                      // 1
+console.log(maxSubArray([5,4,-1,7,8]));            // 23`,
+      explanation: 'À chaque étape : continuer le sous-tableau ou recommencer avec l\'élément actuel.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(1)',
+      pros: ['Optimal O(n)', 'Simple', 'Une seule passe', 'Élégant'],
+      cons: ['Non intuitif au premier abord']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Kadane avec indices',
+      approach: 'Dynamic Programming',
+      code: `function maxSubArray(nums) {
+  let maxSum = nums[0];
+  let currentSum = nums[0];
+  let start = 0, end = 0, tempStart = 0;
+  
+  for (let i = 1; i < nums.length; i++) {
+    if (currentSum + nums[i] < nums[i]) {
+      currentSum = nums[i];
+      tempStart = i;
+    } else {
+      currentSum += nums[i];
+    }
+    
+    if (currentSum > maxSum) {
+      maxSum = currentSum;
+      start = tempStart;
+      end = i;
+    }
+  }
+  
+  return {
+    maxSum,
+    subarray: nums.slice(start, end + 1)
+  };
+}
+
+// Exemple
+console.log(maxSubArray([-2,1,-3,4,-1,2,1,-5,4]));
+// { maxSum: 6, subarray: [4, -1, 2, 1] }`,
+      explanation: 'Version qui retourne aussi le sous-tableau.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(1)',
+      pros: ['Retourne le sous-tableau', 'Toujours O(n)'],
+      cons: ['Plus de code']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '[-2,1,-3,4,-1,2,1,-5,4]',
+      output: '6',
+      explanation: 'Sous-tableau [4,-1,2,1] a la somme max'
+    },
+    {
+      input: '[5,4,-1,7,8]',
+      output: '23',
+      explanation: 'Tout le tableau'
+    }
+  ],
+  
+  tips: [
+    'Programmation dynamique : currentSum = max(num, currentSum + num)',
+    'Si currentSum < 0, mieux vaut recommencer',
+    'Algorithme classique, DOIT être su par cœur',
+    'Utilisé en finance (maximum profit)',
+    'Variante : Maximum Product Subarray'
+  ],
+  
+  tags: ['array', 'dynamic-programming', 'kadane', 'leetcode-medium'],
+  relatedAlgorithms: ['max-product-subarray', 'max-subarray-brute']
+},
+
+{
+  id: 'prefix-sum',
+  title: '80. Prefix Sum',
+  level: 'niveau-6',
+  category: 'array',
+  difficulty: 'facile',
+  order: 80,
+  description: 'Calculer des sommes de sous-tableaux en O(1)',
+  explanation: `Prefix Sum permet de calculer la somme de n'importe quel sous-tableau [i, j] en O(1).
+
+Prétraitement : prefix[i] = somme de nums[0..i-1]
+Requête : sum(i, j) = prefix[j+1] - prefix[i]
+
+Exemple : nums = [1, 2, 3, 4], prefix = [0, 1, 3, 6, 10]
+sum(1, 2) = prefix[3] - prefix[1] = 6 - 1 = 5 (éléments 2+3)`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Classe PrefixSum',
+      approach: 'Preprocessing',
+      code: `class PrefixSum {
+  constructor(nums) {
+    this.prefix = [0];
+    
+    // Construire prefix sum
+    for (let num of nums) {
+      this.prefix.push(this.prefix[this.prefix.length - 1] + num);
+    }
+  }
+  
+  // Somme du sous-tableau [left, right]
+  rangeSum(left, right) {
+    return this.prefix[right + 1] - this.prefix[left];
+  }
+}
+
+// Exemple
+const nums = [1, 2, 3, 4, 5];
+const ps = new PrefixSum(nums);
+
+console.log(ps.rangeSum(1, 3)); // 9 (2+3+4)
+console.log(ps.rangeSum(0, 4)); // 15 (tout)
+console.log(ps.rangeSum(2, 2)); // 3 (juste l'élément 3)`,
+      explanation: 'Prétraite le tableau en O(n), puis chaque requête en O(1).',
+      timeComplexity: 'Construction O(n), requête O(1)',
+      spaceComplexity: 'O(n)',
+      pros: ['Requêtes ultra-rapides O(1)', 'Simple', 'Très utile'],
+      cons: ['Prétraitement O(n)', 'Espace O(n)']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Application - Subarray Sum Equals K',
+      approach: 'Hash Map + Prefix Sum',
+      code: `function subarraySum(nums, k) {
+  const map = new Map([[0, 1]]); // prefix sum → count
+  let count = 0;
+  let sum = 0;
+  
+  for (let num of nums) {
+    sum += num;
+    
+    // Chercher sum - k dans le map
+    if (map.has(sum - k)) {
+      count += map.get(sum - k);
+    }
+    
+    map.set(sum, (map.get(sum) || 0) + 1);
+  }
+  
+  return count;
+}
+
+// Exemple
+console.log(subarraySum([1, 1, 1], 2));        // 2
+console.log(subarraySum([1, 2, 3], 3));        // 2
+console.log(subarraySum([1, -1, 0], 0));       // 3`,
+      explanation: 'Utilise prefix sum + HashMap pour compter les sous-tableaux de somme k.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Technique puissante', 'O(n) optimal'],
+      cons: ['Nécessite HashMap']
+    }
+  ],
+  
+  examples: [
+    {
+      input: 'nums = [1, 2, 3, 4], rangeSum(1, 3)',
+      output: '9',
+      explanation: 'Somme de [2, 3, 4]'
+    }
+  ],
+  
+  tips: [
+    'prefix[i] = somme de nums[0..i-1]',
+    'sum(i, j) = prefix[j+1] - prefix[i]',
+    'Très utile pour multiple range queries',
+    'Extension : prefix sum 2D pour matrices',
+    'Applications : subarray sum, range queries'
+  ],
+  
+  tags: ['array', 'prefix-sum', 'preprocessing', 'leetcode-medium'],
+  relatedAlgorithms: ['range-query', 'subarray-sum']
+},
+
+{
+  id: 'binary-search-advanced',
+  title: '81. Binary Search avancée',
+  level: 'niveau-6',
+  category: 'search',
+  difficulty: 'moyen',
+  order: 81,
+  description: 'Binary Search sur tableaux rotés, recherche de pic',
+  explanation: `Binary Search avancée pour tableaux avec propriétés spéciales.
+
+1. Tableau roté : [4,5,6,7,0,1,2], chercher 0
+2. Trouver un pic : [1,2,3,1]
+3. Search in rotated sorted array`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Rotated Sorted Array',
+      approach: 'Modified Binary Search',
+      code: `function searchRotated(nums, target) {
+  let left = 0;
+  let right = nums.length - 1;
+  
+  while (left <= right) {
+    const mid = Math.floor((left + right) / 2);
+    
+    if (nums[mid] === target) return mid;
+    
+    // Déterminer quelle moitié est triée
+    if (nums[left] <= nums[mid]) {
+      // Moitié gauche triée
+      if (nums[left] <= target && target < nums[mid]) {
+        right = mid - 1;
+      } else {
+        left = mid + 1;
+      }
+    } else {
+      // Moitié droite triée
+      if (nums[mid] < target && target <= nums[right]) {
+        left = mid + 1;
+      } else {
+        right = mid - 1;
+      }
+    }
+  }
+  
+  return -1;
+}
+
+// Exemple
+console.log(searchRotated([4,5,6,7,0,1,2], 0)); // 4
+console.log(searchRotated([4,5,6,7,0,1,2], 3)); // -1`,
+      explanation: 'Identifie la moitié triée et décide où chercher.',
+      timeComplexity: 'O(log n)',
+      spaceComplexity: 'O(1)',
+      pros: ['O(log n) même avec rotation', 'Élégant'],
+      cons: ['Logique complexe']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Find Peak Element',
+      approach: 'Binary Search',
+      code: `function findPeakElement(nums) {
+  let left = 0;
+  let right = nums.length - 1;
+  
+  while (left < right) {
+    const mid = Math.floor((left + right) / 2);
+    
+    if (nums[mid] > nums[mid + 1]) {
+      // Pic à gauche ou mid est un pic
+      right = mid;
+    } else {
+      // Pic à droite
+      left = mid + 1;
+    }
+  }
+  
+  return left;
+}
+
+// Exemple
+console.log(findPeakElement([1,2,3,1]));     // 2
+console.log(findPeakElement([1,2,1,3,5,6,4])); // 5`,
+      explanation: 'Binary search sur une propriété : nums[i] > nums[i+1].',
+      timeComplexity: 'O(log n)',
+      spaceComplexity: 'O(1)',
+      pros: ['O(log n)', 'Pas besoin de tri'],
+      cons: ['Non intuitif']
+    }
+  ],
+  
+  examples: [
+    {
+      input: 'Rotated: [4,5,6,7,0,1,2], target = 0',
+      output: '4',
+      explanation: 'Trouve 0 à l\'index 4'
+    }
+  ],
+  
+  tips: [
+    'Identifier la moitié triée avec nums[left] <= nums[mid]',
+    'Binary search ne nécessite pas toujours un tableau trié',
+    'Chercher une propriété monotone',
+    'Applications : rotated array, peak, sqrt, capacity'
+  ],
+  
+  tags: ['binary-search', 'array', 'leetcode-medium'],
+  relatedAlgorithms: ['binary-search', 'find-minimum-rotated']
+},
+
+{
+  id: 'floyd-cycle',
+  title: '82. Floyd\'s Cycle Detection (revisité)',
+  level: 'niveau-6',
+  category: 'linked-list',
+  difficulty: 'moyen',
+  order: 82,
+  description: 'Algorithme tortue et lièvre pour détecter et trouver le début du cycle',
+  explanation: `Floyd's algorithm (tortue et lièvre) détecte un cycle et trouve son début.
+
+Phase 1 : Détecter le cycle (slow/fast se rencontrent)
+Phase 2 : Trouver le début (reset slow au head, avancer à même vitesse)
+
+Mathématiquement prouvé que slow et fast se rencontrent au début du cycle.`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Floyd complet avec début du cycle',
+      approach: 'Two Pointers',
+      code: `function detectCycle(head) {
+  if (!head || !head.next) return null;
+  
+  // Phase 1 : Détecter le cycle
+  let slow = head;
+  let fast = head;
+  
+  while (fast && fast.next) {
+    slow = slow.next;
+    fast = fast.next.next;
+    
+    if (slow === fast) {
+      // Cycle détecté
+      
+      // Phase 2 : Trouver le début
+      slow = head;
+      while (slow !== fast) {
+        slow = slow.next;
+        fast = fast.next;
+      }
+      
+      return slow; // Début du cycle
+    }
+  }
+  
+  return null; // Pas de cycle
+}
+
+// Pour trouver la longueur du cycle
+function cycleLength(head) {
+  let slow = head;
+  let fast = head;
+  
+  // Détecter
+  while (fast && fast.next) {
+    slow = slow.next;
+    fast = fast.next.next;
+    
+    if (slow === fast) {
+      // Compter
+      let length = 1;
+      fast = fast.next;
+      while (slow !== fast) {
+        fast = fast.next;
+        length++;
+      }
+      return length;
+    }
+  }
+  
+  return 0;
+}`,
+      explanation: 'Phase 1 détecte, Phase 2 trouve le début en réinitialisant un pointeur.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(1)',
+      pros: ['O(1) espace', 'Trouve le début', 'Mathématiquement élégant'],
+      cons: ['Preuve mathématique complexe']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '3 -> 2 -> 0 -> -4 -> (cycle vers 2)',
+      output: 'Node avec valeur 2',
+      explanation: 'Le cycle commence au deuxième nœud'
+    }
+  ],
+  
+  tips: [
+    'Phase 1 : tortue 1 pas, lièvre 2 pas',
+    'Phase 2 : reset tortue au head, avancer à même vitesse',
+    'Distance du head au début = distance du meeting point au début',
+    'Applications : duplicate number, happy number'
+  ],
+  
+  tags: ['linked-list', 'two-pointers', 'floyd', 'cycle', 'leetcode-medium'],
+  relatedAlgorithms: ['detect-cycle', 'linked-list']
+},
+
+{
+  id: 'merge-intervals',
+  title: '83. Merge Intervals',
+  level: 'niveau-6',
+  category: 'array',
+  difficulty: 'moyen',
+  order: 83,
+  description: 'Fusionner les intervalles qui se chevauchent',
+  explanation: `Fusionner tous les intervalles qui se chevauchent.
+
+Exemple : [[1,3],[2,6],[8,10],[15,18]] → [[1,6],[8,10],[15,18]]
+
+Stratégie : Trier par début, puis fusionner si chevauchement.`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Tri + Fusion',
+      approach: 'Sorting',
+      code: `function merge(intervals) {
+  if (intervals.length === 0) return [];
+  
+  // Trier par début
+  intervals.sort((a, b) => a[0] - b[0]);
+  
+  const result = [intervals[0]];
+  
+  for (let i = 1; i < intervals.length; i++) {
+    const current = intervals[i];
+    const last = result[result.length - 1];
+    
+    // Chevauchement ?
+    if (current[0] <= last[1]) {
+      // Fusionner
+      last[1] = Math.max(last[1], current[1]);
+    } else {
+      // Pas de chevauchement
+      result.push(current);
+    }
+  }
+  
+  return result;
+}
+
+// Exemples
+console.log(merge([[1,3],[2,6],[8,10],[15,18]]));
+// [[1,6],[8,10],[15,18]]
+
+console.log(merge([[1,4],[4,5]]));
+// [[1,5]]
+
+console.log(merge([[1,4],[0,4]]));
+// [[0,4]]`,
+      explanation: 'Trie puis fusionne les intervalles qui se chevauchent.',
+      timeComplexity: 'O(n log n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Simple après tri', 'Élégant'],
+      cons: ['Nécessite tri O(n log n)']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '[[1,3],[2,6],[8,10],[15,18]]',
+      output: '[[1,6],[8,10],[15,18]]',
+      explanation: '[1,3] et [2,6] fusionnent en [1,6]'
+    }
+  ],
+  
+  tips: [
+    'Trier par début d\'intervalle d\'abord',
+    'Chevauchement si current.start <= last.end',
+    'Fusionner : last.end = max(last.end, current.end)',
+    'Variantes : insert interval, meeting rooms'
+  ],
+  
+  tags: ['array', 'intervals', 'sorting', 'leetcode-medium'],
+  relatedAlgorithms: ['insert-interval', 'meeting-rooms']
+},
+
+{
+  id: 'longest-increasing-subsequence',
+  title: '84. Longest Increasing Subsequence (LIS)',
+  level: 'niveau-6',
+  category: 'dynamic-programming',
+  difficulty: 'moyen',
+  order: 84,
+  description: 'Plus longue sous-séquence strictement croissante',
+  explanation: `Trouver la longueur de la plus longue sous-séquence strictement croissante.
+
+Exemple : [10,9,2,5,3,7,101,18] → 4 ([2,3,7,101] ou [2,5,7,101])
+
+ATTENTION : Sous-séquence ≠ sous-tableau (pas besoin d'être contigu)`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : DP O(n²)',
+      approach: 'Dynamic Programming',
+      code: `function lengthOfLIS(nums) {
+  if (nums.length === 0) return 0;
+  
+  const dp = new Array(nums.length).fill(1);
+  let maxLength = 1;
+  
+  for (let i = 1; i < nums.length; i++) {
+    for (let j = 0; j < i; j++) {
+      if (nums[i] > nums[j]) {
+        dp[i] = Math.max(dp[i], dp[j] + 1);
+      }
+    }
+    maxLength = Math.max(maxLength, dp[i]);
+  }
+  
+  return maxLength;
+}
+
+// Exemples
+console.log(lengthOfLIS([10,9,2,5,3,7,101,18])); // 4
+console.log(lengthOfLIS([0,1,0,3,2,3]));         // 4
+console.log(lengthOfLIS([7,7,7,7,7,7,7]));       // 1`,
+      explanation: 'dp[i] = longueur du LIS se terminant à i.',
+      timeComplexity: 'O(n²)',
+      spaceComplexity: 'O(n)',
+      pros: ['Classique DP', 'Facile à comprendre'],
+      cons: ['O(n²) pas optimal']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Binary Search O(n log n)',
+      approach: 'Greedy + Binary Search',
+      code: `function lengthOfLIS(nums) {
+  const tails = [];
+  
+  for (let num of nums) {
+    let left = 0;
+    let right = tails.length;
+    
+    // Binary search
+    while (left < right) {
+      const mid = Math.floor((left + right) / 2);
+      if (tails[mid] < num) {
+        left = mid + 1;
+      } else {
+        right = mid;
+      }
+    }
+    
+    if (left === tails.length) {
+      tails.push(num);
+    } else {
+      tails[left] = num;
+    }
+  }
+  
+  return tails.length;
+}
+
+// Exemples
+console.log(lengthOfLIS([10,9,2,5,3,7,101,18])); // 4`,
+      explanation: 'Maintient le plus petit tail possible pour chaque longueur avec binary search.',
+      timeComplexity: 'O(n log n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Optimal O(n log n)', 'Très clever'],
+      cons: ['Complexe à comprendre', 'Ne donne pas la séquence']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '[10,9,2,5,3,7,101,18]',
+      output: '4',
+      explanation: 'Séquences possibles : [2,3,7,101] ou [2,5,7,101]'
+    }
+  ],
+  
+  tips: [
+    'Sous-séquence ≠ sous-tableau (pas contigu)',
+    'DP O(n²) : dp[i] = max(dp[j] + 1) pour j < i et nums[j] < nums[i]',
+    'Binary search O(n log n) : maintient tails optimaux',
+    'tails[i] = plus petit tail pour longueur i+1',
+    'Problème classique de DP'
+  ],
+  
+  tags: ['dynamic-programming', 'binary-search', 'subsequence', 'leetcode-medium'],
+  relatedAlgorithms: ['longest-common-subsequence', 'russian-doll']
+},
+
+{
+  id: 'longest-common-prefix',
+  title: '85. Longest Common Prefix',
+  level: 'niveau-6',
+  category: 'string',
+  difficulty: 'facile',
+  order: 85,
+  description: 'Plus long préfixe commun à toutes les chaînes',
+  explanation: `Trouver le plus long préfixe commun parmi un tableau de chaînes.
+
+Exemple : ["flower","flow","flight"] → "fl"
+Exemple : ["dog","racecar","car"] → "" (rien en commun)`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Comparaison verticale',
+      approach: 'Iteration',
+      code: `function longestCommonPrefix(strs) {
+  if (strs.length === 0) return "";
+  
+  // Comparer caractère par caractère
+  for (let i = 0; i < strs[0].length; i++) {
+    const char = strs[0][i];
+    
+    for (let j = 1; j < strs.length; j++) {
+      if (i >= strs[j].length || strs[j][i] !== char) {
+        return strs[0].substring(0, i);
+      }
+    }
+  }
+  
+  return strs[0];
+}
+
+// Exemples
+console.log(longestCommonPrefix(["flower","flow","flight"])); // "fl"
+console.log(longestCommonPrefix(["dog","racecar","car"]));    // ""
+console.log(longestCommonPrefix(["interspecies","interstellar","interstate"])); // "inters"`,
+      explanation: 'Compare caractère par caractère verticalement.',
+      timeComplexity: 'O(S)', // S = somme de tous les caractères
+      spaceComplexity: 'O(1)',
+      pros: ['Simple', 'Early return'],
+      cons: ['Parcourt potentiellement tout']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Comparaison horizontale',
+      approach: 'Iteration',
+      code: `function longestCommonPrefix(strs) {
+  if (strs.length === 0) return "";
+  
+  let prefix = strs[0];
+  
+  for (let i = 1; i < strs.length; i++) {
+    // Réduire prefix jusqu'à match
+    while (strs[i].indexOf(prefix) !== 0) {
+      prefix = prefix.substring(0, prefix.length - 1);
+      if (prefix === "") return "";
+    }
+  }
+  
+  return prefix;
+}
+
+// Exemples
+console.log(longestCommonPrefix(["flower","flow","flight"])); // "fl"`,
+      explanation: 'Réduit progressivement le préfixe jusqu\'à ce qu\'il matche.',
+      timeComplexity: 'O(S)',
+      spaceComplexity: 'O(1)',
+      pros: ['Simple', 'Différente approche'],
+      cons: ['Peut être lent si beaucoup de réductions']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '["flower","flow","flight"]',
+      output: '"fl"',
+      explanation: 'Préfixe commun le plus long'
+    },
+    {
+      input: '["dog","racecar","car"]',
+      output: '""',
+      explanation: 'Aucun préfixe commun'
+    }
+  ],
+  
+  tips: [
+    'Cas limite : tableau vide, une seule string',
+    'Early return si préfixe devient vide',
+    'Vertical : compare colonne par colonne',
+    'Horizontal : réduit le préfixe progressivement',
+    'Peut optimiser en trouvant d\'abord la plus courte string'
+  ],
+  
+  tags: ['string', 'prefix', 'leetcode-easy'],
+  relatedAlgorithms: ['trie', 'common-characters']
+},
+
+{
+  id: 'longest-common-subsequence',
+  title: '86. Longest Common Subsequence (LCS)',
+  level: 'niveau-6',
+  category: 'dynamic-programming',
+  difficulty: 'moyen',
+  order: 86,
+  description: 'Plus longue sous-séquence commune à deux chaînes',
+  explanation: `Trouver la longueur de la plus longue sous-séquence commune (pas nécessairement contiguë).
+
+Exemple : "abcde", "ace" → 3 (sous-séquence "ace")
+
+Problème classique de DP, utilisé dans diff, bioinformatique, etc.`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : DP 2D',
+      approach: 'Dynamic Programming',
+      code: `function longestCommonSubsequence(text1, text2) {
+  const m = text1.length;
+  const n = text2.length;
+  const dp = Array.from({ length: m + 1 }, () => 
+    new Array(n + 1).fill(0)
+  );
+  
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      if (text1[i - 1] === text2[j - 1]) {
+        dp[i][j] = dp[i - 1][j - 1] + 1;
+      } else {
+        dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+      }
+    }
+  }
+  
+  return dp[m][n];
+}
+
+// Exemples
+console.log(longestCommonSubsequence("abcde", "ace"));   // 3
+console.log(longestCommonSubsequence("abc", "abc"));     // 3
+console.log(longestCommonSubsequence("abc", "def"));     // 0`,
+      explanation: 'Table DP où dp[i][j] = LCS de text1[0..i-1] et text2[0..j-1].',
+      timeComplexity: 'O(m * n)',
+      spaceComplexity: 'O(m * n)',
+      pros: ['Classique DP', 'Peut reconstruire la séquence'],
+      cons: ['O(m*n) espace']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : DP optimisé (1D)',
+      approach: 'Space-Optimized DP',
+      code: `function longestCommonSubsequence(text1, text2) {
+  const m = text1.length;
+  const n = text2.length;
+  let prev = new Array(n + 1).fill(0);
+  
+  for (let i = 1; i <= m; i++) {
+    const curr = new Array(n + 1).fill(0);
+    
+    for (let j = 1; j <= n; j++) {
+      if (text1[i - 1] === text2[j - 1]) {
+        curr[j] = prev[j - 1] + 1;
+      } else {
+        curr[j] = Math.max(prev[j], curr[j - 1]);
+      }
+    }
+    
+    prev = curr;
+  }
+  
+  return prev[n];
+}
+
+// Exemples
+console.log(longestCommonSubsequence("abcde", "ace")); // 3`,
+      explanation: 'Optimise l\'espace en ne gardant que la ligne précédente.',
+      timeComplexity: 'O(m * n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Espace O(n) au lieu de O(m*n)'],
+      cons: ['Ne peut pas reconstruire la séquence']
+    }
+  ],
+  
+  examples: [
+    {
+      input: 'text1 = "abcde", text2 = "ace"',
+      output: '3',
+      explanation: 'LCS est "ace"'
+    },
+    {
+      input: 'text1 = "abc", text2 = "def"',
+      output: '0',
+      explanation: 'Aucun caractère commun'
+    }
+  ],
+  
+  tips: [
+    'Si caractères égaux : dp[i][j] = dp[i-1][j-1] + 1',
+    'Sinon : dp[i][j] = max(dp[i-1][j], dp[i][j-1])',
+    'Utilisé dans : diff, DNA matching, plagiarism',
+    'Variante : Longest Common Substring (doit être contigu)',
+    'Peut optimiser à O(min(m,n)) espace'
+  ],
+  
+  tags: ['dynamic-programming', 'string', 'subsequence', 'leetcode-medium'],
+  relatedAlgorithms: ['edit-distance', 'longest-increasing-subsequence']
+},
+
+{
+  id: 'edit-distance',
+  title: '87. Edit Distance (Levenshtein Distance)',
+  level: 'niveau-6',
+  category: 'dynamic-programming',
+  difficulty: 'difficile',
+  order: 87,
+  description: 'Nombre minimum d\'opérations pour transformer une chaîne en une autre',
+  explanation: `Calculer le nombre minimum d'opérations (insertion, suppression, remplacement) pour transformer word1 en word2.
+
+Exemple : "horse" → "ros"
+- Remplacer 'h' par 'r' → "rorse"
+- Supprimer 'r' → "rose"
+- Supprimer 'e' → "ros"
+Total : 3 opérations
+
+Algorithme de Levenshtein, utilisé en NLP, spell checking, DNA sequencing.`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : DP 2D',
+      approach: 'Dynamic Programming',
+      code: `function minDistance(word1, word2) {
+  const m = word1.length;
+  const n = word2.length;
+  
+  // dp[i][j] = edit distance entre word1[0..i-1] et word2[0..j-1]
+  const dp = Array.from({ length: m + 1 }, () => 
+    new Array(n + 1).fill(0)
+  );
+  
+  // Cas de base
+  for (let i = 0; i <= m; i++) {
+    dp[i][0] = i; // Supprimer tous les caractères
+  }
+  for (let j = 0; j <= n; j++) {
+    dp[0][j] = j; // Insérer tous les caractères
+  }
+  
+  // Remplir la table
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      if (word1[i - 1] === word2[j - 1]) {
+        dp[i][j] = dp[i - 1][j - 1]; // Pas d'opération
+      } else {
+        dp[i][j] = Math.min(
+          dp[i - 1][j] + 1,     // Supprimer
+          dp[i][j - 1] + 1,     // Insérer
+          dp[i - 1][j - 1] + 1  // Remplacer
+        );
+      }
+    }
+  }
+  
+  return dp[m][n];
+}
+
+// Exemples
+console.log(minDistance("horse", "ros"));       // 3
+console.log(minDistance("intention", "execution")); // 5`,
+      explanation: 'DP 2D où dp[i][j] = distance entre préfixes de longueur i et j.',
+      timeComplexity: 'O(m * n)',
+      spaceComplexity: 'O(m * n)',
+      pros: ['Classique DP', 'Peut reconstruire les opérations'],
+      cons: ['O(m*n) espace']
+    }
+  ],
+  
+  examples: [
+    {
+      input: 'word1 = "horse", word2 = "ros"',
+      output: '3',
+      explanation: 'Replace h→r, delete r, delete e'
+    },
+    {
+      input: 'word1 = "intention", word2 = "execution"',
+      output: '5',
+      explanation: '5 opérations minimum'
+    }
+  ],
+  
+  tips: [
+    'Trois opérations : insert, delete, replace',
+    'Si caractères égaux : pas d\'opération',
+    'Sinon : min(delete, insert, replace) + 1',
+    'Applications : spell check, DNA, plagiarism',
+    'Optimisable à O(n) espace',
+    'Variante : un seul type d\'opération autorisé'
+  ],
+  
+  tags: ['dynamic-programming', 'string', 'levenshtein', 'leetcode-hard'],
+  relatedAlgorithms: ['longest-common-subsequence', 'min-operations']
+},
+
+{
+  id: 'coin-change',
+  title: '88. Coin Change',
+  level: 'niveau-6',
+  category: 'dynamic-programming',
+  difficulty: 'moyen',
+  order: 88,
+  description: 'Nombre minimum de pièces pour former un montant',
+  explanation: `Trouver le nombre minimum de pièces nécessaires pour former un montant.
+
+Exemple : coins = [1, 2, 5], amount = 11 → 3 (5 + 5 + 1)
+
+Problème classique de DP unbounded knapsack.`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : DP Bottom-Up',
+      approach: 'Dynamic Programming',
+      code: `function coinChange(coins, amount) {
+  // dp[i] = nombre minimum de pièces pour amount i
+  const dp = new Array(amount + 1).fill(Infinity);
+  dp[0] = 0;
+  
+  for (let i = 1; i <= amount; i++) {
+    for (let coin of coins) {
+      if (i >= coin) {
+        dp[i] = Math.min(dp[i], dp[i - coin] + 1);
+      }
+    }
+  }
+  
+  return dp[amount] === Infinity ? -1 : dp[amount];
+}
+
+// Exemples
+console.log(coinChange([1, 2, 5], 11));    // 3 (5+5+1)
+console.log(coinChange([2], 3));           // -1 (impossible)
+console.log(coinChange([1], 0));           // 0
+console.log(coinChange([1, 2, 5], 100));   // 20 (20×5)`,
+      explanation: 'Pour chaque montant, essaie chaque pièce et garde le minimum.',
+      timeComplexity: 'O(amount * n)',
+      spaceComplexity: 'O(amount)',
+      pros: ['Optimal', 'Bottom-up clair'],
+      cons: ['O(amount) espace']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : DP avec reconstruction',
+      approach: 'Dynamic Programming',
+      code: `function coinChange(coins, amount) {
+  const dp = new Array(amount + 1).fill(Infinity);
+  const parent = new Array(amount + 1).fill(-1);
+  dp[0] = 0;
+  
+  for (let i = 1; i <= amount; i++) {
+    for (let coin of coins) {
+      if (i >= coin && dp[i - coin] + 1 < dp[i]) {
+        dp[i] = dp[i - coin] + 1;
+        parent[i] = coin;
+      }
+    }
+  }
+  
+  if (dp[amount] === Infinity) return { count: -1, coins: [] };
+  
+  // Reconstruire les pièces
+  const result = [];
+  let curr = amount;
+  while (curr > 0) {
+    result.push(parent[curr]);
+    curr -= parent[curr];
+  }
+  
+  return { count: dp[amount], coins: result };
+}
+
+// Exemple
+console.log(coinChange([1, 2, 5], 11));
+// { count: 3, coins: [1, 5, 5] }`,
+      explanation: 'Garde trace des pièces utilisées pour reconstruire la solution.',
+      timeComplexity: 'O(amount * n)',
+      spaceComplexity: 'O(amount)',
+      pros: ['Retourne les pièces utilisées'],
+      cons: ['Plus de code']
+    }
+  ],
+  
+  examples: [
+    {
+      input: 'coins = [1, 2, 5], amount = 11',
+      output: '3',
+      explanation: '5 + 5 + 1 = 11'
+    },
+    {
+      input: 'coins = [2], amount = 3',
+      output: '-1',
+      explanation: 'Impossible de former 3 avec des pièces de 2'
+    }
+  ],
+  
+  tips: [
+    'dp[i] = min(dp[i], dp[i - coin] + 1)',
+    'Initialiser à Infinity sauf dp[0] = 0',
+    'Unbounded : peut utiliser chaque pièce plusieurs fois',
+    'Variante : Coin Change II (nombre de combinaisons)',
+    'Applications : monnaie, ressources, items'
+  ],
+  
+  tags: ['dynamic-programming', 'unbounded-knapsack', 'leetcode-medium'],
+  relatedAlgorithms: ['coin-change-ii', 'knapsack']
+},
+
+{
+  id: 'max-product-subarray',
+  title: '89. Maximum Product Subarray',
+  level: 'niveau-6',
+  category: 'dynamic-programming',
+  difficulty: 'moyen',
+  order: 89,
+  description: 'Produit maximum d\'un sous-tableau contigu',
+  explanation: `Trouver le sous-tableau contigu avec le produit maximum.
+
+Exemple : [2,3,-2,4] → 6 (sous-tableau [2,3])
+
+Différence avec Kadane : les négatifs peuvent devenir positifs (négatif × négatif).
+Il faut garder track du min ET du max.`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : DP avec min et max',
+      approach: 'Dynamic Programming',
+      code: `function maxProduct(nums) {
+  if (nums.length === 0) return 0;
+  
+  let maxSoFar = nums[0];
+  let maxEndingHere = nums[0];
+  let minEndingHere = nums[0];
+  
+  for (let i = 1; i < nums.length; i++) {
+    const num = nums[i];
+    
+    // Sauvegarder maxEndingHere avant modification
+    const temp = maxEndingHere;
+    
+    // Calculer nouveau max et min
+    maxEndingHere = Math.max(num, maxEndingHere * num, minEndingHere * num);
+    minEndingHere = Math.min(num, temp * num, minEndingHere * num);
+    
+    maxSoFar = Math.max(maxSoFar, maxEndingHere);
+  }
+  
+  return maxSoFar;
+}
+
+// Exemples
+console.log(maxProduct([2,3,-2,4]));     // 6
+console.log(maxProduct([-2,0,-1]));      // 0
+console.log(maxProduct([-2,3,-4]));      // 24 (tout le tableau)`,
+      explanation: 'Garde le max ET le min car négatif × négatif = positif.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(1)',
+      pros: ['Optimal O(n)', 'O(1) espace', 'Gère les négatifs'],
+      cons: ['Plus complexe que Kadane']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '[2,3,-2,4]',
+      output: '6',
+      explanation: 'Sous-tableau [2,3] donne 2×3 = 6'
+    },
+    {
+      input: '[-2,3,-4]',
+      output: '24',
+      explanation: 'Tout le tableau : -2×3×-4 = 24'
+    }
+  ],
+  
+  tips: [
+    'Garder maxEndingHere ET minEndingHere',
+    'Négatif × négatif peut donner le max',
+    'max = max(num, max*num, min*num)',
+    'min = min(num, max*num, min*num)',
+    'Similaire à Kadane mais avec produit et min/max'
+  ],
+  
+  tags: ['dynamic-programming', 'array', 'kadane', 'leetcode-medium'],
+  relatedAlgorithms: ['kadane-algorithm', 'max-subarray']
+},
+
+{
+  id: 'median-two-sorted',
+  title: '90. Median of Two Sorted Arrays',
+  level: 'niveau-6',
+  category: 'binary-search',
+  difficulty: 'difficile',
+  order: 90,
+  description: 'Médiane de deux tableaux triés en O(log(min(m,n)))',
+  explanation: `Trouver la médiane de deux tableaux triés en O(log(min(m,n))).
+
+Exemple : nums1 = [1,3], nums2 = [2] → 2.0
+Exemple : nums1 = [1,2], nums2 = [3,4] → 2.5
+
+Utilise binary search pour partitionner les tableaux de manière optimale.
+
+C'est un des problèmes les plus difficiles sur LeetCode !`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Fusion simple O(m+n)',
+      approach: 'Merge',
+      code: `function findMedianSortedArrays(nums1, nums2) {
+  // Fusionner
+  const merged = [];
+  let i = 0, j = 0;
+  
+  while (i < nums1.length && j < nums2.length) {
+    if (nums1[i] < nums2[j]) {
+      merged.push(nums1[i++]);
+    } else {
+      merged.push(nums2[j++]);
+    }
+  }
+  
+  while (i < nums1.length) merged.push(nums1[i++]);
+  while (j < nums2.length) merged.push(nums2[j++]);
+  
+  // Trouver médiane
+  const mid = Math.floor(merged.length / 2);
+  
+  if (merged.length % 2 === 0) {
+    return (merged[mid - 1] + merged[mid]) / 2;
+  } else {
+    return merged[mid];
+  }
+}
+
+// Exemples
+console.log(findMedianSortedArrays([1,3], [2]));     // 2.0
+console.log(findMedianSortedArrays([1,2], [3,4]));   // 2.5`,
+      explanation: 'Fusionne puis trouve la médiane.',
+      timeComplexity: 'O(m + n)',
+      spaceComplexity: 'O(m + n)',
+      pros: ['Simple', 'Facile à comprendre'],
+      cons: ['O(m+n) pas optimal', 'Utilise O(m+n) espace']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Binary Search O(log(min(m,n)))',
+      approach: 'Binary Search',
+      code: `function findMedianSortedArrays(nums1, nums2) {
+  // S'assurer que nums1 est le plus petit
+  if (nums1.length > nums2.length) {
+    [nums1, nums2] = [nums2, nums1];
+  }
+  
+  const m = nums1.length;
+  const n = nums2.length;
+  let left = 0;
+  let right = m;
+  
+  while (left <= right) {
+    const partition1 = Math.floor((left + right) / 2);
+    const partition2 = Math.floor((m + n + 1) / 2) - partition1;
+    
+    const maxLeft1 = partition1 === 0 ? -Infinity : nums1[partition1 - 1];
+    const minRight1 = partition1 === m ? Infinity : nums1[partition1];
+    
+    const maxLeft2 = partition2 === 0 ? -Infinity : nums2[partition2 - 1];
+    const minRight2 = partition2 === n ? Infinity : nums2[partition2];
+    
+    if (maxLeft1 <= minRight2 && maxLeft2 <= minRight1) {
+      // Partition correcte trouvée
+      if ((m + n) % 2 === 0) {
+        return (Math.max(maxLeft1, maxLeft2) + Math.min(minRight1, minRight2)) / 2;
+      } else {
+        return Math.max(maxLeft1, maxLeft2);
+      }
+    } else if (maxLeft1 > minRight2) {
+      right = partition1 - 1;
+    } else {
+      left = partition1 + 1;
+    }
+  }
+}
+
+// Exemples
+console.log(findMedianSortedArrays([1,3], [2]));   // 2.0
+console.log(findMedianSortedArrays([1,2], [3,4])); // 2.5`,
+      explanation: 'Binary search sur la partition pour diviser en deux moitiés égales.',
+      timeComplexity: 'O(log(min(m,n)))',
+      spaceComplexity: 'O(1)',
+      pros: ['Optimal O(log(min(m,n)))', 'O(1) espace'],
+      cons: ['Très complexe', 'Difficile à comprendre', 'Beaucoup de cas limites']
+    }
+  ],
+  
+  examples: [
+    {
+      input: 'nums1 = [1,3], nums2 = [2]',
+      output: '2.0',
+      explanation: 'Médiane de [1,2,3]'
+    },
+    {
+      input: 'nums1 = [1,2], nums2 = [3,4]',
+      output: '2.5',
+      explanation: 'Médiane de [1,2,3,4] = (2+3)/2'
+    }
+  ],
+  
+  tips: [
+    'Binary search sur le plus petit tableau',
+    'Trouver partition telle que maxLeft1 ≤ minRight2 et maxLeft2 ≤ minRight1',
+    'Si longueur totale paire : (maxLeft + minRight) / 2',
+    'Si impaire : maxLeft',
+    'Un des problèmes les plus difficiles',
+    'Acceptable de faire O(m+n) en interview'
+  ],
+  
+  tags: ['binary-search', 'array', 'hard', 'leetcode-hard'],
+  relatedAlgorithms: ['kth-element', 'binary-search']
+},
 ];
