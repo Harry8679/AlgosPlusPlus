@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Algorithm } from '../types';
+import type { Algorithm } from '../types';
 import { useAlgoStore } from '../store/useAlgoStore';
 import { Check, Star, Clock, Database, Lightbulb, Code2, ThumbsUp, ThumbsDown } from 'lucide-react';
 import CodeEditor from './CodeEditor';
