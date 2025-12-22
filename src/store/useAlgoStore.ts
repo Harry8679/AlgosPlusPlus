@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { Chapter, Algorithm } from '../types';
+import type { Algorithm } from '../types';
 // import { Algorithm, Chapter } from '@/data';
 
 interface ProgressData {
