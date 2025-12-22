@@ -1,4 +1,4 @@
-import { Algorithm } from './index';
+import type { Algorithm } from '../types';
 
 export const algorithms: Algorithm[] = [
   // ==========================================
