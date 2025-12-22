@@ -2635,5 +2635,452 @@ console.log(generateNumbers(5)); // [1, 2, 3, 4, 5]`,
     ],
     
     tags: ['array', 'numbers', 'range', 'sequence']
+  },
+  {
+    id: 'factorial',
+    title: '28. Calculer la factorielle d\'un nombre',
+    level: 'niveau-1',
+    category: 'nombres',
+    difficulty: 'débutant',
+    order: 28,
+    description: 'Calculer n! = n × (n-1) × (n-2) × ... × 1',
+    explanation: `La factorielle de n (notée n!) est le produit de tous les entiers de 1 à n.
+
+Exemples :
+- 5! = 5 × 4 × 3 × 2 × 1 = 120
+- 0! = 1 (par définition)
+- 1! = 1
+
+La factorielle croît TRÈS rapidement : 20! = 2,432,902,008,176,640,000`,
+    
+    solutions: [
+      {
+        id: 'method-1',
+        title: 'Méthode 1 : Boucle for',
+        approach: 'Impérative',
+        code: `function factorial(n) {
+  if (n < 0) return undefined; // Pas défini pour négatifs
+  if (n === 0 || n === 1) return 1;
+  
+  let result = 1;
+  for (let i = 2; i <= n; i++) {
+    result *= i;
+  }
+  
+  return result;
+}
+
+// Exemples
+console.log(factorial(5));  // 120
+console.log(factorial(0));  // 1
+console.log(factorial(10)); // 3628800`,
+        explanation: 'Multiplie tous les nombres de 2 à n de manière itérative.',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(1)',
+        pros: ['Simple', 'Performant', 'Itératif (pas de stack overflow)', 'Économe en mémoire'],
+        cons: ['Un peu verbeux']
+      },
+      {
+        id: 'method-2',
+        title: 'Méthode 2 : Récursion',
+        approach: 'Récursive',
+        code: `function factorial(n) {
+  if (n < 0) return undefined;
+  if (n === 0 || n === 1) return 1;
+  
+  return n * factorial(n - 1);
+}
+
+// Exemples
+console.log(factorial(5));  // 120
+console.log(factorial(0));  // 1
+console.log(factorial(10)); // 3628800`,
+        explanation: 'Définition récursive : n! = n × (n-1)!',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(n)',
+        pros: ['Élégant', 'Suit la définition mathématique', 'Concis'],
+        cons: ['Stack overflow si n trop grand (>~10000)', 'Utilise la pile d\'appels']
+      },
+      {
+        id: 'method-3',
+        title: 'Méthode 3 : reduce()',
+        approach: 'Fonctionnelle',
+        code: `function factorial(n) {
+  if (n < 0) return undefined;
+  if (n === 0 || n === 1) return 1;
+  
+  return Array.from({ length: n }, (_, i) => i + 1)
+    .reduce((acc, val) => acc * val, 1);
+}
+
+// Exemples
+console.log(factorial(5));  // 120
+console.log(factorial(0));  // 1`,
+        explanation: 'Génère [1, 2, 3, ..., n] puis multiplie tous les éléments avec reduce.',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(n)',
+        pros: ['Fonctionnel', 'Déclaratif'],
+        cons: ['Crée un tableau intermédiaire', 'Moins performant', 'Plus verbeux que récursion']
+      },
+      {
+        id: 'method-4',
+        title: 'Méthode 4 : Récursion terminale (tail recursive)',
+        approach: 'Récursive',
+        code: `function factorial(n, accumulator = 1) {
+  if (n < 0) return undefined;
+  if (n === 0 || n === 1) return accumulator;
+  
+  return factorial(n - 1, n * accumulator);
+}
+
+// Exemples
+console.log(factorial(5));  // 120
+console.log(factorial(0));  // 1
+console.log(factorial(10)); // 3628800`,
+        explanation: 'Récursion terminale : l\'appel récursif est la dernière opération (optimisable par certains compilateurs).',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(n)',
+        pros: ['Élégant', 'Optimisable (tail call optimization)', 'Pas de multiplication après retour'],
+        cons: ['JS n\'optimise pas toujours les tail calls', 'Plus complexe à comprendre']
+      }
+    ],
+    
+    examples: [
+      {
+        input: '5',
+        output: '120',
+        explanation: '5! = 5 × 4 × 3 × 2 × 1 = 120'
+      },
+      {
+        input: '0',
+        output: '1',
+        explanation: '0! = 1 par définition mathématique'
+      },
+      {
+        input: '10',
+        output: '3628800',
+        explanation: '10! = 3,628,800'
+      }
+    ],
+    
+    tips: [
+      'La boucle for est la plus performante et la plus sûre',
+      'La récursion est élégante mais limitée par la stack (~10000)',
+      'Attention : factorielle croît TRÈS vite (overflow après ~170 en JS)',
+      '0! = 1 par convention mathématique',
+      'Les nombres négatifs n\'ont pas de factorielle',
+      'Pour de grands nombres, utilisez BigInt en JavaScript'
+    ],
+    
+    tags: ['math', 'factorial', 'recursion', 'iteration'],
+    relatedAlgorithms: ['fibonacci']
+  },
+
+  {
+    id: 'is-even-odd',
+    title: '29. Vérifier si un nombre est pair ou impair',
+    level: 'niveau-1',
+    category: 'nombres',
+    difficulty: 'débutant',
+    order: 29,
+    description: 'Déterminer si un nombre est pair (divisible par 2) ou impair',
+    explanation: `Un nombre est pair si divisible par 2 sans reste (n % 2 === 0).
+Un nombre est impair dans le cas contraire (n % 2 !== 0).
+
+Exemples :
+- Pairs : 0, 2, 4, 6, 8, 10, -2, -4...
+- Impairs : 1, 3, 5, 7, 9, -1, -3...`,
+    
+    solutions: [
+      {
+        id: 'method-1',
+        title: 'Méthode 1 : Modulo %',
+        approach: 'Impérative',
+        code: `function isEven(n) {
+  return n % 2 === 0;
+}
+
+function isOdd(n) {
+  return n % 2 !== 0;
+}
+
+// Exemples
+console.log(isEven(4));   // true
+console.log(isEven(7));   // false
+console.log(isOdd(7));    // true
+console.log(isOdd(4));    // false
+
+// Fonctionne avec négatifs
+console.log(isEven(-4));  // true
+console.log(isOdd(-3));   // true`,
+        explanation: 'Utilise le modulo pour vérifier le reste de la division par 2.',
+        timeComplexity: 'O(1)',
+        spaceComplexity: 'O(1)',
+        pros: ['Simple', 'Standard', 'Rapide', 'Universel', 'Lisible'],
+        cons: ['Aucun']
+      },
+      {
+        id: 'method-2',
+        title: 'Méthode 2 : Bitwise AND (&)',
+        approach: 'Bitwise',
+        code: `function isEven(n) {
+  return (n & 1) === 0;
+}
+
+function isOdd(n) {
+  return (n & 1) === 1;
+}
+
+// Exemples
+console.log(isEven(4));   // true
+console.log(isEven(7));   // false
+console.log(isOdd(7));    // true
+
+// Explication binaire :
+// 4 = 0100 & 0001 = 0000 (0) → pair
+// 7 = 0111 & 0001 = 0001 (1) → impair`,
+        explanation: 'Vérifie le bit de poids faible (rightmost bit) : 0 = pair, 1 = impair.',
+        timeComplexity: 'O(1)',
+        spaceComplexity: 'O(1)',
+        pros: ['Légèrement plus rapide (opération CPU niveau bas)', 'Astucieux'],
+        cons: ['Moins lisible', 'Optimisation prématurée', 'Peut être déroutant']
+      },
+      {
+        id: 'method-3',
+        title: 'Méthode 3 : Math.abs() + modulo (gestion négatifs explicite)',
+        approach: 'Impérative',
+        code: `function isEven(n) {
+  return Math.abs(n) % 2 === 0;
+}
+
+function isOdd(n) {
+  return Math.abs(n) % 2 !== 0;
+}
+
+// Exemples
+console.log(isEven(-4));  // true
+console.log(isOdd(-3));   // true`,
+        explanation: 'Utilise Math.abs() pour gérer explicitement les négatifs (mais c\'est inutile car % gère déjà).',
+        timeComplexity: 'O(1)',
+        spaceComplexity: 'O(1)',
+        pros: ['Explicite sur les négatifs'],
+        cons: ['Inutile (% gère déjà les négatifs)', 'Appel de fonction supplémentaire']
+      }
+    ],
+    
+    examples: [
+      {
+        input: '4',
+        output: 'pair (true)',
+        explanation: '4 % 2 = 0'
+      },
+      {
+        input: '7',
+        output: 'impair (false)',
+        explanation: '7 % 2 = 1'
+      },
+      {
+        input: '0',
+        output: 'pair (true)',
+        explanation: '0 % 2 = 0, zéro est pair'
+      },
+      {
+        input: '-4',
+        output: 'pair (true)',
+        explanation: 'Les négatifs suivent la même règle'
+      }
+    ],
+    
+    tips: [
+      'Utilisez le modulo (%) - c\'est le standard',
+      'Le modulo fonctionne parfaitement avec les nombres négatifs',
+      'Le bitwise AND (&) est une micro-optimisation rarement utile',
+      'Attention : en JavaScript, -3 % 2 donne -1 (pas 1), mais !== 0 fonctionne',
+      '0 est pair par définition',
+      'Pour des performances critiques en boucle, bitwise peut aider, sinon utilisez %'
+    ],
+    
+    tags: ['math', 'even', 'odd', 'modulo', 'bitwise'],
+    relatedAlgorithms: ['generate-even-numbers', 'generate-odd-numbers']
+  },
+
+  {
+    id: 'is-prime',
+    title: '30. Vérifier si un nombre est premier',
+    level: 'niveau-1',
+    category: 'nombres',
+    difficulty: 'débutant',
+    order: 30,
+    description: 'Déterminer si un nombre n\'est divisible que par 1 et lui-même',
+    explanation: `Un nombre premier n'a que deux diviseurs : 1 et lui-même.
+
+Exemples de nombres premiers : 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31...
+
+Notes importantes :
+- 0 et 1 ne sont PAS premiers
+- 2 est le seul nombre premier pair
+- Les nombres négatifs ne sont pas premiers
+
+Optimisation clé : il suffit de tester jusqu'à √n car si n a un diviseur > √n, il doit aussi avoir un diviseur < √n.`,
+    
+    solutions: [
+      {
+        id: 'method-1',
+        title: 'Méthode 1 : Boucle basique',
+        approach: 'Impérative',
+        code: `function isPrime(n) {
+  if (n < 2) return false;
+  
+  for (let i = 2; i < n; i++) {
+    if (n % i === 0) {
+      return false; // Trouvé un diviseur
+    }
+  }
+  
+  return true;
+}
+
+// Exemples
+console.log(isPrime(2));   // true
+console.log(isPrime(7));   // true
+console.log(isPrime(10));  // false
+console.log(isPrime(1));   // false`,
+        explanation: 'Vérifie tous les diviseurs de 2 à n-1.',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(1)',
+        pros: ['Simple', 'Facile à comprendre', 'Pédagogique'],
+        cons: ['Très lent pour grands nombres', 'Teste trop de diviseurs inutiles']
+      },
+      {
+        id: 'method-2',
+        title: 'Méthode 2 : Optimisée (√n)',
+        approach: 'Impérative',
+        code: `function isPrime(n) {
+  if (n < 2) return false;
+  if (n === 2) return true;
+  if (n % 2 === 0) return false; // Éliminer les pairs
+  
+  const sqrt = Math.sqrt(n);
+  for (let i = 3; i <= sqrt; i += 2) {
+    if (n % i === 0) {
+      return false;
+    }
+  }
+  
+  return true;
+}
+
+// Exemples
+console.log(isPrime(2));    // true
+console.log(isPrime(7));    // true
+console.log(isPrime(10));   // false
+console.log(isPrime(97));   // true
+console.log(isPrime(100));  // false`,
+        explanation: 'Ne teste que jusqu\'à √n et saute les nombres pairs (sauf 2).',
+        timeComplexity: 'O(√n)',
+        spaceComplexity: 'O(1)',
+        pros: ['Beaucoup plus rapide', 'Mathématiquement optimisé', 'Standard', 'Production-ready'],
+        cons: ['Un peu plus complexe']
+      },
+      {
+        id: 'method-3',
+        title: 'Méthode 3 : every() (Fonctionnelle)',
+        approach: 'Fonctionnelle',
+        code: `function isPrime(n) {
+  if (n < 2) return false;
+  if (n === 2) return true;
+  if (n % 2 === 0) return false;
+  
+  const sqrt = Math.sqrt(n);
+  const divisors = Array.from(
+    { length: Math.floor((sqrt - 1) / 2) },
+    (_, i) => 2 * i + 3
+  );
+  
+  return divisors.every(divisor => n % divisor !== 0);
+}
+
+// Exemples
+console.log(isPrime(7));    // true
+console.log(isPrime(10));   // false
+console.log(isPrime(97));   // true`,
+        explanation: 'Génère les diviseurs impairs de 3 à √n et teste avec every().',
+        timeComplexity: 'O(√n)',
+        spaceComplexity: 'O(√n)',
+        pros: ['Fonctionnel', 'Élégant', 'Déclaratif'],
+        cons: ['Crée un tableau (gaspille mémoire)', 'Moins lisible', 'Moins performant']
+      },
+      {
+        id: 'method-4',
+        title: 'Méthode 4 : Optimisée 6k±1',
+        approach: 'Impérative',
+        code: `function isPrime(n) {
+  if (n <= 1) return false;
+  if (n <= 3) return true;
+  if (n % 2 === 0 || n % 3 === 0) return false;
+  
+  // Tous les premiers > 3 sont de la forme 6k±1
+  for (let i = 5; i * i <= n; i += 6) {
+    if (n % i === 0 || n % (i + 2) === 0) {
+      return false;
+    }
+  }
+  
+  return true;
+}
+
+// Exemples
+console.log(isPrime(7));    // true
+console.log(isPrime(97));   // true
+console.log(isPrime(1000)); // false`,
+        explanation: 'Utilise le fait que tous les premiers > 3 sont de la forme 6k±1.',
+        timeComplexity: 'O(√n)',
+        spaceComplexity: 'O(1)',
+        pros: ['Encore plus rapide (~3x)', 'Très optimisé', 'Utilisé en production'],
+        cons: ['Plus complexe', 'Nécessite de comprendre la théorie des nombres']
+      }
+    ],
+    
+    examples: [
+      {
+        input: '2',
+        output: 'true',
+        explanation: '2 est le seul nombre premier pair'
+      },
+      {
+        input: '7',
+        output: 'true',
+        explanation: '7 est premier (divisible que par 1 et 7)'
+      },
+      {
+        input: '10',
+        output: 'false',
+        explanation: '10 = 2 × 5, donc pas premier'
+      },
+      {
+        input: '1',
+        output: 'false',
+        explanation: '1 n\'est pas premier par définition'
+      },
+      {
+        input: '97',
+        output: 'true',
+        explanation: '97 est un nombre premier'
+      }
+    ],
+    
+    tips: [
+      'CRITIQUE : Il suffit de tester jusqu\'à √n (optimisation majeure)',
+      'Éliminez d\'abord les cas simples : n < 2, n === 2, n % 2 === 0',
+      'Pour de nombreux tests : utilisez le crible d\'Ératosthène',
+      '2 est le seul nombre premier pair',
+      '0 et 1 ne sont PAS premiers',
+      'Les nombres négatifs ne sont pas premiers',
+      'Pour n très grands : utilisez des algorithmes probabilistes (Miller-Rabin)',
+      'Optimisation 6k±1 : tous les premiers > 3 sont de la forme 6k-1 ou 6k+1'
+    ],
+    
+    tags: ['math', 'prime', 'number-theory', 'optimization'],
+    relatedAlgorithms: ['generate-n-numbers', 'is-even-odd']
   }
 ];
