@@ -9493,4 +9493,1467 @@ console.log(findMedianSortedArrays([1,2], [3,4])); // 2.5`,
   tags: ['binary-search', 'array', 'hard', 'leetcode-hard'],
   relatedAlgorithms: ['kth-element', 'binary-search']
 },
+// ==========================================
+// 🟠 NIVEAU 5 : RÉCURSIVITÉ & BACKTRACKING (Algorithmes 91-100)
+// Objectif : Penser récursif
+// ==========================================
+
+{
+  id: 'factorial-recursive',
+  title: '91. Factorielle récursive',
+  level: 'niveau-5',
+  category: 'recursion',
+  difficulty: 'débutant',
+  order: 91,
+  description: 'Calculer n! de manière récursive',
+  explanation: `La factorielle est l'exemple classique de récursion.
+
+n! = n × (n-1)!
+Cas de base : 0! = 1, 1! = 1
+
+Exemple : 5! = 5 × 4! = 5 × 4 × 3 × 2 × 1 = 120`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Récursion simple',
+      approach: 'Récursive',
+      code: `function factorial(n) {
+  // Cas de base
+  if (n === 0 || n === 1) {
+    return 1;
+  }
+  
+  // Cas récursif
+  return n * factorial(n - 1);
+}
+
+// Exemples
+console.log(factorial(5));  // 120
+console.log(factorial(0));  // 1
+console.log(factorial(10)); // 3628800
+
+// Trace d'exécution pour factorial(5):
+// factorial(5) = 5 * factorial(4)
+//              = 5 * 4 * factorial(3)
+//              = 5 * 4 * 3 * factorial(2)
+//              = 5 * 4 * 3 * 2 * factorial(1)
+//              = 5 * 4 * 3 * 2 * 1
+//              = 120`,
+      explanation: 'Définition récursive directe de la factorielle.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(n)', // Stack de récursion
+      pros: ['Simple', 'Suit la définition mathématique', 'Élégant'],
+      cons: ['Stack overflow si n trop grand', 'O(n) stack']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Tail Recursion',
+      approach: 'Tail Recursive',
+      code: `function factorial(n, accumulator = 1) {
+  // Cas de base
+  if (n === 0 || n === 1) {
+    return accumulator;
+  }
+  
+  // Appel récursif terminal
+  return factorial(n - 1, n * accumulator);
+}
+
+// Exemples
+console.log(factorial(5));  // 120
+console.log(factorial(10)); // 3628800
+
+// Trace pour factorial(5, 1):
+// factorial(5, 1)
+// factorial(4, 5)
+// factorial(3, 20)
+// factorial(2, 60)
+// factorial(1, 120)
+// return 120`,
+      explanation: 'Tail recursion : l\'appel récursif est la dernière opération (optimisable par certains compilateurs).',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(n)', // JS n'optimise pas tail calls
+      pros: ['Optimisable (pas en JS)', 'Accumulator pattern'],
+      cons: ['JS ne l\'optimise pas', 'Moins intuitif']
+    },
+    {
+      id: 'method-3',
+      title: 'Méthode 3 : Avec mémoïsation',
+      approach: 'Memoization',
+      code: `const factorialMemo = (() => {
+  const cache = {};
+  
+  return function factorial(n) {
+    if (n === 0 || n === 1) return 1;
+    
+    if (cache[n]) return cache[n];
+    
+    cache[n] = n * factorial(n - 1);
+    return cache[n];
+  };
+})();
+
+// Exemples
+console.log(factorialMemo(5));  // 120
+console.log(factorialMemo(5));  // 120 (depuis cache)`,
+      explanation: 'Cache les résultats pour éviter les recalculs.',
+      timeComplexity: 'O(n) première fois, O(1) ensuite',
+      spaceComplexity: 'O(n)',
+      pros: ['Réutilise les calculs', 'Rapide après première fois'],
+      cons: ['Overkill pour factorielle', 'Utilise mémoire']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '5',
+      output: '120',
+      explanation: '5! = 5 × 4 × 3 × 2 × 1 = 120'
+    },
+    {
+      input: '0',
+      output: '1',
+      explanation: '0! = 1 par définition'
+    }
+  ],
+  
+  tips: [
+    'Toujours définir le cas de base (n=0 ou n=1)',
+    'Récursion simple est la plus claire',
+    'Tail recursion théoriquement meilleure (pas en JS)',
+    'Stack overflow après ~10000 en JS',
+    'Version itérative plus efficace en production'
+  ],
+  
+  tags: ['recursion', 'math', 'factorial', 'base-case'],
+  relatedAlgorithms: ['fibonacci-recursive', 'power-recursive']
+},
+
+{
+  id: 'fibonacci-recursive',
+  title: '92. Fibonacci récursif',
+  level: 'niveau-5',
+  category: 'recursion',
+  difficulty: 'débutant',
+  order: 92,
+  description: 'Suite de Fibonacci de manière récursive',
+  explanation: `Suite de Fibonacci : F(n) = F(n-1) + F(n-2)
+Cas de base : F(0) = 0, F(1) = 1
+
+0, 1, 1, 2, 3, 5, 8, 13, 21, 34...
+
+ATTENTION : Récursion naïve est très inefficace O(2^n) !`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Récursion naïve (LENT)',
+      approach: 'Récursive',
+      code: `function fibonacci(n) {
+  // Cas de base
+  if (n <= 1) return n;
+  
+  // Cas récursif
+  return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+// Exemples
+console.log(fibonacci(5));  // 5
+console.log(fibonacci(10)); // 55
+console.log(fibonacci(20)); // 6765 (déjà lent)
+
+// Arbre d'appels pour fib(5):
+//                    fib(5)
+//                   /      \\
+//              fib(4)      fib(3)
+//             /     \\      /    \\
+//         fib(3)  fib(2)  fib(2) fib(1)
+//         /   \\   /   \\   /   \\
+//     fib(2) fib(1) ... 
+// BEAUCOUP de calculs redondants !`,
+      explanation: 'Récursion simple mais TRÈS inefficace (recalcule plusieurs fois les mêmes valeurs).',
+      timeComplexity: 'O(2^n)',
+      spaceComplexity: 'O(n)', // Stack depth
+      pros: ['Suit la définition', 'Simple'],
+      cons: ['EXTRÊMEMENT LENT O(2^n)', 'Inutilisable au-delà de n=40', 'Beaucoup de recalculs']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Avec mémoïsation (RAPIDE)',
+      approach: 'Memoization',
+      code: `function fibonacci(n, memo = {}) {
+  // Cas de base
+  if (n <= 1) return n;
+  
+  // Déjà calculé ?
+  if (memo[n]) return memo[n];
+  
+  // Calculer et mémoriser
+  memo[n] = fibonacci(n - 1, memo) + fibonacci(n - 2, memo);
+  return memo[n];
+}
+
+// Exemples
+console.log(fibonacci(5));   // 5
+console.log(fibonacci(50));  // 12586269025 (rapide !)
+console.log(fibonacci(100)); // 354224848179262000000`,
+      explanation: 'Cache les résultats pour éviter les recalculs.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Très rapide O(n)', 'Garde l\'approche récursive', 'Élégant'],
+      cons: ['Utilise mémoire pour cache']
+    },
+    {
+      id: 'method-3',
+      title: 'Méthode 3 : Top-down DP (closure)',
+      approach: 'Dynamic Programming',
+      code: `const fibonacci = (() => {
+  const cache = { 0: 0, 1: 1 };
+  
+  return function fib(n) {
+    if (cache[n] !== undefined) return cache[n];
+    
+    cache[n] = fib(n - 1) + fib(n - 2);
+    return cache[n];
+  };
+})();
+
+// Exemples
+console.log(fibonacci(5));  // 5
+console.log(fibonacci(50)); // 12586269025`,
+      explanation: 'Closure avec cache persistant entre appels.',
+      timeComplexity: 'O(n) première fois, O(1) ensuite',
+      spaceComplexity: 'O(n)',
+      pros: ['Cache persistant', 'Très rapide après première fois'],
+      cons: ['Plus de code']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '5',
+      output: '5',
+      explanation: 'F(5) = F(4) + F(3) = 3 + 2 = 5'
+    },
+    {
+      input: '10',
+      output: '55',
+      explanation: 'Le 10ème nombre de Fibonacci'
+    }
+  ],
+  
+  tips: [
+    'Récursion naïve = O(2^n) TRÈS LENT',
+    'Mémoïsation transforme O(2^n) → O(n)',
+    'TOUJOURS utiliser mémoïsation pour Fibonacci récursif',
+    'Version itérative plus efficace (O(n) temps, O(1) espace)',
+    'Exemple classique pour enseigner la mémoïsation'
+  ],
+  
+  tags: ['recursion', 'fibonacci', 'memoization', 'dynamic-programming'],
+  relatedAlgorithms: ['factorial-recursive', 'climbing-stairs']
+},
+
+{
+  id: 'array-recursive-traversal',
+  title: '93. Parcours récursif d\'un tableau',
+  level: 'niveau-5',
+  category: 'recursion',
+  difficulty: 'débutant',
+  order: 93,
+  description: 'Parcourir et traiter un tableau récursivement',
+  explanation: `Parcourir un tableau sans boucles, uniquement par récursion.
+
+Utile pour comprendre le principe de récursion sur structures linéaires.`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Afficher tous les éléments',
+      approach: 'Récursive',
+      code: `function printArray(arr, index = 0) {
+  // Cas de base
+  if (index >= arr.length) return;
+  
+  // Traitement
+  console.log(arr[index]);
+  
+  // Récursion
+  printArray(arr, index + 1);
+}
+
+// Exemple
+printArray([1, 2, 3, 4, 5]);
+// 1
+// 2
+// 3
+// 4
+// 5`,
+      explanation: 'Traite l\'élément courant puis récurse sur le reste.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(n)', // Stack
+      pros: ['Simple', 'Démontre la récursion'],
+      cons: ['Boucle plus naturelle']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Somme récursive',
+      approach: 'Récursive',
+      code: `function sumArray(arr, index = 0) {
+  // Cas de base
+  if (index >= arr.length) return 0;
+  
+  // Récursion : élément courant + somme du reste
+  return arr[index] + sumArray(arr, index + 1);
+}
+
+// Exemples
+console.log(sumArray([1, 2, 3, 4, 5])); // 15
+console.log(sumArray([10, 20, 30]));    // 60`,
+      explanation: 'Somme = élément courant + somme récursive du reste.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Retourne une valeur', 'Pattern utilisable'],
+      cons: ['reduce() plus idiomatique']
+    },
+    {
+      id: 'method-3',
+      title: 'Méthode 3 : Recherche récursive',
+      approach: 'Récursive',
+      code: `function findRecursive(arr, target, index = 0) {
+  // Cas de base : pas trouvé
+  if (index >= arr.length) return -1;
+  
+  // Cas de base : trouvé
+  if (arr[index] === target) return index;
+  
+  // Récursion
+  return findRecursive(arr, target, index + 1);
+}
+
+// Exemples
+console.log(findRecursive([1, 2, 3, 4, 5], 3)); // 2
+console.log(findRecursive([1, 2, 3, 4, 5], 6)); // -1`,
+      explanation: 'Recherche linéaire récursive avec early return.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Early return', 'Pattern utile'],
+      cons: ['indexOf() plus simple']
+    },
+    {
+      id: 'method-4',
+      title: 'Méthode 4 : Map récursif',
+      approach: 'Récursive',
+      code: `function mapRecursive(arr, fn, index = 0, result = []) {
+  // Cas de base
+  if (index >= arr.length) return result;
+  
+  // Appliquer fonction et ajouter au résultat
+  result.push(fn(arr[index]));
+  
+  // Récursion
+  return mapRecursive(arr, fn, index + 1, result);
+}
+
+// Exemples
+console.log(mapRecursive([1, 2, 3], x => x * 2));
+// [2, 4, 6]
+
+console.log(mapRecursive(['a', 'b', 'c'], x => x.toUpperCase()));
+// ['A', 'B', 'C']`,
+      explanation: 'Implémente map de manière récursive.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Fonctionnel', 'Réutilisable'],
+      cons: ['Array.map() natif meilleur']
+    }
+  ],
+  
+  examples: [
+    {
+      input: 'sumArray([1, 2, 3, 4, 5])',
+      output: '15',
+      explanation: '1 + 2 + 3 + 4 + 5 = 15'
+    }
+  ],
+  
+  tips: [
+    'Toujours avoir un cas de base (index >= length)',
+    'Passer l\'index en paramètre',
+    'Pattern : traiter courant + récurse sur reste',
+    'Utile pédagogiquement mais boucles plus efficaces',
+    'Base pour parcours d\'arbres et graphes'
+  ],
+  
+  tags: ['recursion', 'array', 'traversal', 'linear-recursion'],
+  relatedAlgorithms: ['object-recursive-traversal', 'tree-traversal']
+},
+
+{
+  id: 'object-recursive-traversal',
+  title: '94. Parcours récursif d\'un objet',
+  level: 'niveau-5',
+  category: 'recursion',
+  difficulty: 'intermédiaire',
+  order: 94,
+  description: 'Parcourir récursivement un objet imbriqué',
+  explanation: `Parcourir un objet avec propriétés imbriquées récursivement.
+
+Utile pour : deep clone, deep equal, flatten, search dans structures JSON.`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Afficher toutes les valeurs',
+      approach: 'Récursive',
+      code: `function printObject(obj, indent = 0) {
+  const spacing = '  '.repeat(indent);
+  
+  for (let key in obj) {
+    const value = obj[key];
+    
+    if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+      console.log(\`\${spacing}\${key}:\`);
+      printObject(value, indent + 1);
+    } else {
+      console.log(\`\${spacing}\${key}: \${value}\`);
+    }
+  }
+}
+
+// Exemple
+const user = {
+  name: 'Alice',
+  age: 30,
+  address: {
+    city: 'Paris',
+    country: 'France',
+    zip: {
+      code: 75001
+    }
+  }
+};
+
+printObject(user);
+// name: Alice
+// age: 30
+// address:
+//   city: Paris
+//   country: France
+//   zip:
+//     code: 75001`,
+      explanation: 'Parcourt récursivement les objets imbriqués.',
+      timeComplexity: 'O(n)', // n = nombre de propriétés
+      spaceComplexity: 'O(d)', // d = profondeur
+      pros: ['Gère imbrication', 'Visualise structure'],
+      cons: ['Pas de retour de valeur']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Deep Clone',
+      approach: 'Récursive',
+      code: `function deepClone(obj) {
+  // Cas de base : types primitifs et null
+  if (obj === null || typeof obj !== 'object') {
+    return obj;
+  }
+  
+  // Tableaux
+  if (Array.isArray(obj)) {
+    return obj.map(item => deepClone(item));
+  }
+  
+  // Objets
+  const clone = {};
+  for (let key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      clone[key] = deepClone(obj[key]);
+    }
+  }
+  
+  return clone;
+}
+
+// Exemple
+const original = {
+  name: 'Alice',
+  scores: [90, 85, 88],
+  meta: { created: '2024' }
+};
+
+const copy = deepClone(original);
+copy.scores.push(95);
+
+console.log(original.scores); // [90, 85, 88]
+console.log(copy.scores);     // [90, 85, 88, 95]`,
+      explanation: 'Clone profond récursif de l\'objet.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Vrai deep clone', 'Gère tableaux et objets'],
+      cons: ['Ne gère pas Date, Map, Set, fonctions']
+    },
+    {
+      id: 'method-3',
+      title: 'Méthode 3 : Flatten object',
+      approach: 'Récursive',
+      code: `function flattenObject(obj, prefix = '', result = {}) {
+  for (let key in obj) {
+    const value = obj[key];
+    const newKey = prefix ? \`\${prefix}.\${key}\` : key;
+    
+    if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+      flattenObject(value, newKey, result);
+    } else {
+      result[newKey] = value;
+    }
+  }
+  
+  return result;
+}
+
+// Exemple
+const nested = {
+  user: {
+    name: 'Alice',
+    address: {
+      city: 'Paris',
+      zip: 75001
+    }
+  },
+  active: true
+};
+
+console.log(flattenObject(nested));
+// {
+//   'user.name': 'Alice',
+//   'user.address.city': 'Paris',
+//   'user.address.zip': 75001,
+//   'active': true
+// }`,
+      explanation: 'Aplatit un objet imbriqué en chemin pointé.',
+      timeComplexity: 'O(n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Utile pour databases', 'Format plat'],
+      cons: ['Perd la structure']
+    },
+    {
+      id: 'method-4',
+      title: 'Méthode 4 : Find value by path',
+      approach: 'Récursive',
+      code: `function findByPath(obj, path) {
+  const keys = path.split('.');
+  
+  function find(obj, keys, index = 0) {
+    // Cas de base
+    if (index >= keys.length) return obj;
+    if (obj === null || typeof obj !== 'object') return undefined;
+    
+    // Récursion
+    return find(obj[keys[index]], keys, index + 1);
+  }
+  
+  return find(obj, keys);
+}
+
+// Exemple
+const data = {
+  user: {
+    profile: {
+      name: 'Alice',
+      age: 30
+    }
+  }
+};
+
+console.log(findByPath(data, 'user.profile.name')); // 'Alice'
+console.log(findByPath(data, 'user.profile.age'));  // 30
+console.log(findByPath(data, 'user.invalid'));      // undefined`,
+      explanation: 'Cherche une valeur dans un objet imbriqué par chemin.',
+      timeComplexity: 'O(d)', // d = profondeur du chemin
+      spaceComplexity: 'O(d)',
+      pros: ['Très utile', 'Safe navigation'],
+      cons: ['Pas de support de tableaux dans path']
+    }
+  ],
+  
+  examples: [
+    {
+      input: 'flattenObject({ a: { b: { c: 1 } } })',
+      output: '{ "a.b.c": 1 }',
+      explanation: 'Objet imbriqué aplati'
+    }
+  ],
+  
+  tips: [
+    'Vérifier null et typeof === "object"',
+    'Gérer tableaux séparément (Array.isArray)',
+    'hasOwnProperty pour éviter propriétés héritées',
+    'Deep clone ne gère pas tout (Date, Map, Set, fonctions)',
+    'structuredClone() en JS moderne pour deep clone'
+  ],
+  
+  tags: ['recursion', 'object', 'deep-clone', 'traversal'],
+  relatedAlgorithms: ['array-recursive-traversal', 'tree-traversal']
+},
+
+{
+  id: 'permutations',
+  title: '95. Génération de permutations',
+  level: 'niveau-5',
+  category: 'backtracking',
+  difficulty: 'moyen',
+  order: 95,
+  description: 'Générer toutes les permutations d\'un tableau',
+  explanation: `Permutation = arrangement où l'ordre compte.
+
+Exemple : [1, 2, 3] → 6 permutations
+[[1,2,3], [1,3,2], [2,1,3], [2,3,1], [3,1,2], [3,2,1]]
+
+Nombre de permutations = n! (factorielle)
+
+Backtracking : essayer chaque possibilité, backtrack si nécessaire.`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Backtracking classique',
+      approach: 'Backtracking',
+      code: `function permute(nums) {
+  const result = [];
+  const used = new Array(nums.length).fill(false);
+  
+  function backtrack(current) {
+    // Cas de base : permutation complète
+    if (current.length === nums.length) {
+      result.push([...current]);
+      return;
+    }
+    
+    // Essayer chaque nombre non utilisé
+    for (let i = 0; i < nums.length; i++) {
+      if (used[i]) continue;
+      
+      // Choisir
+      current.push(nums[i]);
+      used[i] = true;
+      
+      // Explorer
+      backtrack(current);
+      
+      // Backtrack
+      current.pop();
+      used[i] = false;
+    }
+  }
+  
+  backtrack([]);
+  return result;
+}
+
+// Exemple
+console.log(permute([1, 2, 3]));
+// [[1,2,3], [1,3,2], [2,1,3], [2,3,1], [3,1,2], [3,2,1]]`,
+      explanation: 'Backtracking avec tableau used pour suivre les éléments utilisés.',
+      timeComplexity: 'O(n! * n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Classique backtracking', 'Clair', 'Pattern réutilisable'],
+      cons: ['n! explose rapidement']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Swap in-place',
+      approach: 'Backtracking',
+      code: `function permute(nums) {
+  const result = [];
+  
+  function backtrack(start) {
+    // Cas de base
+    if (start === nums.length) {
+      result.push([...nums]);
+      return;
+    }
+    
+    // Essayer chaque élément à la position start
+    for (let i = start; i < nums.length; i++) {
+      // Swap
+      [nums[start], nums[i]] = [nums[i], nums[start]];
+      
+      // Récursion
+      backtrack(start + 1);
+      
+      // Backtrack (swap back)
+      [nums[start], nums[i]] = [nums[i], nums[start]];
+    }
+  }
+  
+  backtrack(0);
+  return result;
+}
+
+// Exemple
+console.log(permute([1, 2, 3]));`,
+      explanation: 'Génère les permutations par swaps successifs.',
+      timeComplexity: 'O(n! * n)',
+      spaceComplexity: 'O(n)',
+      pros: ['In-place', 'Moins de mémoire'],
+      cons: ['Modifie le tableau original (copie à chaque résultat)']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '[1, 2, 3]',
+      output: '[[1,2,3], [1,3,2], [2,1,3], [2,3,1], [3,1,2], [3,2,1]]',
+      explanation: '3! = 6 permutations'
+    },
+    {
+      input: '[1, 2]',
+      output: '[[1,2], [2,1]]',
+      explanation: '2! = 2 permutations'
+    }
+  ],
+  
+  tips: [
+    'Backtracking = choisir, explorer, backtrack',
+    'n! croît très vite : 10! = 3,628,800',
+    'Pattern : boucle sur options, récurse, undo',
+    'Utilisé pour : puzzles, combinatoire, brute force',
+    'Variante : permutations avec doublons'
+  ],
+  
+  tags: ['backtracking', 'permutation', 'recursion', 'leetcode-medium'],
+  relatedAlgorithms: ['combinations', 'subsets', 'n-queens']
+},
+
+{
+  id: 'combinations',
+  title: '96. Génération de combinaisons',
+  level: 'niveau-5',
+  category: 'backtracking',
+  difficulty: 'moyen',
+  order: 96,
+  description: 'Générer toutes les combinaisons de k éléments parmi n',
+  explanation: `Combinaison = sélection où l'ordre ne compte PAS.
+
+Exemple : Combinaisons de 2 éléments parmi [1,2,3,4]
+[[1,2], [1,3], [1,4], [2,3], [2,4], [3,4]]
+
+Nombre de combinaisons = C(n,k) = n! / (k! * (n-k)!)`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Backtracking',
+      approach: 'Backtracking',
+      code: `function combine(n, k) {
+  const result = [];
+  
+  function backtrack(start, current) {
+    // Cas de base : combinaison complète
+    if (current.length === k) {
+      result.push([...current]);
+      return;
+    }
+    
+    // Essayer chaque nombre de start à n
+    for (let i = start; i <= n; i++) {
+      // Choisir
+      current.push(i);
+      
+      // Explorer (i+1 pour éviter doublons)
+      backtrack(i + 1, current);
+      
+      // Backtrack
+      current.pop();
+    }
+  }
+  
+  backtrack(1, []);
+  return result;
+}
+
+// Exemples
+console.log(combine(4, 2));
+// [[1,2], [1,3], [1,4], [2,3], [2,4], [3,4]]
+
+console.log(combine(5, 3));
+// [[1,2,3], [1,2,4], [1,2,5], [1,3,4], [1,3,5], 
+//  [1,4,5], [2,3,4], [2,3,5], [2,4,5], [3,4,5]]`,
+      explanation: 'Backtracking avec start pour éviter les doublons.',
+      timeComplexity: 'O(C(n,k) * k)',
+      spaceComplexity: 'O(k)',
+      pros: ['Classique', 'Pas de doublons', 'Efficient'],
+      cons: ['Récursif']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Combinaisons de tableau',
+      approach: 'Backtracking',
+      code: `function combinations(arr, k) {
+  const result = [];
+  
+  function backtrack(start, current) {
+    if (current.length === k) {
+      result.push([...current]);
+      return;
+    }
+    
+    for (let i = start; i < arr.length; i++) {
+      current.push(arr[i]);
+      backtrack(i + 1, current);
+      current.pop();
+    }
+  }
+  
+  backtrack(0, []);
+  return result;
+}
+
+// Exemple
+console.log(combinations(['a', 'b', 'c', 'd'], 2));
+// [['a','b'], ['a','c'], ['a','d'], ['b','c'], ['b','d'], ['c','d']]`,
+      explanation: 'Version pour tableaux quelconques.',
+      timeComplexity: 'O(C(n,k) * k)',
+      spaceComplexity: 'O(k)',
+      pros: ['Fonctionne avec n\'importe quel type'],
+      cons: ['Même complexité']
+    }
+  ],
+  
+  examples: [
+    {
+      input: 'n=4, k=2',
+      output: '[[1,2], [1,3], [1,4], [2,3], [2,4], [3,4]]',
+      explanation: 'C(4,2) = 6 combinaisons'
+    }
+  ],
+  
+  tips: [
+    'start pour éviter doublons : [1,2] ≠ [2,1] en combinaisons',
+    'C(n,k) = n! / (k! * (n-k)!)',
+    'Pattern similaire aux permutations mais avec start',
+    'Applications : loterie, poker, échantillonnage',
+    'Variante : combination sum'
+  ],
+  
+  tags: ['backtracking', 'combination', 'recursion', 'leetcode-medium'],
+  relatedAlgorithms: ['permutations', 'subsets', 'combination-sum']
+},
+
+{
+  id: 'subsets',
+  title: '97. Sous-ensembles d\'un ensemble',
+  level: 'niveau-5',
+  category: 'backtracking',
+  difficulty: 'moyen',
+  order: 97,
+  description: 'Générer tous les sous-ensembles (power set) d\'un ensemble',
+  explanation: `Power set = ensemble de tous les sous-ensembles possibles.
+
+Exemple : [1, 2, 3] → 2³ = 8 sous-ensembles
+[[], [1], [2], [3], [1,2], [1,3], [2,3], [1,2,3]]
+
+Nombre de sous-ensembles = 2^n`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Backtracking',
+      approach: 'Backtracking',
+      code: `function subsets(nums) {
+  const result = [];
+  
+  function backtrack(start, current) {
+    // Ajouter le sous-ensemble courant
+    result.push([...current]);
+    
+    // Explorer
+    for (let i = start; i < nums.length; i++) {
+      current.push(nums[i]);
+      backtrack(i + 1, current);
+      current.pop();
+    }
+  }
+  
+  backtrack(0, []);
+  return result;
+}
+
+// Exemple
+console.log(subsets([1, 2, 3]));
+// [[], [1], [1,2], [1,2,3], [1,3], [2], [2,3], [3]]`,
+      explanation: 'Backtracking : ajoute chaque sous-ensemble rencontré.',
+      timeComplexity: 'O(2^n * n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Simple', 'Génère tous les subsets'],
+      cons: ['2^n explose rapidement']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Itératif (cascade)',
+      approach: 'Iterative',
+      code: `function subsets(nums) {
+  const result = [[]];
+  
+  for (let num of nums) {
+    const newSubsets = [];
+    
+    // Pour chaque subset existant
+    for (let subset of result) {
+      // Ajouter num pour créer nouveau subset
+      newSubsets.push([...subset, num]);
+    }
+    
+    result.push(...newSubsets);
+  }
+  
+  return result;
+}
+
+// Exemple
+console.log(subsets([1, 2, 3]));
+// Étape par étape :
+// []
+// [], [1]
+// [], [1], [2], [1,2]
+// [], [1], [2], [1,2], [3], [1,3], [2,3], [1,2,3]`,
+      explanation: 'Pour chaque élément, duplique tous les subsets existants en ajoutant l\'élément.',
+      timeComplexity: 'O(2^n * n)',
+      spaceComplexity: 'O(2^n * n)',
+      pros: ['Itératif', 'Facile à visualiser', 'Pas de récursion'],
+      cons: ['Utilise plus de mémoire']
+    },
+    {
+      id: 'method-3',
+      title: 'Méthode 3 : Bit manipulation',
+      approach: 'Bit Mask',
+      code: `function subsets(nums) {
+  const n = nums.length;
+  const result = [];
+  
+  // 2^n combinaisons possibles
+  for (let mask = 0; mask < (1 << n); mask++) {
+    const subset = [];
+    
+    // Tester chaque bit
+    for (let i = 0; i < n; i++) {
+      if (mask & (1 << i)) {
+        subset.push(nums[i]);
+      }
+    }
+    
+    result.push(subset);
+  }
+  
+  return result;
+}
+
+// Exemple
+console.log(subsets([1, 2, 3]));
+// mask=0 (000) → []
+// mask=1 (001) → [1]
+// mask=2 (010) → [2]
+// mask=3 (011) → [1,2]
+// mask=4 (100) → [3]
+// mask=5 (101) → [1,3]
+// mask=6 (110) → [2,3]
+// mask=7 (111) → [1,2,3]`,
+      explanation: 'Chaque nombre de 0 à 2^n-1 représente un subset via ses bits.',
+      timeComplexity: 'O(2^n * n)',
+      spaceComplexity: 'O(1)', // Sans compter résultat
+      pros: ['Clever', 'Bit manipulation', 'Pas de récursion'],
+      cons: ['Moins intuitif', 'Ordre différent']
+    }
+  ],
+  
+  examples: [
+    {
+      input: '[1, 2, 3]',
+      output: '[[], [1], [2], [1,2], [3], [1,3], [2,3], [1,2,3]]',
+      explanation: '2³ = 8 sous-ensembles'
+    }
+  ],
+  
+  tips: [
+    'Nombre de subsets = 2^n (chaque élément : in ou out)',
+    'Backtracking : ajoute à chaque niveau',
+    'Itératif : duplique et ajoute élément',
+    'Bit manipulation : chaque bit = in/out',
+    'Applications : combinatoire, génération de tests'
+  ],
+  
+  tags: ['backtracking', 'subsets', 'power-set', 'bit-manipulation', 'leetcode-medium'],
+  relatedAlgorithms: ['permutations', 'combinations']
+},
+
+{
+  id: 'generate-parentheses',
+  title: '98. Génération de parenthèses valides',
+  level: 'niveau-5',
+  category: 'backtracking',
+  difficulty: 'moyen',
+  order: 98,
+  description: 'Générer toutes les combinaisons de n paires de parenthèses bien formées',
+  explanation: `Générer toutes les combinaisons valides de n paires de parenthèses.
+
+Exemple n=3 : ["((()))", "(()())", "(())()", "()(())", "()()()"]
+
+Règles :
+1. Nombre de '(' = Nombre de ')'
+2. À tout moment : nombre de '(' ≥ nombre de ')'`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Backtracking',
+      approach: 'Backtracking',
+      code: `function generateParenthesis(n) {
+  const result = [];
+  
+  function backtrack(current, open, close) {
+    // Cas de base : combinaison complète
+    if (current.length === 2 * n) {
+      result.push(current);
+      return;
+    }
+    
+    // Ajouter '(' si possible
+    if (open < n) {
+      backtrack(current + '(', open + 1, close);
+    }
+    
+    // Ajouter ')' si valide
+    if (close < open) {
+      backtrack(current + ')', open, close + 1);
+    }
+  }
+  
+  backtrack('', 0, 0);
+  return result;
+}
+
+// Exemples
+console.log(generateParenthesis(1));
+// ["()"]
+
+console.log(generateParenthesis(2));
+// ["(())", "()()"]
+
+console.log(generateParenthesis(3));
+// ["((()))", "(()())", "(())()", "()(())", "()()()"]`,
+      explanation: 'Backtracking avec compteurs open et close pour garantir validité.',
+      timeComplexity: 'O(4^n / √n)', // Catalan number
+      spaceComplexity: 'O(n)',
+      pros: ['Génère uniquement valides', 'Optimal', 'Élégant'],
+      cons: ['Complexité non évidente']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Backtracking avec validation',
+      approach: 'Backtracking',
+      code: `function generateParenthesis(n) {
+  const result = [];
+  
+  function isValid(s) {
+    let balance = 0;
+    for (let char of s) {
+      if (char === '(') balance++;
+      else balance--;
+      if (balance < 0) return false;
+    }
+    return balance === 0;
+  }
+  
+  function backtrack(current) {
+    if (current.length === 2 * n) {
+      if (isValid(current)) {
+        result.push(current);
+      }
+      return;
+    }
+    
+    backtrack(current + '(');
+    backtrack(current + ')');
+  }
+  
+  backtrack('');
+  return result;
+}
+
+// Exemple
+console.log(generateParenthesis(2));`,
+      explanation: 'Génère toutes les combinaisons puis filtre les valides (moins efficace).',
+      timeComplexity: 'O(2^(2n) * n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Plus simple à comprendre'],
+      cons: ['Génère beaucoup d\'invalides', 'Moins efficace']
+    }
+  ],
+  
+  examples: [
+    {
+      input: 'n = 3',
+      output: '["((()))", "(()())", "(())()", "()(())", "()()()"]',
+      explanation: '5 combinaisons valides pour 3 paires'
+    }
+  ],
+  
+  tips: [
+    'Règle clé : close < open (toujours plus de ( que ) à un moment)',
+    'Nombre de combinaisons = Catalan number C_n',
+    'C_n = (2n)! / ((n+1)! * n!)',
+    'Ne générer que les valides (pas de validation après)',
+    'Problème classique de backtracking'
+  ],
+  
+  tags: ['backtracking', 'string', 'parentheses', 'catalan', 'leetcode-medium'],
+  relatedAlgorithms: ['balanced-parentheses', 'valid-parentheses']
+},
+
+{
+  id: 'knapsack-recursive',
+  title: '99. Sac à dos récursif (0/1 Knapsack)',
+  level: 'niveau-5',
+  category: 'recursion',
+  difficulty: 'difficile',
+  order: 99,
+  description: 'Problème du sac à dos version récursive',
+  explanation: `Sac à dos 0/1 : étant donné des objets avec poids et valeurs, maximiser la valeur dans un sac de capacité W.
+
+Chaque objet : prendre ou ne pas prendre (0/1).
+
+Exemple :
+values = [60, 100, 120], weights = [10, 20, 30], capacity = 50
+Max value = 220 (objet 2 et 3)`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Récursion naïve',
+      approach: 'Récursive',
+      code: `function knapsack(weights, values, capacity, n = weights.length) {
+  // Cas de base
+  if (n === 0 || capacity === 0) {
+    return 0;
+  }
+  
+  // Si poids > capacité, ne pas prendre
+  if (weights[n - 1] > capacity) {
+    return knapsack(weights, values, capacity, n - 1);
+  }
+  
+  // Max de : prendre ou ne pas prendre
+  const include = values[n - 1] + knapsack(
+    weights, 
+    values, 
+    capacity - weights[n - 1], 
+    n - 1
+  );
+  
+  const exclude = knapsack(weights, values, capacity, n - 1);
+  
+  return Math.max(include, exclude);
+}
+
+// Exemple
+const weights = [10, 20, 30];
+const values = [60, 100, 120];
+const capacity = 50;
+
+console.log(knapsack(weights, values, capacity)); // 220`,
+      explanation: 'Pour chaque objet : essaie de prendre ou ne pas prendre, garde le max.',
+      timeComplexity: 'O(2^n)',
+      spaceComplexity: 'O(n)', // Stack
+      pros: ['Simple', 'Suit la logique'],
+      cons: ['TRÈS LENT O(2^n)', 'Beaucoup de recalculs']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Avec mémoïsation',
+      approach: 'Memoization',
+      code: `function knapsack(weights, values, capacity) {
+  const memo = {};
+  
+  function solve(n, cap) {
+    // Cas de base
+    if (n === 0 || cap === 0) return 0;
+    
+    // Clé pour mémoïsation
+    const key = \`\${n}-\${cap}\`;
+    if (memo[key] !== undefined) return memo[key];
+    
+    // Ne peut pas prendre
+    if (weights[n - 1] > cap) {
+      memo[key] = solve(n - 1, cap);
+      return memo[key];
+    }
+    
+    // Max de prendre ou ne pas prendre
+    const include = values[n - 1] + solve(n - 1, cap - weights[n - 1]);
+    const exclude = solve(n - 1, cap);
+    
+    memo[key] = Math.max(include, exclude);
+    return memo[key];
+  }
+  
+  return solve(weights.length, capacity);
+}
+
+// Exemple
+const weights = [10, 20, 30];
+const values = [60, 100, 120];
+const capacity = 50;
+
+console.log(knapsack(weights, values, capacity)); // 220`,
+      explanation: 'Cache les résultats pour éviter les recalculs.',
+      timeComplexity: 'O(n * capacity)',
+      spaceComplexity: 'O(n * capacity)',
+      pros: ['Beaucoup plus rapide', 'O(n*W) acceptable'],
+      cons: ['Utilise mémoire pour cache']
+    },
+    {
+      id: 'method-3',
+      title: 'Méthode 3 : Retourner les objets choisis',
+      approach: 'Memoization',
+      code: `function knapsackWithItems(weights, values, capacity) {
+  const n = weights.length;
+  const memo = {};
+  
+  function solve(i, cap) {
+    if (i === 0 || cap === 0) {
+      return { value: 0, items: [] };
+    }
+    
+    const key = \`\${i}-\${cap}\`;
+    if (memo[key]) return memo[key];
+    
+    if (weights[i - 1] > cap) {
+      memo[key] = solve(i - 1, cap);
+      return memo[key];
+    }
+    
+    const include = solve(i - 1, cap - weights[i - 1]);
+    const exclude = solve(i - 1, cap);
+    
+    if (include.value + values[i - 1] > exclude.value) {
+      memo[key] = {
+        value: include.value + values[i - 1],
+        items: [...include.items, i - 1]
+      };
+    } else {
+      memo[key] = exclude;
+    }
+    
+    return memo[key];
+  }
+  
+  return solve(n, capacity);
+}
+
+// Exemple
+const result = knapsackWithItems([10, 20, 30], [60, 100, 120], 50);
+console.log(result);
+// { value: 220, items: [1, 2] } (objets indices 1 et 2)`,
+      explanation: 'Retourne aussi les indices des objets choisis.',
+      timeComplexity: 'O(n * capacity)',
+      spaceComplexity: 'O(n * capacity)',
+      pros: ['Retourne la solution complète'],
+      cons: ['Plus de code', 'Plus de mémoire']
+    }
+  ],
+  
+  examples: [
+    {
+      input: 'weights=[10,20,30], values=[60,100,120], capacity=50',
+      output: '220',
+      explanation: 'Prendre objets 2 et 3 (poids 20+30=50, valeur 100+120=220)'
+    }
+  ],
+  
+  tips: [
+    'Récursion naïve O(2^n) TRÈS LENTE',
+    'Mémoïsation transforme en O(n*W)',
+    'DP bottom-up plus efficace (moins de stack)',
+    'Variante unbounded : peut prendre plusieurs fois',
+    'Applications : allocation ressources, investment'
+  ],
+  
+  tags: ['recursion', 'dynamic-programming', 'knapsack', 'memoization'],
+  relatedAlgorithms: ['coin-change', 'subset-sum']
+},
+
+{
+  id: 'tower-of-hanoi',
+  title: '100. Tour de Hanoï',
+  level: 'niveau-5',
+  category: 'recursion',
+  difficulty: 'moyen',
+  order: 100,
+  description: 'Résoudre le puzzle de la Tour de Hanoï',
+  explanation: `Tour de Hanoï : déplacer une pile de n disques d'une tour source vers une tour destination, en utilisant une tour auxiliaire.
+
+Règles :
+1. Déplacer un disque à la fois
+2. Un disque ne peut être placé que sur un disque plus grand
+
+Solution récursive :
+1. Déplacer n-1 disques de source vers aux (en utilisant dest)
+2. Déplacer le plus grand disque de source vers dest
+3. Déplacer n-1 disques de aux vers dest (en utilisant source)
+
+Nombre de mouvements = 2^n - 1`,
+  
+  solutions: [
+    {
+      id: 'method-1',
+      title: 'Méthode 1 : Récursion classique',
+      approach: 'Récursive',
+      code: `function towerOfHanoi(n, source = 'A', destination = 'C', auxiliary = 'B') {
+  const moves = [];
+  
+  function solve(n, src, dest, aux) {
+    // Cas de base : un seul disque
+    if (n === 1) {
+      moves.push(\`Déplacer disque 1 de \${src} vers \${dest}\`);
+      return;
+    }
+    
+    // Étape 1 : Déplacer n-1 disques de src vers aux (via dest)
+    solve(n - 1, src, aux, dest);
+    
+    // Étape 2 : Déplacer le plus grand disque de src vers dest
+    moves.push(\`Déplacer disque \${n} de \${src} vers \${dest}\`);
+    
+    // Étape 3 : Déplacer n-1 disques de aux vers dest (via src)
+    solve(n - 1, aux, dest, src);
+  }
+  
+  solve(n, source, destination, auxiliary);
+  return moves;
+}
+
+// Exemple
+console.log(towerOfHanoi(3));
+// [
+//   'Déplacer disque 1 de A vers C',
+//   'Déplacer disque 2 de A vers B',
+//   'Déplacer disque 1 de C vers B',
+//   'Déplacer disque 3 de A vers C',
+//   'Déplacer disque 1 de B vers A',
+//   'Déplacer disque 2 de B vers C',
+//   'Déplacer disque 1 de A vers C'
+// ]
+// Total : 2^3 - 1 = 7 mouvements`,
+      explanation: 'Solution récursive élégante en 3 étapes.',
+      timeComplexity: 'O(2^n)',
+      spaceComplexity: 'O(n)', // Stack depth
+      pros: ['Élégant', 'Simple', 'Classique'],
+      cons: ['2^n mouvements', 'Pas de solution itérative simple']
+    },
+    {
+      id: 'method-2',
+      title: 'Méthode 2 : Avec compteur',
+      approach: 'Récursive',
+      code: `function towerOfHanoi(n, source = 'A', destination = 'C', auxiliary = 'B') {
+  let moveCount = 0;
+  
+  function solve(n, src, dest, aux) {
+    if (n === 1) {
+      moveCount++;
+      console.log(\`Mouvement \${moveCount}: Disque 1 de \${src} vers \${dest}\`);
+      return;
+    }
+    
+    solve(n - 1, src, aux, dest);
+    moveCount++;
+    console.log(\`Mouvement \${moveCount}: Disque \${n} de \${src} vers \${dest}\`);
+    solve(n - 1, aux, dest, src);
+  }
+  
+  solve(n, source, destination, auxiliary);
+  return moveCount;
+}
+
+// Exemple
+const moves = towerOfHanoi(4);
+console.log(\`Total de mouvements: \${moves}\`); // 15 (2^4 - 1)`,
+      explanation: 'Version avec compteur pour suivre le nombre de mouvements.',
+      timeComplexity: 'O(2^n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Compte les mouvements', 'Utile pour vérification'],
+      cons: ['Même complexité']
+    },
+    {
+      id: 'method-3',
+      title: 'Méthode 3 : Simulation avec piles',
+      approach: 'Simulation',
+      code: `function towerOfHanoi(n) {
+  const towers = {
+    A: Array.from({ length: n }, (_, i) => n - i),
+    B: [],
+    C: []
+  };
+  
+  const moves = [];
+  
+  function move(from, to) {
+    const disk = towers[from].pop();
+    towers[to].push(disk);
+    moves.push({ from, to, disk, state: JSON.stringify(towers) });
+  }
+  
+  function solve(n, src, dest, aux) {
+    if (n === 1) {
+      move(src, dest);
+      return;
+    }
+    
+    solve(n - 1, src, aux, dest);
+    move(src, dest);
+    solve(n - 1, aux, dest, src);
+  }
+  
+  solve(n, 'A', 'C', 'B');
+  return { towers, moves, count: moves.length };
+}
+
+// Exemple
+const result = towerOfHanoi(3);
+console.log(\`Nombre de mouvements: \${result.count}\`);
+console.log('État final:', result.towers);
+// { A: [], B: [], C: [3, 2, 1] }`,
+      explanation: 'Simulation complète avec état des tours.',
+      timeComplexity: 'O(2^n)',
+      spaceComplexity: 'O(n)',
+      pros: ['Visualise l\'état', 'Utile pour UI'],
+      cons: ['Plus de code', 'Plus de mémoire']
+    }
+  ],
+  
+  examples: [
+    {
+      input: 'n = 3',
+      output: '7 mouvements',
+      explanation: '2³ - 1 = 7 mouvements minimum'
+    },
+    {
+      input: 'n = 4',
+      output: '15 mouvements',
+      explanation: '2⁴ - 1 = 15 mouvements'
+    }
+  ],
+  
+  tips: [
+    'Solution récursive élégante en 3 lignes logiques',
+    'Nombre de mouvements = 2^n - 1 (toujours optimal)',
+    'Pas de solution itérative simple',
+    'Exemple classique de récursion',
+    'Légende : inventé par mathématicien français Édouard Lucas (1883)',
+    'Applications : backup systems, algorithmes de tri'
+  ],
+  
+  tags: ['recursion', 'puzzle', 'divide-and-conquer', 'classic'],
+  relatedAlgorithms: ['merge-sort', 'quick-sort']
+},
 ];
