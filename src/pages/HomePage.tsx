@@ -19,19 +19,19 @@ export default function HomePage() {
         
         {/* Statistiques */}
         <div className="flex flex-wrap justify-center gap-8 mt-8">
-          <div className="text-center p-6 bg-white rounded-lg shadow-sm border border-gray-200 min-w-[150px]">
+          <div className="text-center p-6 bg-white rounded-lg shadow-sm border border-gray-200 min-w-37.5">
             <div className="text-4xl font-bold text-primary-600">
               {progress.completedAlgorithms.length}
             </div>
             <div className="text-sm text-gray-600 mt-2">Algorithmes complétés</div>
           </div>
-          <div className="text-center p-6 bg-white rounded-lg shadow-sm border border-gray-200 min-w-[150px]">
+          <div className="text-center p-6 bg-white rounded-lg shadow-sm border border-gray-200 min-w-37.5">
             <div className="text-4xl font-bold text-yellow-600">
               {progress.favorites.length}
             </div>
             <div className="text-sm text-gray-600 mt-2">Favoris</div>
           </div>
-          <div className="text-center p-6 bg-white rounded-lg shadow-sm border border-gray-200 min-w-[150px]">
+          <div className="text-center p-6 bg-white rounded-lg shadow-sm border border-gray-200 min-w-37.5">
             <div className="text-4xl font-bold text-green-600">
               {algorithms.length}
             </div>
@@ -47,7 +47,7 @@ export default function HomePage() {
       </div>
 
       {/* Section d'aide */}
-      <div className="bg-gradient-to-br from-primary-50 to-blue-50 rounded-lg p-8 border border-primary-100">
+      <div className="bg-linear-to-br from-primary-50 to-blue-50 rounded-lg p-8 border border-primary-100">
         <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3 text-center">
           Comment utiliser Algo Master ?
         </h2>
