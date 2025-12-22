@@ -1020,5 +1020,902 @@ console.log(reverseString('hello')); // 'olleh'`,
     
     tags: ['string', 'reverse'],
     relatedAlgorithms: ['reverse-array', 'is-palindrome']
+  },
+  {
+    id: 'is-palindrome',
+    title: '11. Vérifier si un mot est un palindrome',
+    level: 'niveau-1',
+    category: 'chaines',
+    difficulty: 'débutant',
+    order: 11,
+    description: 'Vérifier si une chaîne se lit de la même façon dans les deux sens',
+    explanation: `Un palindrome est un mot qui se lit pareil à l'endroit et à l'envers (ex: "kayak", "radar", "elle").
+
+Il existe plusieurs approches pour vérifier un palindrome :
+1. Comparer avec la version inversée
+2. Utiliser deux pointeurs (plus efficace en mémoire)
+3. Approche récursive`,
+    
+    solutions: [
+      {
+        id: 'method-1',
+        title: 'Méthode 1 : Comparer avec reverse',
+        approach: 'Built-in',
+        code: `function isPalindrome(str) {
+  const cleaned = str.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const reversed = cleaned.split('').reverse().join('');
+  return cleaned === reversed;
+}
+
+// Exemples
+console.log(isPalindrome('kayak'));     // true
+console.log(isPalindrome('hello'));     // false
+console.log(isPalindrome('A man a plan a canal Panama')); // true`,
+        explanation: 'Nettoie la chaîne (minuscules, supprime espaces/ponctuation), puis compare avec sa version inversée.',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(n)',
+        pros: ['Simple', 'Lisible', 'Facile à comprendre'],
+        cons: ['Crée une copie de la chaîne', 'Utilise plus de mémoire']
+      },
+      {
+        id: 'method-2',
+        title: 'Méthode 2 : Two Pointers',
+        approach: 'Impérative',
+        code: `function isPalindrome(str) {
+  const cleaned = str.toLowerCase().replace(/[^a-z0-9]/g, '');
+  let left = 0;
+  let right = cleaned.length - 1;
+  
+  while (left < right) {
+    if (cleaned[left] !== cleaned[right]) {
+      return false;
+    }
+    left++;
+    right--;
+  }
+  
+  return true;
+}
+
+// Exemples
+console.log(isPalindrome('kayak'));     // true
+console.log(isPalindrome('hello'));     // false`,
+        explanation: 'Compare les caractères depuis les deux extrémités en se rapprochant vers le centre.',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(n)', // Pour la chaîne nettoyée
+        pros: ['Plus performant', 'Early return possible', 'Algorithme classique'],
+        cons: ['Légèrement plus complexe']
+      },
+      {
+        id: 'method-3',
+        title: 'Méthode 3 : Récursion',
+        approach: 'Récursive',
+        code: `function isPalindrome(str) {
+  const cleaned = str.toLowerCase().replace(/[^a-z0-9]/g, '');
+  
+  function check(s, left, right) {
+    if (left >= right) return true;
+    if (s[left] !== s[right]) return false;
+    return check(s, left + 1, right - 1);
+  }
+  
+  return check(cleaned, 0, cleaned.length - 1);
+}
+
+// Exemples
+console.log(isPalindrome('kayak'));     // true
+console.log(isPalindrome('hello'));     // false`,
+        explanation: 'Approche récursive : compare les extrémités puis récurse sur la partie intérieure.',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(n)', // Stack de récursion
+        pros: ['Élégant', 'Démonstratif'],
+        cons: ['Moins performant', 'Stack overflow possible']
+      }
+    ],
+    
+    examples: [
+      {
+        input: '"kayak"',
+        output: 'true',
+        explanation: 'Se lit pareil dans les deux sens'
+      },
+      {
+        input: '"hello"',
+        output: 'false',
+        explanation: '"hello" ≠ "olleh"'
+      },
+      {
+        input: '"A man a plan a canal Panama"',
+        output: 'true',
+        explanation: 'En ignorant espaces et casse : "amanaplanacanalpanama"'
+      }
+    ],
+    
+    tips: [
+      'Toujours normaliser : toLowerCase() pour ignorer la casse',
+      'Pour palindromes stricts : supprimez espaces et ponctuation avec regex',
+      'Two pointers est plus efficace en mémoire',
+      'Pensez aux palindromes avec espaces : "race car", "never odd or even"'
+    ],
+    
+    tags: ['string', 'palindrome', 'two-pointers'],
+    relatedAlgorithms: ['reverse-string']
+  },
+
+  {
+    id: 'merge-arrays',
+    title: '12. Fusionner deux tableaux',
+    level: 'niveau-1',
+    category: 'tableaux',
+    difficulty: 'débutant',
+    order: 12,
+    description: 'Combiner deux tableaux en un seul',
+    explanation: `Plusieurs façons de fusionner des tableaux : concat, spread, ou push en boucle.`,
+    
+    solutions: [
+      {
+        id: 'method-1',
+        title: 'Méthode 1 : Spread operator',
+        approach: 'Built-in',
+        code: `function mergeArrays(arr1, arr2) {
+  return [...arr1, ...arr2];
+}
+
+// Exemple
+const arr1 = [1, 2, 3];
+const arr2 = [4, 5, 6];
+console.log(mergeArrays(arr1, arr2)); // [1, 2, 3, 4, 5, 6]`,
+        explanation: 'Utilise le spread operator pour décomposer et combiner les tableaux.',
+        timeComplexity: 'O(n + m)',
+        spaceComplexity: 'O(n + m)',
+        pros: ['Moderne (ES6)', 'Concis', 'Très lisible'],
+        cons: ['Nécessite ES6+']
+      },
+      {
+        id: 'method-2',
+        title: 'Méthode 2 : concat()',
+        approach: 'Built-in',
+        code: `function mergeArrays(arr1, arr2) {
+  return arr1.concat(arr2);
+}
+
+// Exemple
+const arr1 = [1, 2, 3];
+const arr2 = [4, 5, 6];
+console.log(mergeArrays(arr1, arr2)); // [1, 2, 3, 4, 5, 6]`,
+        explanation: 'Utilise la méthode native concat().',
+        timeComplexity: 'O(n + m)',
+        spaceComplexity: 'O(n + m)',
+        pros: ['Compatible tous navigateurs', 'Lisible', 'Standard'],
+        cons: ['Moins moderne que spread']
+      },
+      {
+        id: 'method-3',
+        title: 'Méthode 3 : Boucle for',
+        approach: 'Impérative',
+        code: `function mergeArrays(arr1, arr2) {
+  const result = [...arr1];
+  for (let i = 0; i < arr2.length; i++) {
+    result.push(arr2[i]);
+  }
+  return result;
+}
+
+// Exemple
+const arr1 = [1, 2, 3];
+const arr2 = [4, 5, 6];
+console.log(mergeArrays(arr1, arr2)); // [1, 2, 3, 4, 5, 6]`,
+        explanation: 'Copie le premier tableau puis ajoute les éléments du second.',
+        timeComplexity: 'O(n + m)',
+        spaceComplexity: 'O(n + m)',
+        pros: ['Contrôle total', 'Facile à comprendre'],
+        cons: ['Verbeux', 'Moins idiomatique']
+      }
+    ],
+    
+    examples: [
+      {
+        input: 'arr1 = [1, 2, 3], arr2 = [4, 5, 6]',
+        output: '[1, 2, 3, 4, 5, 6]',
+        explanation: 'Les deux tableaux sont combinés'
+      },
+      {
+        input: 'arr1 = ["a"], arr2 = ["b", "c"]',
+        output: '["a", "b", "c"]'
+      }
+    ],
+    
+    tips: [
+      'Préférez le spread operator en JavaScript moderne',
+      'concat() et spread ne modifient pas les tableaux originaux',
+      'Pour fusionner plusieurs tableaux : [...arr1, ...arr2, ...arr3]'
+    ],
+    
+    tags: ['array', 'merge', 'concat']
+  },
+
+  {
+    id: 'array-intersection',
+    title: '13. Trouver les éléments communs entre deux tableaux',
+    level: 'niveau-1',
+    category: 'tableaux',
+    difficulty: 'débutant',
+    order: 13,
+    description: 'Trouver les éléments présents dans les deux tableaux',
+    explanation: `L'intersection retourne les éléments qui existent dans les deux tableaux.
+
+Attention aux doublons : décidez si vous les gardez ou non.`,
+    
+    solutions: [
+      {
+        id: 'method-1',
+        title: 'Méthode 1 : filter() + includes()',
+        approach: 'Fonctionnelle',
+        code: `function arrayIntersection(arr1, arr2) {
+  return arr1.filter(item => arr2.includes(item));
+}
+
+// Exemple
+const arr1 = [1, 2, 3, 4];
+const arr2 = [3, 4, 5, 6];
+console.log(arrayIntersection(arr1, arr2)); // [3, 4]`,
+        explanation: 'Filtre les éléments de arr1 qui sont présents dans arr2.',
+        timeComplexity: 'O(n * m)',
+        spaceComplexity: 'O(k)', // k = taille résultat
+        pros: ['Simple', 'Lisible', 'Une ligne'],
+        cons: ['Peut contenir des doublons', 'O(n*m) pas optimal']
+      },
+      {
+        id: 'method-2',
+        title: 'Méthode 2 : Set + filter() (sans doublons)',
+        approach: 'Built-in',
+        code: `function arrayIntersection(arr1, arr2) {
+  const set2 = new Set(arr2);
+  return [...new Set(arr1.filter(item => set2.has(item)))];
+}
+
+// Exemple
+const arr1 = [1, 2, 2, 3, 4];
+const arr2 = [2, 3, 4, 5, 6];
+console.log(arrayIntersection(arr1, arr2)); // [2, 3, 4]`,
+        explanation: 'Utilise Set pour une recherche O(1) et élimine les doublons.',
+        timeComplexity: 'O(n + m)',
+        spaceComplexity: 'O(m)',
+        pros: ['Performant O(n+m)', 'Pas de doublons', 'Optimal'],
+        cons: ['Un peu plus complexe']
+      },
+      {
+        id: 'method-3',
+        title: 'Méthode 3 : Boucle for + Set',
+        approach: 'Impérative',
+        code: `function arrayIntersection(arr1, arr2) {
+  const set2 = new Set(arr2);
+  const result = [];
+  
+  for (let item of arr1) {
+    if (set2.has(item)) {
+      result.push(item);
+    }
+  }
+  
+  return [...new Set(result)]; // Enlever doublons
+}
+
+// Exemple
+const arr1 = [1, 2, 3, 4];
+const arr2 = [3, 4, 5, 6];
+console.log(arrayIntersection(arr1, arr2)); // [3, 4]`,
+        explanation: 'Utilise Set pour lookup rapide et boucle explicite.',
+        timeComplexity: 'O(n + m)',
+        spaceComplexity: 'O(m)',
+        pros: ['Performant', 'Contrôle total'],
+        cons: ['Plus verbeux']
+      }
+    ],
+    
+    examples: [
+      {
+        input: 'arr1 = [1, 2, 3, 4], arr2 = [3, 4, 5, 6]',
+        output: '[3, 4]',
+        explanation: '3 et 4 sont présents dans les deux tableaux'
+      }
+    ],
+    
+    tips: [
+      'Utilisez Set pour de meilleures performances O(n+m)',
+      'filter + includes est simple mais O(n*m)',
+      'Décidez si vous voulez garder les doublons ou non'
+    ],
+    
+    tags: ['array', 'intersection', 'set'],
+    relatedAlgorithms: ['array-difference']
+  },
+
+  {
+    id: 'array-difference',
+    title: '14. Trouver la différence entre deux tableaux',
+    level: 'niveau-1',
+    category: 'tableaux',
+    difficulty: 'débutant',
+    order: 14,
+    description: 'Trouver les éléments présents dans le premier mais pas dans le second',
+    explanation: `La différence retourne les éléments de arr1 qui ne sont pas dans arr2.`,
+    
+    solutions: [
+      {
+        id: 'method-1',
+        title: 'Méthode 1 : filter() + includes()',
+        approach: 'Fonctionnelle',
+        code: `function arrayDifference(arr1, arr2) {
+  return arr1.filter(item => !arr2.includes(item));
+}
+
+// Exemple
+const arr1 = [1, 2, 3, 4];
+const arr2 = [3, 4, 5, 6];
+console.log(arrayDifference(arr1, arr2)); // [1, 2]`,
+        explanation: 'Filtre les éléments de arr1 absents de arr2.',
+        timeComplexity: 'O(n * m)',
+        spaceComplexity: 'O(k)',
+        pros: ['Simple', 'Lisible', 'Une ligne'],
+        cons: ['O(n*m) pas optimal']
+      },
+      {
+        id: 'method-2',
+        title: 'Méthode 2 : Set + filter()',
+        approach: 'Built-in',
+        code: `function arrayDifference(arr1, arr2) {
+  const set2 = new Set(arr2);
+  return arr1.filter(item => !set2.has(item));
+}
+
+// Exemple
+const arr1 = [1, 2, 3, 4];
+const arr2 = [3, 4, 5, 6];
+console.log(arrayDifference(arr1, arr2)); // [1, 2]`,
+        explanation: 'Utilise Set pour une recherche rapide O(1).',
+        timeComplexity: 'O(n + m)',
+        spaceComplexity: 'O(m)',
+        pros: ['Performant O(n+m)', 'Optimal'],
+        cons: ['Utilise plus de mémoire']
+      }
+    ],
+    
+    examples: [
+      {
+        input: 'arr1 = [1, 2, 3, 4], arr2 = [3, 4, 5, 6]',
+        output: '[1, 2]',
+        explanation: '1 et 2 sont dans arr1 mais pas dans arr2'
+      }
+    ],
+    
+    tips: [
+      'Set améliore drastiquement les performances',
+      'Pour la différence symétrique : combinez les deux directions',
+      'arrayDifference(A, B) ≠ arrayDifference(B, A)'
+    ],
+    
+    tags: ['array', 'difference', 'set'],
+    relatedAlgorithms: ['array-intersection']
+  },
+
+  {
+    id: 'rotate-array-right',
+    title: '15. Décaler un tableau vers la droite',
+    level: 'niveau-1',
+    category: 'tableaux',
+    difficulty: 'débutant',
+    order: 15,
+    description: 'Décaler tous les éléments d\'un tableau vers la droite de k positions',
+    explanation: `Rotation à droite : les éléments de la fin reviennent au début.
+
+Exemple : [1, 2, 3, 4, 5] avec k=2 → [4, 5, 1, 2, 3]`,
+    
+    solutions: [
+      {
+        id: 'method-1',
+        title: 'Méthode 1 : slice() + concat()',
+        approach: 'Built-in',
+        code: `function rotateRight(arr, k) {
+  k = k % arr.length; // Normaliser k
+  return arr.slice(-k).concat(arr.slice(0, -k));
+}
+
+// Exemple
+const arr = [1, 2, 3, 4, 5];
+console.log(rotateRight(arr, 2)); // [4, 5, 1, 2, 3]`,
+        explanation: 'Coupe les k derniers éléments et les met au début.',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(n)',
+        pros: ['Simple', 'Lisible', 'Immutable'],
+        cons: ['Crée de nouveaux tableaux']
+      },
+      {
+        id: 'method-2',
+        title: 'Méthode 2 : Spread + slice()',
+        approach: 'Built-in',
+        code: `function rotateRight(arr, k) {
+  k = k % arr.length;
+  return [...arr.slice(-k), ...arr.slice(0, -k)];
+}
+
+// Exemple
+const arr = [1, 2, 3, 4, 5];
+console.log(rotateRight(arr, 2)); // [4, 5, 1, 2, 3]`,
+        explanation: 'Version moderne avec spread operator.',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(n)',
+        pros: ['Moderne', 'Concis', 'ES6'],
+        cons: ['Même chose que slice + concat']
+      },
+      {
+        id: 'method-3',
+        title: 'Méthode 3 : Boucle for (modification in-place)',
+        approach: 'Impérative',
+        code: `function rotateRight(arr, k) {
+  k = k % arr.length;
+  
+  // Effectue k rotations d'une position
+  for (let i = 0; i < k; i++) {
+    arr.unshift(arr.pop());
+  }
+  
+  return arr;
+}
+
+// Exemple
+const arr = [1, 2, 3, 4, 5];
+console.log(rotateRight(arr, 2)); // [4, 5, 1, 2, 3]
+// Attention : arr est modifié !`,
+        explanation: 'Retire le dernier élément et le met au début, k fois.',
+        timeComplexity: 'O(k * n)',
+        spaceComplexity: 'O(1)',
+        pros: ['In-place (modifie le tableau)', 'Économe en mémoire'],
+        cons: ['Moins performant si k est grand', 'Modifie l\'original']
+      }
+    ],
+    
+    examples: [
+      {
+        input: 'arr = [1, 2, 3, 4, 5], k = 2',
+        output: '[4, 5, 1, 2, 3]',
+        explanation: 'Les 2 derniers éléments (4, 5) vont au début'
+      },
+      {
+        input: 'arr = [1, 2, 3], k = 7',
+        output: '[3, 1, 2]',
+        explanation: 'k % length = 7 % 3 = 1, donc 1 rotation'
+      }
+    ],
+    
+    tips: [
+      'Utilisez k % arr.length pour gérer k > longueur',
+      'slice() + concat() est la méthode la plus claire',
+      'La boucle for est in-place mais moins performante'
+    ],
+    
+    tags: ['array', 'rotate', 'shift'],
+    relatedAlgorithms: ['rotate-array-left']
+  },
+
+  {
+    id: 'rotate-array-left',
+    title: '16. Décaler un tableau vers la gauche',
+    level: 'niveau-1',
+    category: 'tableaux',
+    difficulty: 'débutant',
+    order: 16,
+    description: 'Décaler tous les éléments d\'un tableau vers la gauche de k positions',
+    explanation: `Rotation à gauche : les éléments du début vont à la fin.
+
+Exemple : [1, 2, 3, 4, 5] avec k=2 → [3, 4, 5, 1, 2]`,
+    
+    solutions: [
+      {
+        id: 'method-1',
+        title: 'Méthode 1 : slice() + concat()',
+        approach: 'Built-in',
+        code: `function rotateLeft(arr, k) {
+  k = k % arr.length;
+  return arr.slice(k).concat(arr.slice(0, k));
+}
+
+// Exemple
+const arr = [1, 2, 3, 4, 5];
+console.log(rotateLeft(arr, 2)); // [3, 4, 5, 1, 2]`,
+        explanation: 'Coupe à partir de k et met le début à la fin.',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(n)',
+        pros: ['Simple', 'Clair', 'Immutable'],
+        cons: ['Crée des copies']
+      },
+      {
+        id: 'method-2',
+        title: 'Méthode 2 : Spread + slice()',
+        approach: 'Built-in',
+        code: `function rotateLeft(arr, k) {
+  k = k % arr.length;
+  return [...arr.slice(k), ...arr.slice(0, k)];
+}
+
+// Exemple
+const arr = [1, 2, 3, 4, 5];
+console.log(rotateLeft(arr, 2)); // [3, 4, 5, 1, 2]`,
+        explanation: 'Version ES6 avec spread.',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(n)',
+        pros: ['Moderne', 'Lisible'],
+        cons: ['ES6+']
+      }
+    ],
+    
+    examples: [
+      {
+        input: 'arr = [1, 2, 3, 4, 5], k = 2',
+        output: '[3, 4, 5, 1, 2]',
+        explanation: 'Les 2 premiers éléments (1, 2) vont à la fin'
+      }
+    ],
+    
+    tips: [
+      'Rotation gauche de k = rotation droite de (n - k)',
+      'Toujours normaliser k avec modulo',
+      'slice() ne modifie pas le tableau original'
+    ],
+    
+    tags: ['array', 'rotate', 'shift'],
+    relatedAlgorithms: ['rotate-array-right']
+  },
+
+  {
+    id: 'remove-element',
+    title: '17. Supprimer un élément spécifique d\'un tableau',
+    level: 'niveau-1',
+    category: 'tableaux',
+    difficulty: 'débutant',
+    order: 17,
+    description: 'Retirer toutes les occurrences d\'une valeur donnée',
+    explanation: `Supprimer toutes les instances d'une valeur spécifique du tableau.`,
+    
+    solutions: [
+      {
+        id: 'method-1',
+        title: 'Méthode 1 : filter()',
+        approach: 'Fonctionnelle',
+        code: `function removeElement(arr, value) {
+  return arr.filter(item => item !== value);
+}
+
+// Exemple
+const arr = [1, 2, 3, 2, 4, 2, 5];
+console.log(removeElement(arr, 2)); // [1, 3, 4, 5]`,
+        explanation: 'Garde tous les éléments différents de la valeur.',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(n)',
+        pros: ['Simple', 'Immutable', 'Lisible', 'Une ligne'],
+        cons: ['Crée un nouveau tableau']
+      },
+      {
+        id: 'method-2',
+        title: 'Méthode 2 : Boucle while + splice() (in-place)',
+        approach: 'Impérative',
+        code: `function removeElement(arr, value) {
+  const result = [...arr]; // Copie pour ne pas modifier l'original
+  let i = 0;
+  
+  while (i < result.length) {
+    if (result[i] === value) {
+      result.splice(i, 1); // Supprime 1 élément à l'index i
+    } else {
+      i++;
+    }
+  }
+  
+  return result;
+}
+
+// Exemple
+const arr = [1, 2, 3, 2, 4, 2, 5];
+console.log(removeElement(arr, 2)); // [1, 3, 4, 5]`,
+        explanation: 'Supprime in-place avec splice (attention aux indices).',
+        timeComplexity: 'O(n²)', // splice est O(n)
+        spaceComplexity: 'O(n)',
+        pros: ['Modifie sur place (si souhaité)'],
+        cons: ['Moins performant O(n²)', 'Plus complexe', 'Gestion indices délicate']
+      }
+    ],
+    
+    examples: [
+      {
+        input: 'arr = [1, 2, 3, 2, 4, 2, 5], value = 2',
+        output: '[1, 3, 4, 5]',
+        explanation: 'Toutes les occurrences de 2 sont supprimées'
+      }
+    ],
+    
+    tips: [
+      'filter() est LA méthode recommandée (simple et performante)',
+      'splice() modifie le tableau original, attention !',
+      'Si vous utilisez splice(), n\'incrémentez pas i après suppression'
+    ],
+    
+    tags: ['array', 'remove', 'filter']
+  },
+
+  {
+    id: 'insert-at-position',
+    title: '18. Insérer un élément à une position donnée',
+    level: 'niveau-1',
+    category: 'tableaux',
+    difficulty: 'débutant',
+    order: 18,
+    description: 'Ajouter un élément à un index spécifique',
+    explanation: `Insertion d'un élément à une position précise sans écraser les éléments existants.`,
+    
+    solutions: [
+      {
+        id: 'method-1',
+        title: 'Méthode 1 : splice()',
+        approach: 'Built-in',
+        code: `function insertAt(arr, index, value) {
+  const result = [...arr];
+  result.splice(index, 0, value); // 0 = ne supprime rien
+  return result;
+}
+
+// Exemple
+const arr = [1, 2, 4, 5];
+console.log(insertAt(arr, 2, 3)); // [1, 2, 3, 4, 5]`,
+        explanation: 'Utilise splice(index, 0, value) pour insérer sans supprimer.',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(n)',
+        pros: ['Simple', 'Méthode native', 'Directe'],
+        cons: ['Crée une copie (si on veut préserver l\'original)']
+      },
+      {
+        id: 'method-2',
+        title: 'Méthode 2 : slice() + spread',
+        approach: 'Built-in',
+        code: `function insertAt(arr, index, value) {
+  return [...arr.slice(0, index), value, ...arr.slice(index)];
+}
+
+// Exemple
+const arr = [1, 2, 4, 5];
+console.log(insertAt(arr, 2, 3)); // [1, 2, 3, 4, 5]`,
+        explanation: 'Découpe et reconstruit avec le nouvel élément au milieu.',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(n)',
+        pros: ['Immutable', 'Fonctionnel', 'Moderne'],
+        cons: ['Moins lisible', 'Crée plusieurs tableaux intermédiaires']
+      }
+    ],
+    
+    examples: [
+      {
+        input: 'arr = [1, 2, 4, 5], index = 2, value = 3',
+        output: '[1, 2, 3, 4, 5]',
+        explanation: '3 est inséré à l\'index 2, décalant 4 et 5'
+      },
+      {
+        input: 'arr = ["a", "c"], index = 1, value = "b"',
+        output: '["a", "b", "c"]'
+      }
+    ],
+    
+    tips: [
+      'splice(index, 0, value) : 0 signifie "ne rien supprimer"',
+      'Vérifiez toujours que l\'index est valide (>= 0 et <= arr.length)',
+      'Pour insérer à la fin : arr.push(value) ou index = arr.length'
+    ],
+    
+    tags: ['array', 'insert', 'splice']
+  },
+
+  {
+    id: 'is-array-sorted',
+    title: '19. Vérifier si un tableau est trié',
+    level: 'niveau-1',
+    category: 'tableaux',
+    difficulty: 'débutant',
+    order: 19,
+    description: 'Vérifier si un tableau est trié par ordre croissant',
+    explanation: `Parcourt le tableau et vérifie que chaque élément est <= au suivant.`,
+    
+    solutions: [
+      {
+        id: 'method-1',
+        title: 'Méthode 1 : every()',
+        approach: 'Fonctionnelle',
+        code: `function isSorted(arr) {
+  return arr.every((val, i) => i === 0 || val >= arr[i - 1]);
+}
+
+// Exemples
+console.log(isSorted([1, 2, 3, 4, 5])); // true
+console.log(isSorted([1, 3, 2, 4]));    // false
+console.log(isSorted([5, 5, 5]));       // true (égalité ok)`,
+        explanation: 'Vérifie que chaque élément est >= au précédent.',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(1)',
+        pros: ['Concis', 'Fonctionnel', 'Une ligne'],
+        cons: ['Moins lisible', 'Parcourt toujours tout le tableau']
+      },
+      {
+        id: 'method-2',
+        title: 'Méthode 2 : Boucle for',
+        approach: 'Impérative',
+        code: `function isSorted(arr) {
+  for (let i = 1; i < arr.length; i++) {
+    if (arr[i] < arr[i - 1]) {
+      return false; // Early return
+    }
+  }
+  return true;
+}
+
+// Exemples
+console.log(isSorted([1, 2, 3, 4, 5])); // true
+console.log(isSorted([1, 3, 2, 4]));    // false`,
+        explanation: 'Parcourt et compare chaque paire adjacente.',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(1)',
+        pros: ['Simple', 'Clair', 'Early return possible', 'Plus performant'],
+        cons: ['Plus verbeux']
+      }
+    ],
+    
+    examples: [
+      {
+        input: '[1, 2, 3, 4, 5]',
+        output: 'true',
+        explanation: 'Chaque élément est >= au précédent'
+      },
+      {
+        input: '[1, 3, 2, 4]',
+        output: 'false',
+        explanation: '3 > 2 : le tableau n\'est pas trié'
+      },
+      {
+        input: '[5, 5, 5]',
+        output: 'true',
+        explanation: 'Éléments égaux = trié'
+      }
+    ],
+    
+    tips: [
+      'La boucle for permet un early return (plus performant)',
+      'every() parcourt toujours tout même si faux trouvé',
+      'Pour ordre décroissant : arr[i] > arr[i - 1]',
+      'Gérez le cas du tableau vide ou à 1 élément (toujours trié)'
+    ],
+    
+    tags: ['array', 'sorted', 'validation']
+  },
+
+  {
+    id: 'count-vowels',
+    title: '20. Compter les voyelles dans une chaîne',
+    level: 'niveau-1',
+    category: 'chaines',
+    difficulty: 'débutant',
+    order: 20,
+    description: 'Compter le nombre de voyelles (a, e, i, o, u) dans une chaîne',
+    explanation: `Parcourt la chaîne et compte les voyelles (insensible à la casse).
+
+Les voyelles françaises : a, e, i, o, u (+ variantes é, è, à, etc. si souhaité)`,
+    
+    solutions: [
+      {
+        id: 'method-1',
+        title: 'Méthode 1 : Boucle for + includes()',
+        approach: 'Impérative',
+        code: `function countVowels(str) {
+  const vowels = 'aeiouAEIOU';
+  let count = 0;
+  
+  for (let char of str) {
+    if (vowels.includes(char)) {
+      count++;
+    }
+  }
+  
+  return count;
+}
+
+// Exemples
+console.log(countVowels('Hello World')); // 3 (e, o, o)
+console.log(countVowels('JavaScript')); // 3 (a, a, i)`,
+        explanation: 'Parcourt chaque caractère et vérifie si c\'est une voyelle.',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(1)',
+        pros: ['Simple', 'Lisible', 'Facile à étendre'],
+        cons: ['Un peu verbeux']
+      },
+      {
+        id: 'method-2',
+        title: 'Méthode 2 : filter() + includes()',
+        approach: 'Fonctionnelle',
+        code: `function countVowels(str) {
+  const vowels = 'aeiouAEIOU';
+  return str.split('').filter(char => vowels.includes(char)).length;
+}
+
+// Exemples
+console.log(countVowels('Hello World')); // 3
+console.log(countVowels('JavaScript')); // 3`,
+        explanation: 'Filtre les voyelles et compte le résultat.',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(n)',
+        pros: ['Fonctionnel', 'Concis'],
+        cons: ['Crée un tableau intermédiaire']
+      },
+      {
+        id: 'method-3',
+        title: 'Méthode 3 : Regex + match()',
+        approach: 'Regex',
+        code: `function countVowels(str) {
+  const matches = str.match(/[aeiou]/gi);
+  return matches ? matches.length : 0;
+}
+
+// Exemples
+console.log(countVowels('Hello World')); // 3
+console.log(countVowels('JavaScript')); // 3
+console.log(countVowels('xyz')); // 0`,
+        explanation: 'Utilise une regex pour trouver toutes les voyelles (flag i = insensible casse).',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(k)', // k = nombre de voyelles
+        pros: ['Très concis', 'Puissant', 'Une ligne'],
+        cons: ['Regex peut être intimidant', 'Retourne null si aucune']
+      },
+      {
+        id: 'method-4',
+        title: 'Méthode 4 : reduce()',
+        approach: 'Fonctionnelle',
+        code: `function countVowels(str) {
+  const vowels = 'aeiouAEIOU';
+  return str.split('').reduce((count, char) => 
+    vowels.includes(char) ? count + 1 : count
+  , 0);
+}
+
+// Exemples
+console.log(countVowels('Hello World')); // 3`,
+        explanation: 'Accumule le compteur avec reduce.',
+        timeComplexity: 'O(n)',
+        spaceComplexity: 'O(n)',
+        pros: ['Fonctionnel', 'Pas de variable externe'],
+        cons: ['Moins lisible', 'Crée un tableau']
+      }
+    ],
+    
+    examples: [
+      {
+        input: '"Hello World"',
+        output: '3',
+        explanation: 'e, o, o sont des voyelles'
+      },
+      {
+        input: '"JavaScript"',
+        output: '3',
+        explanation: 'a, a, i sont des voyelles'
+      },
+      {
+        input: '"xyz"',
+        output: '0',
+        explanation: 'Aucune voyelle'
+      }
+    ],
+    
+    tips: [
+      'Regex est la solution la plus élégante : /[aeiou]/gi',
+      'Le flag g = global (toutes), i = insensitive (casse)',
+      'Pour le français, ajoutez é, è, ê, à, etc. : /[aeiouéèêàù]/gi',
+      'match() retourne null si aucune correspondance (vérifiez !)'
+    ],
+    
+    tags: ['string', 'vowels', 'count', 'regex'],
+    relatedAlgorithms: ['count-words']
   }
 ];
