@@ -239,7 +239,7 @@ export default function AlgorithmDetail({ algorithm }: AlgorithmDetailProps) {
 
       {/* Conseils */}
       {algorithm.tips && algorithm.tips.length > 0 && (
-        <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg shadow-md p-8 border border-yellow-200">
+        <div className="bg-linear-to-r from-yellow-50 to-orange-50 rounded-lg shadow-md p-8 border border-yellow-200">
           <div className="flex items-center space-x-2 mb-4">
             <Lightbulb className="w-6 h-6 text-yellow-600" />
             <h2 className="text-2xl font-bold text-gray-900">💡 Conseils</h2>
