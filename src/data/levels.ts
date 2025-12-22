@@ -1,4 +1,4 @@
-import { LevelInfo } from './index';
+import type { LevelInfo } from "../types";
 
 export const levels: LevelInfo[] = [
   {
