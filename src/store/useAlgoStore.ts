@@ -1,8 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-// import type { Chapter, Algorithm } from '../types';
-import type { Algorithm } from '../types';
-// import { Algorithm, Chapter } from '@/data';
+import type { Level, Algorithm } from '../types';
 
 interface ProgressData {
   completedAlgorithms: string[];
@@ -12,13 +10,13 @@ interface ProgressData {
 
 interface AlgoStore {
   // État
-  // selectedChapter: Chapter | null;
+  selectedLevel: Level | null;
   searchQuery: string;
   selectedDifficulty: string;
   progress: ProgressData;
   
   // Actions
-  setSelectedChapter: (chapter: Chapter | null) => void;
+  setSelectedLevel: (level: Level | null) => void;
   setSearchQuery: (query: string) => void;
   setSelectedDifficulty: (difficulty: string) => void;
   toggleComplete: (algoId: string) => void;
@@ -26,14 +24,19 @@ interface AlgoStore {
   setLastVisited: (algoId: string) => void;
   isCompleted: (algoId: string) => boolean;
   isFavorite: (algoId: string) => boolean;
-  getProgressByChapter: (chapter: Chapter, algorithms: Algorithm[]) => number;
+  getProgressByLevel: (levelId: string, algorithms: Algorithm[]) => number;
+  getGlobalProgress: (algorithms: Algorithm[]) => {
+    completed: number;
+    total: number;
+    percentage: number;
+  };
 }
 
 export const useAlgoStore = create<AlgoStore>()(
   persist(
     (set, get) => ({
       // État initial
-      selectedChapter: null,
+      selectedLevel: null,
       searchQuery: '',
       selectedDifficulty: 'tous',
       progress: {
@@ -43,7 +46,7 @@ export const useAlgoStore = create<AlgoStore>()(
       },
 
       // Actions
-      setSelectedChapter: (chapter) => set({ selectedChapter: chapter }),
+      setSelectedLevel: (level) => set({ selectedLevel: level }),
       
       setSearchQuery: (query) => set({ searchQuery: query }),
       
@@ -92,14 +95,27 @@ export const useAlgoStore = create<AlgoStore>()(
         return get().progress.favorites.includes(algoId);
       },
       
-      getProgressByChapter: (chapter, algorithms) => {
-        const chapterAlgos = algorithms.filter(a => a.chapter === chapter);
+      getProgressByLevel: (levelId, algorithms) => {
+        const levelAlgos = algorithms.filter(a => a.level === levelId);
         const completed = get().progress.completedAlgorithms;
-        const completedInChapter = chapterAlgos.filter(a => completed.includes(a.id));
+        const completedInLevel = levelAlgos.filter(a => completed.includes(a.id));
         
-        return chapterAlgos.length > 0 
-          ? Math.round((completedInChapter.length / chapterAlgos.length) * 100)
+        return levelAlgos.length > 0 
+          ? Math.round((completedInLevel.length / levelAlgos.length) * 100)
           : 0;
+      },
+
+      getGlobalProgress: (algorithms) => {
+        const completed = get().progress.completedAlgorithms;
+        const completedCount = algorithms.filter(a => completed.includes(a.id)).length;
+        const total = algorithms.length;
+        const percentage = total > 0 ? Math.round((completedCount / total) * 100) : 0;
+        
+        return {
+          completed: completedCount,
+          total,
+          percentage,
+        };
       },
     }),
     {
