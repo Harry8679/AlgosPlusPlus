@@ -18,7 +18,7 @@ export type Level =
   | 'niveau-5'  // Récursivité & backtracking
   | 'niveau-6'; // Algorithmes avancés
 
-export type Category =
+  export type Category =
   | 'tableaux'
   | 'chaines'
   | 'nombres'
@@ -35,7 +35,11 @@ export type Category =
   | 'linked-list'
   | 'search'
   | 'dynamic-programming'
-  | 'recursion';
+  | 'recursion'
+  | 'patterns'
+  | 'structures'
+  | 'binary-search'
+  ;
 
 export interface Example {
   input: string;
