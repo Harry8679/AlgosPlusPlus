@@ -30,6 +30,7 @@ export type Category =
   | 'programmation-dynamique'
   // valeurs déjà présentes dans algorithms.ts
   | 'array'
+  | 'patterns'
   | 'string'
   | 'linked-list'
   | 'search'
