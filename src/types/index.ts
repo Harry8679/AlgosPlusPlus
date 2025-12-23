@@ -1,5 +1,14 @@
 // Export des types
-export type Difficulty = 'débutant' | 'intermédiaire' | 'avancé';
+// export type Difficulty = 'débutant' | 'intermédiaire' | 'avancé';
+export type Difficulty = 
+  | 'débutant'
+  | 'intermédiaire'
+  | 'avancé'
+  // valeurs présentes dans algorithms.ts
+  | 'facile'
+  | 'moyen'
+  | 'difficile';
+
 
 export type Level = 
   | 'niveau-1'  // Bases
